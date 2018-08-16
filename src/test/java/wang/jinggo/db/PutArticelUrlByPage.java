@@ -36,7 +36,7 @@ public class PutArticelUrlByPage implements Runnable {
     public void run() {
         try {
             //TODO  每一个主页开启两个线程 先解析1 个
-        //    praseHtml(BEGIN_KJ_URL.replace("pageNumber", "" + number));
+            praseHtml(BEGIN_KJ_URL.replace("pageNumber", "" + number));
             praseHtml(BEGIN_SM_URL.replace("pageNumber", "" + number));
         }catch (ClientProtocolException e) {
             e.printStackTrace();

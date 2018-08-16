@@ -8,11 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import wang.jinggo.JinggoRedisTryApplication;
 import wang.jinggo.dao.NoteRepository;
 import wang.jinggo.domain.Note;
@@ -39,7 +35,7 @@ public class InitDataToDataBase {
     private NoteRepository noteRepository ;
 
     @Test
-    @Transactional
+    //@Transactional    使用这个数据是会回滚的
     public void test() throws IOException {
         ExecutorService pool = Executors.newFixedThreadPool(10);
         try{
