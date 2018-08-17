@@ -84,7 +84,7 @@ public class RedisCacheManager {
                 String[] numbers = redisdbnumber.split(",");
                 for (int i = 0; i < dbs.length; i++) {
                     // 得到redis连接池对象
-                    JedisPool jedisPool = new JedisPool(poolConfig, host, port, timeout, passwords);
+                    JedisPool jedisPool = new JedisPool(poolConfig, host, port, timeout);
                     // 存放不同redis数据库
                     redisPoolMap.put(dbs[i], new RedisCachePool(jedisPool, Integer.parseInt(numbers[i])));
                 }
