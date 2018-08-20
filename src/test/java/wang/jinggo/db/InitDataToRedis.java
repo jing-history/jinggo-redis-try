@@ -18,6 +18,8 @@ import redis.clients.jedis.Transaction;
 import wang.jinggo.JinggoRedisTryApplication;
 import wang.jinggo.annation.RedisCache;
 import wang.jinggo.dao.NoteRepository;
+import wang.jinggo.dao.RedisDao;
+import wang.jinggo.domain.Note;
 import wang.jinggo.util.RedisCacheManager;
 import wang.jinggo.util.RedisCachePool;
 import wang.jinggo.util.RedisDataBaseType;
@@ -27,6 +29,7 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -62,10 +65,9 @@ public class InitDataToRedis {
             for (Resource resource : resources) {
                 String className = resource.getFile().getPath().split("classes\\\\")[1].replaceAll("\\\\", ".").replaceAll(".class", "");
                 Class<?> clzz = Thread.currentThread().getContextClassLoader().loadClass(className);
-                List<Object> listObject = getData(clzz);
                 if (clzz.getAnnotation(RedisCache.class) != null) {
-                 //   List<Object> listObject = getData(clzz);
-                //    RedisDao rd = new RedisDao(tx);
+                    List<Object> listObject = getData(clzz);
+                    RedisDao rd = new RedisDao(tx);
                 //    rd.insertListToredis(listObject);
                 }
             }
@@ -79,19 +81,14 @@ public class InitDataToRedis {
         Field field = clzz.getDeclaredField("className");
         field.setAccessible(true);
         String tableName = field.get(clzz).toString();
-        javax.persistence.Query query = em.createNativeQuery("from " + tableName, Object.class);
+        javax.persistence.Query query = em.createQuery("from " + tableName, Object.class);
         List<Object> resultList = query.getResultList();
-        System.out.printf("resultList==>>" + resultList.size());
-        if (resultList == null || resultList.size() < 1) {
-            return null;
+        if (resultList.size() > 3) {
+            resultList = resultList.subList(0, 1);
+        }
+        if (!tableName.equals("Note")) {
+            resultList = new ArrayList<Object>();
         }
         return resultList;
-        /*Field field = clzz.getDeclaredField("className");
-        field.setAccessible(true);
-        String tableName = field.get(clzz).toString();
-        final Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery("from " + tableName);
-        List<Object> objectList = query.list();
-        System.out.printf("objectList==>>" + objectList.size());*/
     }
 }

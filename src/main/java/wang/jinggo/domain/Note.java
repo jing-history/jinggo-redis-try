@@ -1,5 +1,7 @@
 package wang.jinggo.domain;
 
+import wang.jinggo.annation.RedisCache;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Blob;
@@ -13,7 +15,11 @@ import java.util.Date;
  **/
 @Entity
 @Table(name = "tcnote")
+@RedisCache
 public class Note implements Serializable {
+
+    private static final String className = "Note";
+    private static final String primaryKey = "noteId";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
