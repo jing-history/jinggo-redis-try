@@ -17,16 +17,13 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
 import wang.jinggo.JinggoRedisTryApplication;
 import wang.jinggo.annation.RedisCache;
-import wang.jinggo.dao.NoteRepository;
 import wang.jinggo.dao.RedisDao;
-import wang.jinggo.domain.Note;
 import wang.jinggo.util.RedisCacheManager;
 import wang.jinggo.util.RedisCachePool;
 import wang.jinggo.util.RedisDataBaseType;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -68,12 +65,14 @@ public class InitDataToRedis {
                 if (clzz.getAnnotation(RedisCache.class) != null) {
                     List<Object> listObject = getData(clzz);
                     RedisDao rd = new RedisDao(tx);
-                //    rd.insertListToredis(listObject);
+                    rd.insertListToredis(listObject);
                 }
             }
+            tx.exec();// 提交事物
         }catch (Exception e){
             pool.releaseResource(jedis);
             logger.error("" + e.getLocalizedMessage());
+            e.printStackTrace();
         }
     }
 

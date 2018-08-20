@@ -1,9 +1,7 @@
 package wang.jinggo.dao;
 
 import com.alibaba.fastjson.JSON;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Pipeline;
-import redis.clients.jedis.Transaction;
+import redis.clients.jedis.*;
 import wang.jinggo.annation.RedisFieldNotCache;
 import wang.jinggo.annation.RedisQuery;
 import wang.jinggo.util.BeanField;
@@ -30,6 +28,10 @@ public class RedisDao {
     public final static String LOG = "log";
     // pub/sub模式打印log
     public final static String PUB_LOG = "publog";
+
+    // add by jing
+    public final static String pattern = "old:user*";
+    public final static String cursor = "0";
 
     private Jedis jedis;
     // 事物
@@ -495,5 +497,22 @@ public class RedisDao {
         }
         // 3、更新 存放映射bean key-jsonValue
         setJSON(className, primaryValue, JSON.toJSON(t).toString());
+    }
+
+    // add by jing sscan 使用
+    public void sscan(String key){
+        ScanParams scanParams = new ScanParams();
+        ScanResult scanResult = jedis.sscan(key, cursor, scanParams.match(pattern));
+        List elements = scanResult.getResult();
+        if (elements != null && elements.size() > 0) {
+            //  批量删除    这个方法使用不了
+            //jedis.srem(key, elements);
+        }
+
+        String localCursor = scanResult.getStringCursor();
+
+        if ("0".equals(cursor)) {
+            return;
+        }
     }
 }
