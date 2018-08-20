@@ -1,6 +1,7 @@
 package wang.jinggo.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 /**
  * 只提供 Druid常用的属性
