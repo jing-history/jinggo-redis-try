@@ -18,6 +18,13 @@ public class PubSubMain {
      * 启动嵌入式的Tomcat并初始化Spring环境
      */
     public static void main(String[] args) throws Exception {
+/*        long num = 17;
+        byte[] byteNum = new byte[8];
+        for (int ix = 0; ix < 8; ++ix) {
+            int offset = 64 - (ix + 1) * 8;
+            byteNum[ix] = (byte) ((num >> offset) & 0xff);
+        }
+        System.out.println(byteNum);*/
         // main 方法里面加载application
         ApplicationContext app = SpringApplication.run(JinggoRedisTryApplication.class, args);
         RedisCacheManager redisCacheManager = (RedisCacheManager) app.getBean("redisCacheManager");
