@@ -26,8 +26,5 @@ public class PubSubDemo {
 
         SubThread subThread = new SubThread(redisCacheManager);
         subThread.start();
-
-        Publisher publisher = new Publisher(redisCacheManager);
-        publisher.start();
     }
 }
