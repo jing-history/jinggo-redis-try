@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
+import redis.clients.jedis.Pipeline;
 import wang.jinggo.db.InitDataToDataBase;
 import wang.jinggo.domain.Note;
 import wang.jinggo.service.BaseService;
@@ -21,6 +22,7 @@ import wang.jinggo.util.RedisDataBaseType;
 
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -129,6 +131,34 @@ public class JinggoRedisTryApplicationTests {
 		Jedis jedis = pool.getResource();
 		logger.info("======删除之后打印===========");
 		display(jedis);
+		pool.releaseResource(jedis);
+	}
+
+	@Test
+	public void pipeline() {
+		RedisCachePool pool = redisCacheManager.getRedisPoolMap().get(RedisDataBaseType.defaultType.toString());
+		Jedis jedis = pool.getResource();
+		Pipeline pipeline = jedis.pipelined();
+		pipeline.set("jinggo", "jj123456");
+		pipeline.incr("counter");
+		List<Object> resultList = pipeline.syncAndReturnAll();
+		for (Object object : resultList) {
+			System.out.println(object);
+		}
+	}
+
+	@Test
+	public void luaScrpit() throws InterruptedException {
+		RedisCachePool pool = redisCacheManager.getRedisPoolMap().get(RedisDataBaseType.defaultType.toString());
+		Jedis jedis = pool.getResource();
+		String key = "hello";
+//		String script = "return redis.call('get',KEYS[1])";
+//		Object reuslt = jedis.eval(script,1,key);
+//		logger.info("reuslt:	" + reuslt);
+		System.out.println(jedis.get(key));
+		TimeUnit.SECONDS.sleep(10);
+		System.out.println(jedis.ping());
+		TimeUnit.SECONDS.sleep(5);
 		pool.releaseResource(jedis);
 	}
 

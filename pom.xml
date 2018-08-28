@@ -22,6 +22,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+		<protostuff.version>1.0.11</protostuff.version>
 	</properties>
 
 	<dependencies>
@@ -114,6 +115,18 @@
 			<artifactId>modelmapper</artifactId>
 			<version>0.7.5</version>
 		</dependency>
+		<!-- protostuff 序列化工具 -->
+		<dependency>
+			<groupId>com.dyuproject.protostuff</groupId>
+			<artifactId>protostuff-runtime</artifactId>
+			<version>${protostuff.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.dyuproject.protostuff</groupId>
+			<artifactId>protostuff-core</artifactId>
+			<version>${protostuff.version}</version>
+		</dependency>
+		<!-- protostuff 序列化工具  end-->
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
