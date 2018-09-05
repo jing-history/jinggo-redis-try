@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue</title>
+</head>
+<body>
+    <div id="app">
+        <p v-if="show">this is text</p>
+        <button v-on:click="hand">hide</button>
+    </div>
+    <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+               show: true
+            },
+            methods: {
+                hand: function () {
+                    this.show = false;
+                }
+            }
+        })
+    </script>
+</body>
+</html>
