@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue</title>
+</head>
+<body>
+    <div id="app">
+        <my-component mesage="form parent data"></my-component>
+    </div>
+    <script src="../../../static/vue/vue.min.js"></script>
+    <script>
+        Vue.component('my-component',{
+            props: ['mesage'],
+            template: '<div>{{ mesage }}</div>'
+        });
+        var app = new Vue({
+            el: '#app'
+        })
+    </script>
+</body>
+</html>

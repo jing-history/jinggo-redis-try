@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue</title>
+</head>
+<body>
+    <div id="app">
+        <my-component message="[1,2,3]"></my-component>
+        <my-component :message="[1,2,3]"></my-component>
+    </div>
+    <script src="../../../static/vue/vue.min.js"></script>
+    <script>
+        Vue.component('my-component',{
+            props: ['message'],
+            template: '<div>{{ message.length }}</div>'
+        });
+        var app = new Vue({
+            el: '#app'
+        })
+    </script>
+</body>
+</html>

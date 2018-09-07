@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue</title>
+</head>
+<body>
+    <div id="app">
+        <input type="checkbox" v-model="toggle" :true-value="v1" :false-value="v2">
+        <label>复选框</label>
+        <p>{{ toggle }}</p>
+        <p>{{ v1 }}</p>
+        <p>{{ v2 }}</p>
+    </div>
+    <script src="../../../static/vue/vue.min.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                toggle: false,
+                v1: 'a',
+                v2: 'b'
+            }
+        })
+    </script>
+</body>
+</html>

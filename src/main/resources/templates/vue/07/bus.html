@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue</title>
+</head>
+<body>
+    <div id="app">
+        {{ message }}
+        <my-component></my-component>
+    </div>
+    <script src="../../../static/vue/vue.min.js"></script>
+    <script>
+        var bus = new Vue();
+
+        Vue.component('my-component',{
+            template: '<button @click="handleEvent">传递事件</button>',
+            methods: {
+                handleEvent: function () {
+                    bus.$emit('on-message','from my-componet context');
+                }
+            }
+        });
+        var app = new Vue({
+            el: '#app',
+            data: {
+                message: ''
+            },
+            mounted: function () {
+                var _this = this;
+                //在实例初始化时，监听来自bus 实例的事件
+                bus.$on('on-message',function (msg) {
+                    _this.message = msg;
+                })
+            }
+        })
+    </script>
+</body>
+</html>
