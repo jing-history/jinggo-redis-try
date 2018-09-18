@@ -69,6 +69,17 @@ hibernate:
   hbm2ddl.auto: update
   show_sql: true
 
+# Swagger界面内容配置
+swagger:
+  title: Jinggo API接口文档
+  description: Api Documentation
+  version: 1.0.0
+  termsOfServiceUrl: http://jinggo.wang
+  contact:
+    name: jinggo
+    url: http://jinggo.wang
+    email: jinggo@sohu.com
+
 logging:
   level:
     ROOT: INFO
