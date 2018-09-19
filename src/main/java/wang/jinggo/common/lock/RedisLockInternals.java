@@ -90,6 +90,7 @@ public class RedisLockInternals {
         Jedis jedis = null;
         boolean broken = false;
         try {
+            jedis = jedisPool.getResource();
             String luaScript=""
                     +"\nlocal v = redis.call('GET', KEYS[1]);"
                     +"\nlocal r= 0;"

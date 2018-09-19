@@ -69,6 +69,28 @@ hibernate:
   hbm2ddl.auto: update
   show_sql: true
 
+xboot:
+  # 全局限流
+  rateLimit:
+    enable: true
+    # 每1秒内
+    timeout: 1000
+    # 总限制100个请求
+    limit: 100
+  # mob api配置 mob官网注册申请即可
+  mob:
+    appKey: 你的appKey
+
+# 忽略鉴权url
+ignored:
+  urls:
+    - /xboot/permission/getMenuList/**
+    - /**/*.js
+    - /**/*.css
+    - /**/*.png
+    - /**/*.ico
+    - /test/**
+
 # Swagger界面内容配置
 swagger:
   title: Jinggo API接口文档

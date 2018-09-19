@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -84,7 +85,12 @@ public class RedisCacheManager {
                 String[] numbers = redisdbnumber.split(",");
                 for (int i = 0; i < dbs.length; i++) {
                     // 得到redis连接池对象
-                    JedisPool jedisPool = new JedisPool(poolConfig, host, port, timeout, passwords);
+                    JedisPool jedisPool = null;
+                    if(StringUtils.hasText(passwords)){
+                        jedisPool = new JedisPool(poolConfig, host, port, timeout, passwords);
+                    }else {
+                        jedisPool = new JedisPool(poolConfig, host, port, timeout);
+                    }
                     // 存放不同redis数据库
                     redisPoolMap.put(dbs[i], new RedisCachePool(jedisPool, Integer.parseInt(numbers[i])));
                 }
