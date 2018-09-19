@@ -18,6 +18,10 @@ public class MvcConfiguration implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         InterceptorRegistration ir = registry.addInterceptor(limitRaterInterceptor);
+        //配置拦截器的路径
+        ir.addPathPatterns("/**");
+        // 配置不拦截的路径
+        ir.excludePathPatterns(ignoredUrlsProperties.getUrls());
     }
 
     //跨域访问配置
