@@ -3,6 +3,7 @@ package wang.jinggo.util;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * SnowFlake雪花算法ID生成
  * 项目中需要一个分布式的Id生成器，twitter的Snowflake中这个既简单又高效
  * 原作者 zzxadi https://github.com/zzxadi/Snowflake-IdWorker
  * @author wangyj
