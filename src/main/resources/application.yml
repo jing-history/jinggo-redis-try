@@ -6,9 +6,14 @@ spring:
     cache: false
     mode: LEGACYHTML5
 # 配置自动建表：updata:没有表新建，有表更新操作,控制台显示建表语句
-#  jpa:
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+#    # 自动生成表结构
+#    generate-ddl: true
 #    hibernate:
-#      ddl-auto: update
+#      ddl-auto: none
 #    show-sql: true
 # 不利用spring-data-redis整合	整合灵活度更大
 #  redis:
@@ -53,12 +58,39 @@ druid:
   filters: stat,wall,log4j,config
 # 合并多个DruidDataSource的监控数据
 #   useGlobalDataSourceStat: true
-  url: jdbc:mysql://192.168.1.222:3306/redis?useUnicode=true&characterEncoding=utf-8&useSSL=false
+  url: jdbc:mysql://192.168.1.222:3306/jinggo?useUnicode=true&characterEncoding=utf-8&useSSL=false
   username: hive
   #java -cp druid-1.0.16.jar com.alibaba.druid.filter.config.ConfigTools 你的密码(admin123) admin soonfor
   password: jinggo111
   # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
   connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+
+# Mybatis-plus
+mybatis-plus:
+  # 放在resource目录 classpath:/mapper/*Mapper.xml
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: wang.jinggo.domain,wang.jinggo.base
+  typeEnumsPackage: wang.jinggo.domain
+  global-config:
+    #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+    id-type: 2
+    #字段策略 0:"忽略判断",1:"非 NULL 判断",2:"非空判断"
+    field-strategy: 2
+    #驼峰下划线转换
+    db-column-underline: true
+    #刷新mapper 调试神器
+    refresh-mapper: true
+    #数据库大写下划线转换
+    #capital-mode: true
+    #逻辑删除配置（下面3个配置）
+    logic-delete-value: 0
+    logic-not-delete-value: 1
+    # SQL 解析缓存，开启后多租户 @SqlParser 注解生效
+    sql-parser-cache: true
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
 
 # HTTP Server
 server:

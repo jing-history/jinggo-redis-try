@@ -2,7 +2,9 @@ package wang.jinggo.util;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
@@ -13,6 +15,8 @@ import java.net.UnknownHostException;
  * @description
  * @create 2018-09-19 10:14
  **/
+@Slf4j
+@Component
 public class IpInfoUtil {
 
     @Value("${xboot.mob.appKey}")
