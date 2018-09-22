@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author wangyj
  * @description
  * @create 2018-09-21 20:06
- *
+ **/
 public class BasicThreadPool extends Thread implements ThreadPool {
 
     //初始化线程数量
@@ -24,13 +24,13 @@ public class BasicThreadPool extends Thread implements ThreadPool {
     private final int coreSize;
 
     //当前活跃的线程数量
-    private int acticeCount;
+    private int activeCount;
 
     //创建线程所需的工厂
-    //private final ThreadFactory threadFactory;
+    private final ThreadFactory threadFactory;
 
     //任务队列
-    //private final RunnableQueue runnableQueue;
+    private final RunnableQueue runnableQueue;
 
     //线程池是否已经被shutdown
     private volatile boolean isShutdown = false;
@@ -53,7 +53,7 @@ public class BasicThreadPool extends Thread implements ThreadPool {
 
     public BasicThreadPool(int initSize, int maxSize, int coreSize,
                            ThreadFactory threadFactory, int queueSize,
-                           DenyPolicy denyPolicy, int i, TimeUnit seconds,
+                           DenyPolicy denyPolicy,
                            long keepAliveTime, TimeUnit timeUnit) {
         this.initSize = initSize;
         this.maxSize = maxSize;
@@ -80,7 +80,7 @@ public class BasicThreadPool extends Thread implements ThreadPool {
         Thread thread = this.threadFactory.createThread(internalTask);
         ThreadTask threadTask = new ThreadTask(thread, internalTask);
         threadQueue.offer(threadTask);
-        this.acticeCount++;
+        this.activeCount++;
         thread.start();
     }
 
@@ -88,7 +88,7 @@ public class BasicThreadPool extends Thread implements ThreadPool {
         //从线程池中移除某个线程
         ThreadTask threadTask = threadQueue.remove();
         threadTask.internalTask.stop();
-        this.acticeCount--;
+        this.activeCount--;
     }
 
     @Override
@@ -100,38 +100,93 @@ public class BasicThreadPool extends Thread implements ThreadPool {
     }
 
     @Override
-    public void shutdown() {
+    public void run() {
+       //run 方法继承自Thread，主要用于维护线程数量，比如扩容，回收等工作
+        while (!isShutdown && !isInterrupted()){
+            try {
+                timeUnit.sleep(keeepAliveTime);
+            } catch (InterruptedException e) {
+                isShutdown = true;
+                break;
+            }
+            synchronized (this){
+                if(isShutdown)
+                    break;
+                //当前队列中有任务尚未处理，并且activeCount < coreSize 则继续扩容
+                if(runnableQueue.size() > 0 && activeCount < coreSize){
+                    for (int i = initSize; i < coreSize; i++) {
+                        newThread();
+                    }
+                    //continue 的目的在于不想让线程的扩容直接达到maxsize
+                    continue;
+                }
+                //当前队列中有任务尚未处理，并且activeCount < maxsize 则继续扩容
+                if(runnableQueue.size() > 0 && activeCount < maxSize){
+                    for (int i = coreSize; i < maxSize; i++) {
+                        newThread();
+                    }
+                }
+                //如果任务队列中没有任务，则需要回收，回收至coreSize 即可
+                if(runnableQueue.size() == 0 && activeCount > coreSize){
+                    for (int i = coreSize; i < activeCount; i++) {
+                        removeThread();
+                    }
+                }
+            }
+        }
+    }
 
+    @Override
+    public void shutdown() {
+        synchronized (this){
+            if(isShutdown) return;
+            isShutdown = true;
+            threadQueue.forEach(threadTask -> {
+                threadTask.internalTask.stop();
+                threadTask.thread.interrupt();
+            });
+            this.interrupt();
+        }
     }
 
     @Override
     public int getInitSize() {
-        return 0;
+        if(isShutdown)
+            throw new IllegalStateException("The thread pool is destroy");
+        return initSize;
     }
 
     @Override
     public int getMaxSize() {
-        return 0;
+        if(isShutdown)
+            throw new IllegalStateException("The thread pool is destroy");
+        return maxSize;
     }
 
     @Override
     public int getCoreSize() {
-        return 0;
+        if(isShutdown)
+            throw new IllegalStateException("The thread pool is destroy");
+        return coreSize;
     }
 
     @Override
     public int getQueueSize() {
-        return 0;
+        if(isShutdown)
+            throw new IllegalStateException("The thread pool is destroy");
+        return runnableQueue.size();
     }
 
     @Override
     public int getActiveCount() {
-        return 0;
+        synchronized (this){
+            return this.activeCount;
+        }
     }
 
     @Override
     public boolean isShutdown() {
-        return false;
+        return this.isShutdown;
     }
 
     //ThreadTask 只是InternalTask 和Thread 的一个组合
@@ -155,5 +210,5 @@ public class BasicThreadPool extends Thread implements ThreadPool {
             return new Thread(group,runnable, "thread-pool-" + COUNTER.getAndDecrement());
         }
     }
-}*/
+}
 
