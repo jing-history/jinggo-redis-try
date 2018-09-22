@@ -1,5 +1,6 @@
 package wang.jinggo.domain;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -9,6 +10,8 @@ import wang.jinggo.common.constant.CommonConstant;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import java.util.List;
 
 /**
  * @author wangyj
@@ -60,4 +63,19 @@ public class User extends XbootBaseEntity {
     @ApiModelProperty(value = "所属部门id")
     @Column(name = "department_id")
     private String departmentId;
+
+    @Transient
+    @TableField(exist=false)
+    @ApiModelProperty(value = "所属部门名称")
+    private String departmentTitle;
+
+    @Transient
+    @TableField(exist=false)
+    @ApiModelProperty(value = "用户拥有角色")
+    private List<Role> roles;
+
+    @Transient
+    @TableField(exist=false)
+    @ApiModelProperty(value = "用户拥有的权限")
+    private List<Permission> permissions;
 }

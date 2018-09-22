@@ -1,11 +1,17 @@
 package wang.jinggo.common.security;
 
+import cn.hutool.core.util.StrUtil;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import wang.jinggo.common.constant.CommonConstant;
+import wang.jinggo.domain.Permission;
+import wang.jinggo.domain.Role;
 import wang.jinggo.domain.User;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author wangyj
@@ -20,14 +26,42 @@ public class SecurityUserDetails extends User implements UserDetails {
             this.setUsername(user.getUsername());
             this.setPassword(user.getPassword());
             this.setStatus(user.getStatus());
-//            this.setRoles(user.getRoles());
-//            this.setPermissions(user.getPermissions());
+            this.setRoles(user.getRoles());
+            this.setPermissions(user.getPermissions());
         }
     }
 
+    /**
+     * 添加用户拥有的权限和角色
+     * @return
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+
+        List<GrantedAuthority> authorityList = new ArrayList<>();
+        List<Permission> permissions = this.getPermissions();
+        // 添加请求权限
+        if(permissions!=null&&permissions.size()>0){
+            for (Permission permission : permissions) {
+                if(CommonConstant.PERMISSION_OPERATION.equals(permission.getType())
+                        && StrUtil.isNotBlank(permission.getTitle())
+                        &&StrUtil.isNotBlank(permission.getPath())) {
+
+                    authorityList.add(new SimpleGrantedAuthority(permission.getTitle()));
+                }
+            }
+        }
+        // 添加角色
+        List<Role> roles = this.getRoles();
+        if(roles!=null&&roles.size()>0){
+            // lambda表达式
+            roles.forEach(item -> {
+                if(StrUtil.isNotBlank(item.getName())){
+                    authorityList.add(new SimpleGrantedAuthority(item.getName()));
+                }
+            });
+        }
+        return authorityList;
     }
 
     /**
