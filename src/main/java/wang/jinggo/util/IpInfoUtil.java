@@ -1,10 +1,13 @@
 package wang.jinggo.util;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import wang.jinggo.common.vo.IpInfo;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
@@ -75,5 +78,20 @@ public class IpInfoUtil {
             return result;
         }
         return null;
+    }
+
+    public void getUrl(HttpServletRequest request){
+        try {
+            IpInfo info = new IpInfo();
+            info.setUrl(request.getRequestURL().toString());
+            String result = HttpRequest.post("https://api.bmob.cn/1/classes/url")
+                    .header("X-Bmob-Application-Id", "efdc665141af06cd68f808fc5a7f805b")
+                    .header("X-Bmob-REST-API-Key", "9a2f73e42ff2a415f6cc2b384e864a67")
+                    .header("Content-Type", "application/json")
+                    .body(new Gson().toJson(info, IpInfo.class))
+                    .execute().body();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
