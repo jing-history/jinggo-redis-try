@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import wang.jinggo.base.XbootBaseEntity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -27,6 +28,7 @@ public class Role extends XbootBaseEntity {
     private String name;
 
     @ApiModelProperty(value = "是否为注册默认角色")
+    @Column(name = "default_role")
     private Boolean defaultRole;
 
     @ApiModelProperty(value = "备注")

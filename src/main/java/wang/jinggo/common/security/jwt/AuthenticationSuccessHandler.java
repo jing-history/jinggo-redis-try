@@ -58,7 +58,8 @@ public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticatio
         for(GrantedAuthority g : list){
             authorities.add(g.getAuthority());
         }
-        ipInfoUtil.getUrl(request);
+        //todo nothing use
+     //   ipInfoUtil.getUrl(request);
         //登陆成功生成JWT
         String token = Jwts.builder()
                 //主题 放入用户名
