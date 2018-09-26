@@ -19,6 +19,7 @@ const RouterConfig = {
 
 export const router = new VueRouter(RouterConfig);
 
+//to 即将要进入的目标路由对象 from 当前导航即将离开的路由对象 next 调用该方法后，才能进入下个钩子
 router.beforeEach((to, from, next) => {
     iView.LoadingBar.start();
     Util.title(to.meta.title);

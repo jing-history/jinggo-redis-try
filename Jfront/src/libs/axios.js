@@ -1,4 +1,6 @@
 /**
+ * Promise 是一种异常方案，有3 种状态：
+ * 1.Pending （进行中） Resolved（已完成） Rejected（以失败）
  * Created by gz12 on 2018-09-26.
  */
 import axios from 'axios';

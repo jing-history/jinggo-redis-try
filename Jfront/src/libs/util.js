@@ -57,5 +57,5 @@ util.initRouter = function (vm) {
 
 };
 
-
+export default util;
 

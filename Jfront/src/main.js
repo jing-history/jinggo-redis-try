@@ -5,8 +5,9 @@ import Vue from 'vue'
 import iView from 'iview'
 import iviewArea from 'iview-area'
 import App from './App'
+import { router } from './router/index'
 import store from './store'
-import '@/locale'
+// import '@/locale'
 import 'iview/dist/styles/iview.css'
 import VueI18n from 'vue-i18n';
 import Icon from 'vue-awesome/components/Icon'
@@ -18,7 +19,7 @@ import 'vue-awesome/icons/brands/github'
 import { getRequest, postRequest, putRequest, deleteRequest, uploadFileRequest } from '@/libs/axios'
 import { setStore, getStore, removeStore } from '@/libs/storage'
 import util from '@/libs/util';
-import hasPermission from '@/libs/hasPermission';
+// import hasPermission from '@/libs/hasPermission';
 import VueVirtualScroller from 'vue-virtual-scroller'
 
 Vue.config.productionTip = false;
@@ -27,7 +28,7 @@ Vue.use(iView);
 Vue.use(iviewArea);
 Vue.component('icon', Icon);
 Vue.use(VueVirtualScroller);
-Vue.use(hasPermission);
+// Vue.use(hasPermission);
 // 挂载全局使用的方法
 Vue.prototype.getRequest = getRequest;
 Vue.prototype.postRequest = postRequest;
@@ -51,8 +52,12 @@ new Vue({
         util.initRouter(this);
         this.currentPageName = this.$route.name;
         // 显示打开的页面的列表
-        this.$store.commit('setOpenedList');
-        this.$store.commit('initCachepage');
+        /**
+         Vuex 的使用，来子store index.js，要想改变store 中的数据
+            唯一的途径就是提交mutations
+        */
+     //   this.$store.commit('setOpenedList');
+     //   this.$store.commit('initCachepage');
     }
 });
 
