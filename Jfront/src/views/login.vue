@@ -85,6 +85,10 @@
 
 <script>
     import Cookies from "js-cookie";
+    import {
+        login,
+        userInfo
+    } from "@/api/index";
     import util from "@/libs/util.js";
     export default {
         data(){
@@ -110,7 +114,7 @@
                 maxLength: 6,
                 errorCode: "",
                 form: {
-                    username: "test或test2 可注册",
+                    username: "test",
                     password: "123456",
                     mobile: "捐赠获取完整版功能",
                     code: ""
@@ -258,7 +262,7 @@
             }
         },
         mounted() {
-            this.showMessage();
+         //   this.showMessage();
         //    this.showAccount();
         //    this.relatedLogin();
         }

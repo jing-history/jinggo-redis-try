@@ -125,6 +125,13 @@ xboot:
 ignored:
   urls:
     - /xboot/permission/getMenuList/**
+    - /xboot/user/regist
+    - /xboot/common/**
+    - /druid/**
+    - /swagger-ui.html
+    - /swagger-resources/**
+    - /swagger/**
+    - /**/v2/api-docs
     - /**/*.js
     - /**/*.css
     - /**/*.png
