@@ -79,7 +79,7 @@
                 Copyright © 2018-Present <a href="http://exrick.cn" target="_blank" style="margin:0 5px;">Exrick</a> 版权所有
             </Row>
         </Row>
-       <!-- </Col>-->
+        </Col>
     </Row>
 </template>
 
@@ -87,7 +87,51 @@
     import Cookies from "js-cookie";
     import util from "@/libs/util.js";
     export default {
-
+        data(){
+            const validateMobile = (rule, value, callback) => {
+                var reg = /^[1][3,4,5,7,8][0-9]{9}$/;
+                if (!reg.test(value)) {
+                    callback(new Error("手机号格式错误"));
+                } else {
+                    callback();
+                }
+            };
+            return {
+                form: {
+                    username: "test或test2 可注册",
+                    password: "123456",
+                    mobile: "捐赠获取完整版功能",
+                    code: ""
+                },
+                rules: {
+                    username: [
+                        {
+                            required: true,
+                            message: "账号不能为空",
+                            trigger: "blur"
+                        }
+                    ],
+                    password: [
+                        {
+                            required: true,
+                            message: "密码不能为空",
+                            trigger: "blur"
+                        }
+                    ],
+                    mobile: [
+                        {
+                            required: true,
+                            message: "手机号不能为空",
+                            trigger: "blur"
+                        },
+                        {
+                            validator: validateMobile,
+                            trigger: "blur"
+                        }
+                    ]
+                }
+            }
+        }
     };
 </script>
 
