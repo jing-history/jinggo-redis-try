@@ -14,6 +14,9 @@ const app = {
     mutations: {
         setCurrentPageName(state, name) {
             state.currentPageName = name;
+        },
+        setAvatarPath(state, path) {
+            localStorage.avatorImgPath = path;
         }
     }
 };

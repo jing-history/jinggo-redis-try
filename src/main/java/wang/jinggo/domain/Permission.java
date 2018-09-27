@@ -48,16 +48,18 @@ public class Permission extends XbootBaseEntity {
     private String icon;
 
     @ApiModelProperty(value = "按钮权限类型")
+    @Column(name = "button_type")
     private String buttonType;
 
     @ApiModelProperty(value = "父id")
+    @Column(name = "parent_id")
     private String parentId;
 
     @ApiModelProperty(value = "说明备注")
     private String description;
 
     @ApiModelProperty(value = "排序值")
-    @Column(precision = 10, scale = 2)
+    @Column(name = "sort_order", precision = 10, scale = 2)
     private BigDecimal sortOrder;
 
     @ApiModelProperty(value = "是否启用 0启用 -1禁用")
@@ -74,6 +76,7 @@ public class Permission extends XbootBaseEntity {
     @Transient
     @TableField(exist=false)
     @ApiModelProperty(value = "页面拥有的权限类型")
+    @Column(name = "perm_types")
     private List<String> permTypes;
 
     @Transient
@@ -90,4 +93,5 @@ public class Permission extends XbootBaseEntity {
     @TableField(exist=false)
     @ApiModelProperty(value = "是否选中 前端所需")
     private Boolean selected = false;
+
 }
