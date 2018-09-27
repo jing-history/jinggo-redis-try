@@ -97,6 +97,18 @@
                 }
             };
             return {
+                socialLogining: false,
+                error: false,
+                errorMsg: "",
+                tabName: "username",
+                saveLogin: true,
+                loading: false,
+                sending: false,
+                sended: false,
+                count: 60,
+                countButton: "60 s",
+                maxLength: 6,
+                errorCode: "",
                 form: {
                     username: "test或test2 可注册",
                     password: "123456",
@@ -130,7 +142,125 @@
                         }
                     ]
                 }
+            };
+        },
+        methods: {
+            showErrorMsg(msg) {
+                this.error = true;
+                this.errorMsg = msg;
+            },
+            sendVerify() {
+                this.$refs.mobileLoginForm.validate(valid => {
+                    if (valid) {
+                        this.showErrorMsg("请捐赠获取完整版")
+                    }
+                });
+            },
+            countDown() {
+                let that = this;
+                if (this.count === 0) {
+                    this.sended = false;
+                    this.count = 60;
+                    return;
+                } else {
+                    this.countButton = this.count + " s";
+                    this.count--;
+                }
+                setTimeout(function() {
+                    that.countDown();
+                }, 1000);
+            },
+            submitLogin() {
+                if(this.tabName === "username"){
+                    this.$refs.usernameLoginForm.validate (valid => {
+                        if(valid){
+                            this.loading = true;
+                            login({
+                                username: this.form.username,
+                                password: this.form.password,
+                                saveLogin: this.saveLogin
+                            }).then(res => {
+                                if(res.success === true){
+                                    this.setStore("accessToken", res.result);
+                                    // 获取用户信息
+                                    userInfo().then(res => {
+                                        if (res.success === true) {
+                                            // 避免超过大小限制
+                                            delete res.result.permissions;
+                                            if(this.saveLogin) {
+                                                // 保存7天
+                                                Cookies.set("userInfo", JSON.stringify(res.result), {
+                                                    expires: 7
+                                                });
+                                            }else {
+                                                Cookies.set("userInfo", JSON.stringify(res.result));
+                                            }
+                                            this.setStore("userInfo", res.result);
+                                            this.$store.commit("setAvatarPath", res.result.avatar);
+                                            // 加载菜单
+                                            util.initRouter(this);
+                                            this.$router.push({
+                                                name: "home_index"
+                                            });
+                                        }else {
+                                            this.loading = false;
+                                        }
+                                    });
+                                }else {
+                                    this.loading = false;
+                                }
+                            })
+                        }
+                    });
+                }else if (this.tabName === "mobile") {
+                    this.$refs.mobileLoginForm.validate(valid => {
+                        if (valid) {
+                            if (this.form.code === "") {
+                                this.errorCode = "验证码不能为空";
+                                return;
+                            } else {
+                                this.errorCode = "";
+                            }
+                            this.showErrorMsg("请捐赠获取完整版")
+                        }
+                    });
+                }
+            },
+            toGithubLogin() {
+                this.showErrorMsg("请捐赠获取完整版")
+            },
+            toQQLogin() {
+                this.showErrorMsg("请捐赠获取完整版")
+            },
+            toWeiboLogin() {
+                this.showErrorMsg("请捐赠获取完整版")
+            },
+            toWeixinLogin() {
+                this.$Message.error("开通微信登录官方收费300/年");
+            },
+            relatedLogin() {
+
+            },
+            showAccount() {
+                this.$Notice.info({
+                    title: "体验账号密码",
+                    desc:
+                        "账号1：test 密码：123456 <br>账号2：test2 密码：123456 已开放注册！",
+                    duration: 10
+                });
+            },
+            showMessage() {
+                this.$Notice.success({
+                    title: "已升级至iView3.0",
+                    desc: "完善多项功能，包括部门管理、定时任务、前端模版等 修复已知BUG",
+                    duration: 5
+                });
             }
+        },
+        mounted() {
+            this.showMessage();
+            this.showAccount();
+            this.relatedLogin();
         }
     };
 </script>
