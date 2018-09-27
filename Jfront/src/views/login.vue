@@ -259,8 +259,8 @@
         },
         mounted() {
             this.showMessage();
-            this.showAccount();
-            this.relatedLogin();
+        //    this.showAccount();
+        //    this.relatedLogin();
         }
     };
 </script>
