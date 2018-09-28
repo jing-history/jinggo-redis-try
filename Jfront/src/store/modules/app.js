@@ -59,7 +59,10 @@ const app = {
         },
         setAvatarPath(state, path) {
             localStorage.avatorImgPath = path;
-        }
+        },
+        setOpenedList(state) {
+            state.pageOpenedList = localStorage.pageOpenedList ? JSON.parse(localStorage.pageOpenedList) : [otherRouter.children[0]];
+        },
     }
 };
 

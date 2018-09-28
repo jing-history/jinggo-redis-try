@@ -86,7 +86,7 @@
             </Row>
             </Col>
             <Col :md="24" :lg="16">
-            <Row :gutter="5">
+            <!--<Row :gutter="5">
                 <Col :xs="24" :sm="12" :md="6" :style="{marginBottom: '10px'}">
                 <infor-card id-name="user_created_count" :end-val="count.createUser" iconType="md-person-add" color="#2d8cf0" intro-text="今日新增用户"></infor-card>
                 </Col>
@@ -99,7 +99,7 @@
                 <Col :xs="24" :sm="12" :md="6" :style="{marginBottom: '10px'}">
                 <infor-card id-name="transfer_count" :end-val="count.transfer" iconType="md-shuffle" color="#f25e43" intro-text="今日服务调用量"></infor-card>
                 </Col>
-            </Row>
+            </Row>-->
             <Row>
                 <Col :md="24" :lg="12" style="padding: 0 2px 10px 0;">
                 <Card>
@@ -157,7 +157,7 @@
                     每日来访量统计
                 </p>
                 <div class="data-source-row">
-                    <visite-volume></visite-volume>
+                    <!--<visite-volume></visite-volume>-->
                 </div>
             </Card>
             </Col>
@@ -194,7 +194,15 @@
 </template>
 
 <script>
+    import { ipInfo } from "@/api/index";
+    import cityData from "./map-data/get-city-value.js";
+//    import homeMap from "./components/map.vue";
+    import Cookies from "js-cookie";
+    import "gitment/style/default.css";
+    import Gitment from "gitment";
+
     export default {
+        name: "home",
         data() {
             return {
                 showVideo: false,
@@ -210,6 +218,36 @@
                 weather: "",
                 username: ""
             };
+        },
+        computed: {
+            avatarPath() {
+                return localStorage.avatorImgPath;
+            }
+        },
+        methods: {
+            init() {
+                let userInfo = JSON.parse(Cookies.get("userInfo"));
+                this.username = userInfo.username;
+                ipInfo().then(res => {
+                    if (res.success === true) {
+                        let ipInfo = JSON.parse(res.result);
+                        if (ipInfo.retCode === "200") {
+                            let info = ipInfo.result[0];
+                            let weather =
+                                info.weather +
+                                " " +
+                                info.temperature +
+                                " 污染指数: " +
+                                info.pollutionIndex;
+                            this.city = info.city;
+                            this.weather = weather;
+                        } else {
+                            this.city = "未知";
+                            this.weather = "未知";
+                        }
+                    }
+                });
+            }
         }
     }
 </script>
