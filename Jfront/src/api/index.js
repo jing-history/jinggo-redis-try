@@ -9,3 +9,8 @@ export const login = (params) => {
 export const userInfo = (params) => {
     return getRequest('/user/info', params)
 }
+
+// IP天气信息
+export const ipInfo = (params) => {
+    return getRequest('/common/ip/info', params)
+}

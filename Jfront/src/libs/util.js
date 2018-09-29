@@ -55,6 +55,54 @@ util.initRouter = function (vm) {
     }
     let userId = JSON.parse(Cookies.get("userInfo")).id;
 
+    //加载菜单
+    axios.get("/xboot/permission/getMenuList/" + userId).then(res => {
+        let menuData = res.result;
+        if (menuData === null || menuData === "" || menuData === undefined) {
+            return;
+        }
+        util.initRouterNode(constRoutes, menuData);
+        util.initRouterNode(otherRoutes, otherRouter);
+        // 添加主界面路由
+        vm.$store.commit('updateAppRouter', constRoutes.filter(item => item.children.length > 0));
+        // 添加全局路由
+        vm.$store.commit('updateDefaultRouter', otherRoutes);
+        // 刷新界面菜单
+        vm.$store.commit('updateMenulist', constRoutes.filter(item => item.children.length > 0));
+
+        let tagsList = [];
+        vm.$store.state.app.routers.map((item) => {
+            if (item.children.length <= 1) {
+                tagsList.push(item.children[0]);
+            } else {
+                tagsList.push(...item.children);
+            }
+        });
+        vm.$store.commit('setTagsList', tagsList);
+    });
+};
+
+// 生成路由节点
+util.initRouterNode = function (routers, data) {
+    for (var item of data) {
+        let menu = Object.assign({}, item);
+        // menu.component = import(`@/views/${menu.component}.vue`);
+        menu.component = lazyLoading(menu.component);
+
+        if (item.children && item.children.length > 0) {
+            menu.children = [];
+            util.initRouterNode(menu.children, item.children);
+        }
+
+        let meta = {};
+        // 给页面添加权限、标题、第三方网页链接
+        meta.permTypes = menu.permTypes ? menu.permTypes : null;
+        meta.title = menu.title ? menu.title + " - X-Boot前后端分离开发平台 By: Exrick" : null;
+        meta.url = menu.url ? menu.url : null;
+        menu.meta = meta;
+
+        routers.push(menu);
+    }
 };
 
 util.openNewPage = function (vm, name, argu, query) {
@@ -79,6 +127,141 @@ util.toDefaultPage = function (routers, name, route, next) {
     if (notHandle) {
         next();
     }
+};
+
+util.handleTitle = function (vm, item) {
+    if (typeof item.title === 'object') {
+        return vm.$t(item.title.i18n);
+    } else {
+        return item.title;
+    }
+};
+
+util.getRouterObjByName = function (routers, name) {
+    if (!name || !routers || !routers.length) {
+        return null;
+    }
+    // debugger;
+    let routerObj = null;
+    for (let item of routers) {
+        if (item.name === name) {
+            return item;
+        }
+        routerObj = util.getRouterObjByName(item.children, name);
+        if (routerObj) {
+            return routerObj;
+        }
+    }
+    return null;
+};
+
+util.setCurrentPath = function (vm, name) {
+    let title = '';
+    let isOtherRouter = false;
+    vm.$store.state.app.routers.forEach(item => {
+        if (item.children.length === 1) {
+            if (item.children[0].name === name) {
+                title = util.handleTitle(vm, item);
+                if (item.name === 'otherRouter') {
+                    isOtherRouter = true;
+                }
+            }
+        } else {
+            item.children.forEach(child => {
+                if (child.name === name) {
+                    title = util.handleTitle(vm, child);
+                    if (item.name === 'otherRouter') {
+                        isOtherRouter = true;
+                    }
+                }
+            });
+        }
+    });
+    let currentPathArr = [];
+    if (name === 'home_index') {
+        currentPathArr = [
+            {
+                title: util.handleTitle(vm, util.getRouterObjByName(vm.$store.state.app.routers, 'home_index')),
+                path: '',
+                name: 'home_index'
+            }
+        ];
+    } else if ((name.indexOf('_index') >= 0 || isOtherRouter) && name !== 'home_index') {
+        currentPathArr = [
+            {
+                title: util.handleTitle(vm, util.getRouterObjByName(vm.$store.state.app.routers, 'home_index')),
+                path: '/home',
+                name: 'home_index'
+            },
+            {
+                title: title,
+                path: '',
+                name: name
+            }
+        ];
+    } else {
+        let currentPathObj = vm.$store.state.app.routers.filter(item => {
+            if (item.children.length <= 1) {
+                return item.children[0].name === name;
+            } else {
+                let i = 0;
+                let childArr = item.children;
+                let len = childArr.length;
+                while (i < len) {
+                    if (childArr[i].name === name) {
+                        return true;
+                    }
+                    i++;
+                }
+                return false;
+            }
+        })[0];
+        if (currentPathObj.children.length <= 1 && currentPathObj.name === 'home') {
+            currentPathArr = [
+                {
+                    title: '首页',
+                    path: '',
+                    name: 'home_index'
+                }
+            ];
+        } else if (currentPathObj.children.length <= 1 && currentPathObj.name !== 'home') {
+            currentPathArr = [
+                {
+                    title: '首页',
+                    path: '/home',
+                    name: 'home_index'
+                },
+                {
+                    title: currentPathObj.title,
+                    path: '',
+                    name: name
+                }
+            ];
+        } else {
+            let childObj = currentPathObj.children.filter((child) => {
+                return child.name === name;
+            })[0];
+            currentPathArr = [
+                {
+                    title: '首页',
+                    path: '/home',
+                    name: 'home_index'
+                },
+                {
+                    title: currentPathObj.title,
+                    path: '',
+                    name: currentPathObj.name
+                },
+                {
+                    title: childObj.title,
+                    path: currentPathObj.path + '/' + childObj.path,
+                    name: name
+                }
+            ];
+        }
+    }
+    vm.$store.commit('setCurrentPath', currentPathArr);
+    return currentPathArr;
 };
 
 export default util;
