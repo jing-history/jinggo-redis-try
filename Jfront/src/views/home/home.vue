@@ -5,7 +5,7 @@
 
 <template>
     <div class="home-main">
-        <Row :gutter="10">
+        <!--<Row :gutter="10">
             <Col :md="24" :lg="8">
             <Row class-name="home-page-row1" :gutter="10">
                 <Col :md="12" :lg="24" :style="{marginBottom: '10px'}">
@@ -86,7 +86,7 @@
             </Row>
             </Col>
             <Col :md="24" :lg="16">
-            <!--<Row :gutter="5">
+            <Row :gutter="5">
                 <Col :xs="24" :sm="12" :md="6" :style="{marginBottom: '10px'}">
                 <infor-card id-name="user_created_count" :end-val="count.createUser" iconType="md-person-add" color="#2d8cf0" intro-text="今日新增用户"></infor-card>
                 </Col>
@@ -99,7 +99,7 @@
                 <Col :xs="24" :sm="12" :md="6" :style="{marginBottom: '10px'}">
                 <infor-card id-name="transfer_count" :end-val="count.transfer" iconType="md-shuffle" color="#f25e43" intro-text="今日服务调用量"></infor-card>
                 </Col>
-            </Row>-->
+            </Row>
             <Row>
                 <Col :md="24" :lg="12" style="padding: 0 2px 10px 0;">
                 <Card>
@@ -157,7 +157,7 @@
                     每日来访量统计
                 </p>
                 <div class="data-source-row">
-                    <!--<visite-volume></visite-volume>-->
+                    &lt;!&ndash;<visite-volume></visite-volume>&ndash;&gt;
                 </div>
             </Card>
             </Col>
@@ -180,7 +180,7 @@
             </Card>
             </col>
         </Row>
-        <!--<Modal
+        <Modal
                 v-model="showVideo"
                 title="作者亲自制作XBoot炫酷文字快闪宣传片"
                 :styles="{top: '30px'}"

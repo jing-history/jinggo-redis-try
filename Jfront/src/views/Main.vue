@@ -185,7 +185,7 @@
                 }
             },
             handleSubmenuChange(val) {
-                // console.log(val)
+                 console.log(val)
             },
             beforePush(name) {
                 // console.log(name)

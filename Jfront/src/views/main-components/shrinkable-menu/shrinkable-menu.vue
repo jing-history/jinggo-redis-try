@@ -79,5 +79,5 @@
                 this.$emit('on-change', name);
             }
         }
-    }
+    };
 </script>

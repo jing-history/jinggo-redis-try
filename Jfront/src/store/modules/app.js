@@ -63,6 +63,22 @@ const app = {
         setOpenedList(state) {
             state.pageOpenedList = localStorage.pageOpenedList ? JSON.parse(localStorage.pageOpenedList) : [otherRouter.children[0]];
         },
+        setCurrentPath(state, pathArr) {
+            state.currentPath = pathArr;
+        },
+        addOpenSubmenu(state, name) {
+            let hasThisName = false;
+            let isEmpty = false;
+            if (name.length === 0) {
+                isEmpty = true;
+            }
+            if (state.openedSubmenuArr.indexOf(name) > -1) {
+                hasThisName = true;
+            }
+            if (!hasThisName && !isEmpty) {
+                state.openedSubmenuArr.push(name);
+            }
+        }
     }
 };
 
