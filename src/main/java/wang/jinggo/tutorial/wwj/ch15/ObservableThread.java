@@ -1,6 +1,4 @@
-package wang.jinggo.tutorial.wwj.ch16;
-
-import org.springframework.security.core.parameters.P;
+package wang.jinggo.tutorial.wwj.ch15;
 
 /**
  * @author wangyj
