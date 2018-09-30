@@ -14,3 +14,8 @@ export const userInfo = (params) => {
 export const ipInfo = (params) => {
     return getRequest('/common/ip/info', params)
 }
+
+// 获取一级部门
+export const initDepartment = (params) => {
+    return getRequest('/department/getByParentId/0', params)
+}
