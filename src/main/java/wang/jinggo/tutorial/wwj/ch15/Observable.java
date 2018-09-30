@@ -1,4 +1,4 @@
-package wang.jinggo.tutorial.wwj.ch16;
+package wang.jinggo.tutorial.wwj.ch15;
 
 /**
  * 观察者 模式
