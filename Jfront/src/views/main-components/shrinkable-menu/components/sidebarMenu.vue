@@ -75,7 +75,6 @@
         watch: {
             // 监听路由变化
             $route(to, from) {
-                debugger
                 this.singleOpenName = [this.$route.matched[0].name];
             }
         },

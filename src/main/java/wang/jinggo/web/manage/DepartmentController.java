@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import wang.jinggo.common.constant.CommonConstant;
 import wang.jinggo.common.vo.Result;
 import wang.jinggo.domain.Department;
 import wang.jinggo.service.DepartmentService;
+import wang.jinggo.util.ResultUtil;
 
 import java.util.List;
 
@@ -37,6 +39,17 @@ public class DepartmentController {
     @ApiOperation(value = "通过id获取")
     @Cacheable(key = "#parentId")
     public Result<List<Department>> getByParentId(@PathVariable String parentId){
-        return null;
+
+        List<Department> list = departmentService.findByParentIdOrderBySortOrder(parentId);
+        // lambda表达式
+        list.forEach(item -> {
+            if(!CommonConstant.PARENT_ID.equals(item.getParentId())){
+                Department parent = departmentService.get(item.getParentId());
+                item.setParentTitle(parent.getTitle());
+            }else{
+                item.setParentTitle("一级部门");
+            }
+        });
+        return new ResultUtil<List<Department>>().setData(list);
     }
 }

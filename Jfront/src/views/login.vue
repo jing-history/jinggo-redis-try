@@ -200,6 +200,13 @@
                                                 Cookies.set("userInfo", JSON.stringify(res.result));
                                             }
                                             this.setStore("userInfo", res.result);
+                                            let roleArr ="";
+                                            res.result.roles.forEach(function(e) {
+                                                roleArr += e.name;
+                                            });
+
+                                            // add by jing 添加本地role 内容
+                                            this.setStore("roles", '["' + roleArr + '"]');
                                             this.$store.commit("setAvatarPath", res.result.avatar);
                                             // 加载菜单
                                             util.initRouter(this);

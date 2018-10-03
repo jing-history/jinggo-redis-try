@@ -1,9 +1,11 @@
 package wang.jinggo.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wang.jinggo.base.XbootBaseDao;
+import wang.jinggo.dao.DepartmentDao;
 import wang.jinggo.domain.Department;
 import wang.jinggo.service.DepartmentService;
 
@@ -19,15 +21,18 @@ import java.util.List;
 @Transactional
 public class DepartmentServiceImpl implements DepartmentService {
 
+    @Autowired
+    private DepartmentDao departmentDao;
+
     @Override
-    public XbootBaseDao<Department, String> getRepository() {
-        return null;
+    public DepartmentDao getRepository() {
+        return departmentDao;
     }
 
     @Override
     public List<Department> findByParentIdOrderBySortOrder(String parentId) {
-        return null;
-    }
 
+        return departmentDao.findByParentIdOrderBySortOrder(parentId);
+    }
 
 }

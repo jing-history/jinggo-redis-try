@@ -53,16 +53,130 @@
                             </Form-item>
                         </Form>
                     </Row>
+                    <Row class="operation">
+                        <Button @click="add" type="primary" icon="md-add">添加用户</Button>
+                        <Button @click="delAll" icon="md-trash">批量删除</Button>
+                        <!--<Dropdown @on-click="handleDropdown">
+                            <Button>
+                                更多操作
+                                <Icon type="md-arrow-dropdown" />
+                            </Button>
+                            <DropdownMenu slot="list">
+                                <DropdownItem name="refresh">刷新</DropdownItem>
+                                <DropdownItem name="exportData">导出所选数据</DropdownItem>
+                                <DropdownItem name="exportAll">导出全部数据</DropdownItem>
+                                <DropdownItem name="importData">导入数据(付费)</DropdownItem>
+                            </DropdownMenu>
+                        </Dropdown>
+                        <circleLoading v-if="operationLoading"/>-->
+                    </Row>
+                    <Row>
+                        <Alert show-icon>
+                            已选择 <span class="select-count">{{selectCount}}</span> 项
+                            <a class="select-clear" @click="clearSelectAll">清空</a>
+                        </Alert>
+                    </Row>
+                    <Row>
+                        <Table :loading="loading" border :columns="columns" :data="data" sortable="custom" @on-sort-change="changeSort" @on-selection-change="showSelect" ref="table"></Table>
+                        <!--<Table :columns="exportColumns" :data="exportData" ref="exportTable" style="display:none"></Table>-->
+                    </Row>
                 </Card>
             </Col>
         </Row>
+        <Modal :title="modalTitle" v-model="userModalVisible" :mask-closable='false' :width="500" :styles="{top: '30px'}">
+            <Form ref="userForm" :model="userForm" :label-width="70" :rules="userFormValidate">
+                <FormItem label="用户名" prop="username">
+                    <Input v-model="userForm.username" autocomplete="off"/>
+                </FormItem>
+                <FormItem label="密码" prop="password" v-if="modalType===0" :error="errorPass">
+                    <Input type="password" v-model="userForm.password" autocomplete="off"/>
+                </FormItem>
+                <FormItem label="邮箱" prop="email">
+                    <Input v-model="userForm.email"/>
+                </FormItem>
+                <FormItem label="手机号" prop="mobile">
+                    <Input v-model="userForm.mobile"/>
+                </FormItem>
+                <FormItem label="性别" prop="sex">
+                    <RadioGroup v-model="userForm.sex">
+                        <Radio :label="1">男</Radio>
+                        <Radio :label="0">女</Radio>
+                    </RadioGroup>
+                </FormItem>
+                <Form-item label="头像" prop="avatar">
+                    <Poptip trigger="hover" title="图片预览" placement="right" width="350">
+                        <Input v-model="userForm.avatar" placeholder="可直接填入网络图片链接" clearable/>
+                        <div slot="content">
+                            <img :src="userForm.avatar" alt="无效的图片链接" style="width: 100%;margin: 0 auto;display: block;">
+                            <a @click="viewPic()" style="margin-top:5px;text-align:right;display:block">查看原图</a>
+                        </div>
+                    </Poptip>
+                    <Upload action="/xboot/upload/file"
+                            :headers="accessToken"
+                            :on-success="handleSuccess"
+                            :on-error="handleError"
+                            :format="['jpg','jpeg','png','gif']"
+                            :max-size="5120"
+                            :on-format-error="handleFormatError"
+                            :on-exceeded-size="handleMaxSize"
+                            :before-upload="beforeUpload"
+                            ref="up"
+                            class="upload">
+                        <Button icon="ios-cloud-upload-outline">上传图片</Button>
+                    </Upload>
+                </Form-item>
+                <Form-item label="所属部门" prop="departmentTitle">
+                    <Poptip trigger="click" placement="right" title="选择部门" width="250">
+                        <div style="display:flex;">
+                            <Input v-model="userForm.departmentTitle" readonly style="margin-right:10px;"/>
+                            <Button icon="md-trash" @click="clearSelectDep">清空已选</Button>
+                        </div>
+                       <!-- <div slot="content">
+                            <Tree :data="dataDep" :load-data="loadDataTree" @on-select-change="selectTree"></Tree>
+                            <Spin size="large" fix v-if="loading"></Spin>
+                        </div>-->
+                    </Poptip>
+                </Form-item>
+                <FormItem label="用户类型" prop="type">
+                    <Select v-model="userForm.type" placeholder="请选择">
+                        <Option :value="0">普通用户</Option>
+                        <Option :value="1">管理员</Option>
+                    </Select>
+                </FormItem>
+               <!-- <FormItem label="角色分配" prop="roles">
+                    <Select v-model="userForm.roles" multiple>
+                        <Option v-for="item in roleList" :value="item.id" :key="item.id" :label="item.name">
+                            &lt;!&ndash; <div style="display:flex;flex-direction:column"> &ndash;&gt;
+                            <span style="margin-right:10px;">{{ item.name }}</span>
+                            <span style="color:#ccc;">{{ item.description }}</span>
+                            &lt;!&ndash; </div> &ndash;&gt;
+                        </Option>
+                    </Select>
+                </FormItem>-->
+            </Form>
+            <div slot="footer">
+                <Button type="text" @click="cancelUser">取消</Button>
+                <Button type="primary" :loading="submitLoading" @click="submitUser">提交</Button>
+            </div>
+        </Modal>
+        <Modal title="图片预览" v-model="viewImage" :styles="{top: '30px'}">
+            <img :src="userForm.avatar" alt="无效的图片链接" style="width: 100%;margin: 0 auto;display: block;">
+        </Modal>
+        <!--<Modal
+                v-model="modalExportAll"
+                title="确认导出"
+                :loading="loadingExport"
+                @on-ok="exportAll">
+            <p>您确认要导出全部 {{total}} 条数据？</p>
+        </Modal>-->
     </div>
 </template>
 
 <script>
     import {
         initDepartment,
-        loadDepartment
+        loadDepartment,
+        getUserListData
     } from "@/api/index";
 
     export default {
@@ -85,8 +199,27 @@
             };
 
             return {
+                accessToken: {},
+                loading: true,
                 department: [],
                 selectDep: [],
+                dataDep: [],
+                dropDownContent: "展开",
+                dropDownIcon: "ios-arrow-down",
+                drop: false,
+                selectCount: 0,
+                modalType: 0,
+                userModalVisible: false,
+                modalTitle: "",
+                errorPass: "",
+                submitLoading: false,
+                modalExportAll: false,
+                loadingExport: true,
+                viewImage: false,
+                data: [],
+                exportData: [],
+                total: 0,
+                selectList: [],
                 searchForm: {
                     username: "",
                     departmentId: "",
@@ -102,7 +235,525 @@
                     startDate: "",
                     endDate: ""
                 },
+                userForm: {
+                    sex: 1,
+                    type: 0,
+                    avatar: "https://s1.ax1x.com/2018/05/19/CcdVQP.png",
+                    roles: [],
+                    departmentId: "",
+                    departmentTitle: ""
+                },
+                userFormValidate: {
+                    username: [
+                        { required: true, message: "账号不能为空", trigger: "blur" }
+                    ],
+                    mobile: [
+                        { required: true, message: "手机号不能为空", trigger: "blur" },
+                        { validator: validateMobile, trigger: "blur" }
+                    ],
+                    email: [
+                        { required: true, message: "请输入邮箱地址" },
+                        { type: "email", message: "邮箱格式不正确" }
+                    ]
+                },
+                columns: [
+                    {
+                        type: "selection",
+                        width: 60,
+                        align: "center",
+                        fixed: "left"
+                    },
+                    {
+                        type: "index",
+                        width: 60,
+                        align: "center",
+                        fixed: "left"
+                    },
+                    {
+                        title: "用户名",
+                        key: "username",
+                        width: 145,
+                        sortable: true,
+                        fixed: "left"
+                    },
+                    {
+                        title: "头像",
+                        key: "avatar",
+                        width: 80,
+                        align: "center",
+                        render: (h, params) => {
+                            return h("Avatar", {
+                                props: {
+                                    src: params.row.avatar
+                                }
+                            });
+                        }
+                    },
+                    {
+                        title: "所属部门",
+                        key: "departmentTitle",
+                        width: 120
+                    },
+                    {
+                        title: "手机",
+                        key: "mobile",
+                        width: 115,
+                        sortable: true,
+                        render: (h, params) => {
+                            let aa = this.getStore("roles");
+                            if (this.getStore("roles").includes("ROLE_ADMIN")) {
+                                return h("span", params.row.mobile);
+                            } else{
+                                return h("span", "您无权查看该数据");
+                            }
+                        }
+                    },
+                    {
+                        title: "邮箱",
+                        key: "email",
+                        width: 180,
+                        sortable: true
+                    },
+                    {
+                        title: "性别",
+                        key: "sex",
+                        width: 70,
+                        align: "center",
+                        render: (h, params) => {
+                            let re = "";
+                            if (params.row.sex === 1) {
+                                re = "男";
+                            } else if (params.row.sex === 0) {
+                                re = "女";
+                            }
+                            return h("div", re);
+                        }
+                    },
+                    {
+                        title: "用户类型",
+                        key: "type",
+                        align: "center",
+                        width: 100,
+                        render: (h, params) => {
+                            let re = "";
+                            if (params.row.type === 1) {
+                                re = "管理员";
+                            } else if (params.row.type === 0) {
+                                re = "普通用户";
+                            }
+                            return h("div", re);
+                        }
+                    },
+                    {
+                        title: "状态",
+                        key: "status",
+                        align: "center",
+                        width: 140,
+                        render: (h, params) => {
+                            let re = "";
+                            if (params.row.status === 0) {
+                                return h("div", [
+                                    h(
+                                        "Tag",
+                                        {
+                                            props: {
+                                                type: "dot",
+                                                color: "success"
+                                            }
+                                        },
+                                        "正常启用"
+                                    )
+                                ]);
+                            } else if (params.row.status === -1) {
+                                return h("div", [
+                                    h(
+                                        "Tag",
+                                        {
+                                            props: {
+                                                type: "dot",
+                                                color: "error"
+                                            }
+                                        },
+                                        "禁用"
+                                    )
+                                ]);
+                            }
+                        },
+                        filters: [
+                            {
+                                label: "正常启用",
+                                value: 0
+                            },
+                            {
+                                label: "禁用",
+                                value: -1
+                            }
+                        ],
+                        filterMultiple: false,
+                        filterMethod(value, row) {
+                            if (value === 0) {
+                                return row.status === 0;
+                            } else if (value === -1) {
+                                return row.status === -1;
+                            }
+                        }
+                    },
+                    {
+                        title: "创建时间",
+                        key: "createTime",
+                        sortable: true,
+                        sortType: "desc",
+                        width: 150
+                    },
+                    {
+                        title: "操作",
+                        key: "action",
+                        width: 200,
+                        align: "center",
+                        fixed: "right",
+                        render: (h, params) => {
+                            if (params.row.status === 0) {
+                                return h("div", [
+                                    h(
+                                        "Button",
+                                        {
+                                            props: {
+                                                type: "primary",
+                                                size: "small"
+                                            },
+                                            style: {
+                                                marginRight: "5px"
+                                            },
+                                            on: {
+                                                click: () => {
+                                                    this.edit(params.row);
+                                                }
+                                            }
+                                        },
+                                        "编辑"
+                                    ),
+                                    h(
+                                        "Button",
+                                        {
+                                            props: {
+                                                size: "small"
+                                            },
+                                            style: {
+                                                marginRight: "5px"
+                                            },
+                                            on: {
+                                                click: () => {
+                                                    this.disable(params.row);
+                                                }
+                                            }
+                                        },
+                                        "禁用"
+                                    ),
+                                    h(
+                                        "Button",
+                                        {
+                                            props: {
+                                                type: "error",
+                                                size: "small"
+                                            },
+                                            on: {
+                                                click: () => {
+                                                    this.remove(params.row);
+                                                }
+                                            }
+                                        },
+                                        "删除"
+                                    )
+                                ]);
+                            } else {
+                                return h("div", [
+                                    h(
+                                        "Button",
+                                        {
+                                            props: {
+                                                type: "primary",
+                                                size: "small"
+                                            },
+                                            style: {
+                                                marginRight: "5px"
+                                            },
+                                            on: {
+                                                click: () => {
+                                                    this.edit(params.row);
+                                                }
+                                            }
+                                        },
+                                        "编辑"
+                                    ),
+                                    h(
+                                        "Button",
+                                        {
+                                            props: {
+                                                type: "success",
+                                                size: "small"
+                                            },
+                                            style: {
+                                                marginRight: "5px"
+                                            },
+                                            on: {
+                                                click: () => {
+                                                    this.enable(params.row);
+                                                }
+                                            }
+                                        },
+                                        "启用"
+                                    ),
+                                    h(
+                                        "Button",
+                                        {
+                                            props: {
+                                                type: "error",
+                                                size: "small"
+                                            },
+                                            on: {
+                                                click: () => {
+                                                    this.remove(params.row);
+                                                }
+                                            }
+                                        },
+                                        "删除"
+                                    )
+                                ]);
+                            }
+                        }
+                    }
+                ],
+                selectDate: null
             }
+        },
+        methods: {
+           init(){
+               this.accessToken = {
+                   accessToken: this.getStore("accessToken")
+               };
+               this.initDepartmentData();
+               this.getUserList();
+               this.initDepartmentTreeData();
+           },
+            initDepartmentData() {
+                initDepartment().then(res => {
+                    if (res.success === true) {
+                        res.result.forEach(function(e) {
+                            if (e.isParent) {
+                                e.value = e.id;
+                                e.label = e.title;
+                                e.loading = false;
+                                e.children = [];
+                            } else {
+                                e.value = e.id;
+                                e.label = e.title;
+                            }
+                            if (e.status === -1) {
+                                e.label = "[已禁用] " + e.label;
+                                e.disabled = true;
+                            }
+                        });
+                        this.department = res.result;
+                    }
+                });
+            },
+            getUserList() {
+                // 多条件搜索用户列表
+                this.loading = true;
+                getUserListData(this.searchForm).then(res => {
+                    this.loading = false;
+                    if (res.success === true) {
+                        this.data = res.result.content;
+                        this.total = res.result.totalElements;
+                    }
+                });
+            },
+            initDepartmentTreeData() {
+                initDepartment().then(res => {
+                    if (res.success === true) {
+                        res.result.forEach(function(e) {
+                            if (e.isParent) {
+                                e.loading = false;
+                                e.children = [];
+                            }
+                            if (e.status === -1) {
+                                e.title = "[已禁用] " + e.title;
+                                e.disabled = true;
+                            }
+                        });
+                        this.dataDep = res.result;
+                    }
+                });
+            },
+            handleChangeDep(value, selectedData) {
+                // 获取最后一个值
+                if (value && value.length > 0) {
+                    this.searchForm.departmentId = value[value.length - 1];
+                } else {
+                    this.searchForm.departmentId = "";
+                }
+            },
+            loadData(item, callback) {
+                item.loading = true;
+                loadDepartment(item.value).then(res => {
+                    item.loading = false;
+                    if (res.success === true) {
+                        res.result.forEach(function(e) {
+                            if (e.isParent) {
+                                e.value = e.id;
+                                e.label = e.title;
+                                e.loading = false;
+                                e.children = [];
+                            } else {
+                                e.value = e.id;
+                                e.label = e.title;
+                            }
+                            if (e.status === -1) {
+                                e.label = "[已禁用] " + e.label;
+                                e.disabled = true;
+                            }
+                        });
+                        item.children = res.result;
+                        callback();
+                    }
+                });
+            },
+            selectDateRange(v) {
+                if (v) {
+                    this.searchForm.startDate = v[0];
+                    this.searchForm.endDate = v[1];
+                }
+            },
+            handleSearch() {
+                this.searchForm.pageNumber = 1;
+                this.searchForm.pageSize = 10;
+                this.getUserList();
+            },
+            handleReset() {
+                this.$refs.searchForm.resetFields();
+                this.searchForm.pageNumber = 1;
+                this.searchForm.pageSize = 10;
+                this.selectDate = null;
+                this.searchForm.startDate = "";
+                this.searchForm.endDate = "";
+                this.selectDep = [];
+                this.searchForm.departmentId = "";
+                // 重新加载数据
+               // this.getUserList();
+            },
+            dropDown() {
+                if (this.drop) {
+                    this.dropDownContent = "展开";
+                    this.dropDownIcon = "ios-arrow-down";
+                } else {
+                    this.dropDownContent = "收起";
+                    this.dropDownIcon = "ios-arrow-up";
+                }
+                this.drop = !this.drop;
+            },
+            add() {
+                this.modalType = 0;
+                this.modalTitle = "添加用户";
+                //todo 这个方法没有找到
+             //   this.$refs.userForm.resetFields();
+                this.userModalVisible = true;
+            },
+            delAll() {
+                if (this.selectCount <= 0) {
+                    this.$Message.warning("您还未选择要删除的数据");
+                    return;
+                }
+                /*this.$Modal.confirm({
+                    title: "确认删除",
+                    content: "您确认要删除所选的 " + this.selectCount + " 条数据?",
+                    onOk: () => {
+                        let ids = "";
+                        this.selectList.forEach(function(e) {
+                            ids += e.id + ",";
+                        });
+                        ids = ids.substring(0, ids.length - 1);
+                        this.operationLoading = true;
+                        deleteUser(ids).then(res => {
+                            this.operationLoading = false;
+                            if (res.success === true) {
+                                this.$Message.success("删除成功");
+                                this.clearSelectAll();
+                                this.getUserList();
+                            }
+                        });
+                    }
+                });*/
+            },
+            viewPic() {
+                this.viewImage = true;
+            },
+            handleSuccess(res, file) {
+                if (res.success === true) {
+                    file.url = res.result;
+                    this.userForm.avatar = res.result;
+                } else {
+                    this.$Message.error(res.message);
+                }
+            },
+            handleError(error, file, fileList) {
+                this.$Message.error(error.toString());
+            },
+            handleFormatError(file) {
+                this.$Notice.warning({
+                    title: "不支持的文件格式",
+                    desc:
+                    "所选文件‘ " +
+                    file.name +
+                    " ’格式不正确, 请选择 .jpg .jpeg .png .gif格式文件"
+                });
+            },
+            handleMaxSize(file) {
+                this.$Notice.warning({
+                    title: "文件大小过大",
+                    desc: "所选文件‘ " + file.name + " ’大小过大, 不得超过 5M."
+                });
+            },
+            beforeUpload() {
+                if (!this.$route.meta.permTypes.includes("upload")) {
+                    this.$Message.error("此处您没有上传权限(为演示功能，该按钮未配置隐藏)");
+                    return false;
+                }
+                return true;
+            },
+            clearSelectDep() {
+                this.userForm.departmentId = "";
+                this.userForm.departmentTitle = "";
+            },
+            cancelUser() {
+                this.userModalVisible = false;
+            },
+            submitUser() {
+
+            },
+            exportAll() {
+
+            },
+            clearSelectAll() {
+                //todo 这个怎么使用
+            //    this.$refs.table.selectAll(false);
+            },
+            changeSort(e) {
+                this.searchForm.sort = e.key;
+                this.searchForm.order = e.order;
+                if (e.order === "normal") {
+                    this.searchForm.order = "";
+                }
+                this.getUserList();
+            },
+            showSelect(e) {
+                this.exportData = e;
+                this.selectList = e;
+                this.selectCount = e.length;
+            }
+        },
+        mounted() {
+            this.init();
+        //    this.getRoleList();
         }
     }
 </script>

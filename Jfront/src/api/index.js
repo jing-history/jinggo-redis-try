@@ -19,3 +19,12 @@ export const ipInfo = (params) => {
 export const initDepartment = (params) => {
     return getRequest('/department/getByParentId/0', params)
 }
+// 加载部门子级数据
+export const loadDepartment = (id, params) => {
+    return getRequest(`/department/getByParentId/${id}`, params)
+}
+
+// 获取用户数据 多条件
+export const getUserListData = (params) => {
+    return getRequest('/user/getByCondition', params)
+}
