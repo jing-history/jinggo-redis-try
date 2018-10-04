@@ -120,6 +120,10 @@ xboot:
   # mob api配置 mob官网注册申请即可
   mob:
     appKey: 你的appKey
+  # ES
+  elasticsearch:
+    nodeClient: 127.0.0.1:9200
+  # 日志记录方式 true使用Elasticsearch记录 false记录至数据库中
 
 # 忽略鉴权url
 ignored:

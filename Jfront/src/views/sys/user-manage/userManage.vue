@@ -300,7 +300,7 @@
                     {
                         title: "手机",
                         key: "mobile",
-                        width: 115,
+                        width: 150,
                         sortable: true,
                         render: (h, params) => {
                             let aa = this.getStore("roles");
