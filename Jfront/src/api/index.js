@@ -28,3 +28,8 @@ export const loadDepartment = (id, params) => {
 export const getUserListData = (params) => {
     return getRequest('/user/getByCondition', params)
 }
+
+// 获取全部角色数据
+export const getAllRoleList = (params) => {
+    return getRequest('/role/getAllList', params)
+}

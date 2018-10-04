@@ -143,16 +143,16 @@
                         <Option :value="1">管理员</Option>
                     </Select>
                 </FormItem>
-               <!-- <FormItem label="角色分配" prop="roles">
+                <FormItem label="角色分配" prop="roles">
                     <Select v-model="userForm.roles" multiple>
                         <Option v-for="item in roleList" :value="item.id" :key="item.id" :label="item.name">
-                            &lt;!&ndash; <div style="display:flex;flex-direction:column"> &ndash;&gt;
+                            <!-- <div style="display:flex;flex-direction:column"> -->
                             <span style="margin-right:10px;">{{ item.name }}</span>
                             <span style="color:#ccc;">{{ item.description }}</span>
-                            &lt;!&ndash; </div> &ndash;&gt;
+                            <!-- </div> -->
                         </Option>
                     </Select>
-                </FormItem>-->
+                </FormItem>
             </Form>
             <div slot="footer">
                 <Button type="text" @click="cancelUser">取消</Button>
@@ -176,7 +176,8 @@
     import {
         initDepartment,
         loadDepartment,
-        getUserListData
+        getUserListData,
+        getAllRoleList
     } from "@/api/index";
 
     export default {
@@ -220,6 +221,8 @@
                 exportData: [],
                 total: 0,
                 selectList: [],
+                userRoles: [],
+                roleList: [],
                 searchForm: {
                     username: "",
                     departmentId: "",
@@ -749,11 +752,18 @@
                 this.exportData = e;
                 this.selectList = e;
                 this.selectCount = e.length;
+            },
+            getRoleList() {
+                getAllRoleList().then(res => {
+                    if (res.success === true) {
+                        this.roleList = res.result;
+                    }
+                });
             }
         },
         mounted() {
             this.init();
-        //    this.getRoleList();
+            this.getRoleList();
         }
     }
 </script>
