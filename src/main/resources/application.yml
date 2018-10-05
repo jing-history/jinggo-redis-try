@@ -134,6 +134,7 @@ ignored:
     - /xboot/permission/getMenuList/**
     - /xboot/user/regist
     - /xboot/common/**
+    - /xboot/es/**
     - /druid/**
     - /swagger-ui.html
     - /swagger-resources/**
