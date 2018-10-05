@@ -7,20 +7,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.data.domain.Page;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import wang.jinggo.common.vo.PageVo;
 import wang.jinggo.common.vo.Result;
 import wang.jinggo.domain.Department;
 import wang.jinggo.domain.Role;
 import wang.jinggo.domain.User;
+import wang.jinggo.domain.UserRole;
 import wang.jinggo.pojo.SearchVo;
 import wang.jinggo.service.DepartmentService;
+import wang.jinggo.service.UserRoleService;
 import wang.jinggo.service.UserService;
 import wang.jinggo.service.mybatis.IUserRoleService;
 import wang.jinggo.util.PageUtil;
@@ -28,6 +29,7 @@ import wang.jinggo.util.ResultUtil;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -52,8 +54,14 @@ public class UserController {
     @Autowired
     private IUserRoleService iUserRoleService;
 
+    @Autowired
+    private UserRoleService userRoleService;
+
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     @RequestMapping(value = "/info",method = RequestMethod.GET)
     @ApiOperation(value = "获取当前登录用户接口")
@@ -86,5 +94,38 @@ public class UserController {
             u.setPassword(null);
         }
         return new ResultUtil<Page<User>>().setData(page);
+    }
+
+    @RequestMapping(value = "/admin/add",method = RequestMethod.POST)
+    @ApiOperation(value = "添加用户")
+    public Result<Object> regist(@ModelAttribute User u,
+                                 @RequestParam(required = false) String[] roles){
+
+        if(StrUtil.isBlank(u.getUsername()) || StrUtil.isBlank(u.getPassword())){
+            return new ResultUtil<Object>().setErrorMsg("缺少必需表单字段");
+        }
+        if(userService.findByUsername(u.getUsername())!=null){
+            return new ResultUtil<Object>().setErrorMsg("该用户名已被注册");
+        }
+        //删除缓存
+        redisTemplate.delete("user::"+u.getUsername());
+
+        String encryptPass = new BCryptPasswordEncoder().encode(u.getPassword());
+        u.setPassword(encryptPass);
+        u.setCreateTime(new Date());
+        User user=userService.save(u);
+        if(user==null){
+            return new ResultUtil<Object>().setErrorMsg("添加失败");
+        }
+        if(roles!=null&&roles.length>0){
+            //添加角色
+            for(String roleId : roles){
+                UserRole ur = new UserRole();
+                ur.setUserId(u.getId());
+                ur.setRoleId(roleId);
+                userRoleService.save(ur);
+            }
+        }
+        return new ResultUtil<Object>().setData(user);
     }
 }

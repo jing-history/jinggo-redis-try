@@ -32,6 +32,9 @@ spring:
       max-idle: 10
       # 连接池中的最小空闲连接
       min-idle: 0
+  data:
+    elasticsearch:
+      cluster-nodes: 192.168.5.111:9300
 
 druid:
   name: redis-db
@@ -122,7 +125,7 @@ xboot:
     appKey: 你的appKey
   # ES
   elasticsearch:
-    nodeClient: 127.0.0.1:9200
+    nodeClient: 192.168.5.111:9200
   # 日志记录方式 true使用Elasticsearch记录 false记录至数据库中
 
 # 忽略鉴权url

@@ -33,3 +33,12 @@ export const getUserListData = (params) => {
 export const getAllRoleList = (params) => {
     return getRequest('/role/getAllList', params)
 }
+
+// 添加用户
+export const addUser = (params) => {
+    return postRequest('/user/admin/add', params)
+}
+// 编辑用户
+export const editUser = (params) => {
+    return postRequest('/user/admin/edit', params)
+}

@@ -131,10 +131,10 @@
                             <Input v-model="userForm.departmentTitle" readonly style="margin-right:10px;"/>
                             <Button icon="md-trash" @click="clearSelectDep">清空已选</Button>
                         </div>
-                       <!-- <div slot="content">
+                        <div slot="content">
                             <Tree :data="dataDep" :load-data="loadDataTree" @on-select-change="selectTree"></Tree>
                             <Spin size="large" fix v-if="loading"></Spin>
-                        </div>-->
+                        </div>
                     </Poptip>
                 </Form-item>
                 <FormItem label="用户类型" prop="type">
@@ -177,7 +177,9 @@
         initDepartment,
         loadDepartment,
         getUserListData,
-        getAllRoleList
+        getAllRoleList,
+        addUser,
+        editUser
     } from "@/api/index";
 
     export default {
@@ -560,6 +562,33 @@
                     }
                 });
             },
+            loadDataTree(item, callback) {
+                loadDepartment(item.id).then(res => {
+                    if (res.success === true) {
+                        res.result.forEach(function(e) {
+                            if (e.isParent) {
+                                e.loading = false;
+                                e.children = [];
+                            }
+                        });
+                        callback(res.result);
+                    }
+                });
+            },
+            selectTree(v) {
+                if (v.length > 0) {
+                    // 转换null为""
+                    for (let attr in v[0]) {
+                        if (v[0][attr] === null) {
+                            v[0][attr] = "";
+                        }
+                    }
+                    let str = JSON.stringify(v[0]);
+                    let data = JSON.parse(str);
+                    this.userForm.departmentId = data.id;
+                    this.userForm.departmentTitle = data.title;
+                }
+            },
             getUserList() {
                 // 多条件搜索用户列表
                 this.loading = true;
@@ -731,7 +760,46 @@
                 this.userModalVisible = false;
             },
             submitUser() {
+                this.$refs.userForm.validate(valid => {
+                    if(valid){
+                        if (this.modalType === 0) {
+                            // 添加用户 避免编辑后传入id
+                            delete this.userForm.id;
+                            delete this.userForm.status;
 
+                            if (
+                                this.userForm.password == "" ||
+                                this.userForm.password == undefined
+                            ) {
+                                this.errorPass = "密码不能为空";
+                                return;
+                            }
+                            if (this.userForm.password.length < 6) {
+                                this.errorPass = "密码长度不得少于6位";
+                                return;
+                            }
+                            this.submitLoading = true;
+                            addUser(this.userForm).then(res => {
+                                this.submitLoading = false;
+                                if (res.success === true) {
+                                    this.$Message.success("操作成功");
+                                    this.getUserList();
+                                    this.userModalVisible = false;
+                                }
+                            });
+                        } else {
+                            // 编辑
+                            editUser(this.userForm).then(res => {
+                                this.submitLoading = false;
+                                if (res.success === true) {
+                                    this.$Message.success("操作成功");
+                                    this.getUserList();
+                                    this.userModalVisible = false;
+                                }
+                            });
+                        }
+                    }
+                });
             },
             exportAll() {
 
