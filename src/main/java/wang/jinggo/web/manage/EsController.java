@@ -90,7 +90,7 @@ public class EsController {
      * @return
      * @throws IOException
      */
-    @RequestMapping(value = "/book/{id}",method = RequestMethod.GET)
+    @RequestMapping(value = "/book/rest/{id}",method = RequestMethod.GET)
     @ApiOperation(value = "es book例子rest 方式根据id获取内容")
     public Result<Book> restBookById(@PathVariable String id) throws IOException {
         Book book = null;
@@ -133,7 +133,7 @@ public class EsController {
         int num = 5;
         PageRequest request = PageRequest.of(page, num);
         //全文搜索翻页
-        Page<Book> pages = bookDao.getByMessage(key, request);
+        Page<Book> pages = null;//bookDao.getByMessage(key, request);
         long total = pages.getTotalElements();
         long totalPage = pages.getTotalPages();
         List<Book> list = pages.getContent();

@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -127,5 +128,20 @@ public class UserController {
             }
         }
         return new ResultUtil<Object>().setData(user);
+    }
+
+    @RequestMapping(value = "/edit",method = RequestMethod.POST)
+    @ApiOperation(value = "修改用户自己资料",notes = "用户名密码不会修改 需要通过id获取原用户信息 需要username更新缓存")
+    @CacheEvict(key = "#u.username")
+    public Result<Object> editOwn(@ModelAttribute User u){
+
+        User old = userService.get(u.getId());
+        u.setUsername(old.getUsername());
+        u.setPassword(old.getPassword());
+        User user=userService.update(u);
+        if(user==null){
+            return new ResultUtil<Object>().setErrorMsg("修改失败");
+        }
+        return new ResultUtil<Object>().setSuccessMsg("修改成功");
     }
 }
