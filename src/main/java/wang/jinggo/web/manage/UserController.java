@@ -3,6 +3,7 @@ package wang.jinggo.web.manage;
 import cn.hutool.core.util.StrUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -14,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import wang.jinggo.common.constant.CommonConstant;
 import wang.jinggo.common.vo.PageVo;
 import wang.jinggo.common.vo.Result;
 import wang.jinggo.domain.Department;
@@ -97,6 +99,15 @@ public class UserController {
         return new ResultUtil<Page<User>>().setData(page);
     }
 
+    @RequestMapping(value = "/getAll",method = RequestMethod.GET)
+    @ResponseBody
+    @ApiOperation(value = "获取全部数据")
+    public Result<List<User>> getAll(){
+
+        List<User> list = userService.getAll();
+        return new ResultUtil<List<User>>().setData(list);
+    }
+
     @RequestMapping(value = "/admin/add",method = RequestMethod.POST)
     @ApiOperation(value = "添加用户")
     public Result<Object> regist(@ModelAttribute User u,
@@ -128,6 +139,91 @@ public class UserController {
             }
         }
         return new ResultUtil<Object>().setData(user);
+    }
+
+    /**
+     * @param u
+     * @param roles
+     * @return
+     */
+    @RequestMapping(value = "/admin/edit",method = RequestMethod.POST)
+    @ApiOperation(value = "修改资料",notes = "需要通过id获取原用户信息 需要username更新缓存")
+    @CacheEvict(key = "#u.username")
+    public Result<Object> edit(@ModelAttribute User u,
+                               @RequestParam(required = false) String[] roles){
+        User old = userService.get(u.getId());
+        //所修改了用户名
+        if(!old.getUsername().equals(u.getUsername())){
+            //若修改用户名删除原用户名缓存
+            redisTemplate.delete("user::"+old.getUsername());
+            //判断新用户名是否存在
+            if(userService.findByUsername(u.getUsername())!=null){
+                return new ResultUtil<Object>().setErrorMsg("该用户名已被存在");
+            }
+            //删除缓存
+            redisTemplate.delete("user::"+u.getUsername());
+        }
+        u.setPassword(old.getPassword());
+        User user=userService.update(u);
+        if(user==null){
+            return new ResultUtil<Object>().setErrorMsg("修改失败");
+        }
+
+        //删除该用户角色
+        userRoleService.deleteByUserId(u.getId());
+        if(roles!=null&&roles.length>0){
+            //新角色
+            for(String roleId : roles){
+                UserRole ur = new UserRole();
+                ur.setRoleId(roleId);
+                ur.setUserId(u.getId());
+                userRoleService.save(ur);
+            }
+        }
+        //手动删除缓存
+        redisTemplate.delete("userRole::"+u.getId());
+        return new ResultUtil<Object>().setSuccessMsg("修改成功");
+    }
+
+    @RequestMapping(value = "/admin/enable/{userId}",method = RequestMethod.POST)
+    @ApiOperation(value = "后台启用用户")
+    public Result<Object> enable(@ApiParam("用户唯一id标识") @PathVariable String userId){
+        User user=userService.get(userId);
+        if(user==null){
+            return new ResultUtil<Object>().setErrorMsg("通过userId获取用户失败");
+        }
+        user.setStatus(CommonConstant.USER_STATUS_NORMAL);
+        userService.update(user);
+        //手动更新缓存
+        redisTemplate.delete("user::"+user.getUsername());
+        return new ResultUtil<Object>().setData(null);
+    }
+
+    @RequestMapping(value = "/delByIds/{ids}",method = RequestMethod.DELETE)
+    @ApiOperation(value = "批量通过ids删除")
+    public Result<Object> delAllByIds(@PathVariable String[] ids){
+
+        for(String id:ids){
+            userService.delete(id);
+            //删除关联角色
+            userRoleService.deleteByUserId(id);
+        }
+        return new ResultUtil<Object>().setSuccessMsg("批量通过id删除数据成功");
+    }
+
+    @RequestMapping(value = "/admin/disable/{userId}",method = RequestMethod.POST)
+    @ApiOperation(value = "后台禁用用户")
+    public Result<Object> disable(@ApiParam("用户唯一id标识") @PathVariable String userId){
+
+        User user=userService.get(userId);
+        if(user==null){
+            return new ResultUtil<Object>().setErrorMsg("通过userId获取用户失败");
+        }
+        user.setStatus(CommonConstant.USER_STATUS_LOCK);
+        userService.update(user);
+        //手动更新缓存
+        redisTemplate.delete("user::"+user.getUsername());
+        return new ResultUtil<Object>().setData(null);
     }
 
     @RequestMapping(value = "/edit",method = RequestMethod.POST)

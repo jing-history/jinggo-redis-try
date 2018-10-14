@@ -56,7 +56,7 @@
                     <Row class="operation">
                         <Button @click="add" type="primary" icon="md-add">添加用户</Button>
                         <Button @click="delAll" icon="md-trash">批量删除</Button>
-                        <!--<Dropdown @on-click="handleDropdown">
+                        <Dropdown @on-click="handleDropdown">
                             <Button>
                                 更多操作
                                 <Icon type="md-arrow-dropdown" />
@@ -68,7 +68,7 @@
                                 <DropdownItem name="importData">导入数据(付费)</DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
-                        <circleLoading v-if="operationLoading"/>-->
+                        <circleLoading v-if="operationLoading"/>
                     </Row>
                     <Row>
                         <Alert show-icon>
@@ -78,7 +78,7 @@
                     </Row>
                     <Row>
                         <Table :loading="loading" border :columns="columns" :data="data" sortable="custom" @on-sort-change="changeSort" @on-selection-change="showSelect" ref="table"></Table>
-                        <!--<Table :columns="exportColumns" :data="exportData" ref="exportTable" style="display:none"></Table>-->
+                        <Table :columns="exportColumns" :data="exportData" ref="exportTable" style="display:none"></Table>
                     </Row>
                 </Card>
             </Col>
@@ -162,13 +162,13 @@
         <Modal title="图片预览" v-model="viewImage" :styles="{top: '30px'}">
             <img :src="userForm.avatar" alt="无效的图片链接" style="width: 100%;margin: 0 auto;display: block;">
         </Modal>
-        <!--<Modal
+        <Modal
                 v-model="modalExportAll"
                 title="确认导出"
                 :loading="loadingExport"
                 @on-ok="exportAll">
             <p>您确认要导出全部 {{total}} 条数据？</p>
-        </Modal>-->
+        </Modal>
     </div>
 </template>
 
@@ -179,7 +179,11 @@
         getUserListData,
         getAllRoleList,
         addUser,
-        editUser
+        editUser,
+        enableUser,
+        disableUser,
+        deleteUser,
+        getAllUserData
     } from "@/api/index";
 
     export default {
@@ -204,6 +208,7 @@
             return {
                 accessToken: {},
                 loading: true,
+                operationLoading: false,
                 department: [],
                 selectDep: [],
                 dataDep: [],
@@ -528,6 +533,59 @@
                         }
                     }
                 ],
+                exportColumns: [
+                    {
+                        title: "用户名",
+                        key: "username"
+                    },
+                    {
+                        title: "头像",
+                        key: "avatar"
+                    },
+                    {
+                        title: "所属部门ID",
+                        key: "departmentId"
+                    },
+                    {
+                        title: "所属部门",
+                        key: "departmentTitle"
+                    },
+                    {
+                        title: "手机",
+                        key: "mobile"
+                    },
+                    {
+                        title: "邮箱",
+                        key: "email"
+                    },
+                    {
+                        title: "性别",
+                        key: "sex"
+                    },
+                    {
+                        title: "用户类型",
+                        key: "type"
+                    },
+                    {
+                        title: "状态",
+                        key: "status"
+                    },
+                    {
+                        title: "删除标志",
+                        key: "delFlag"
+                    },
+                    {
+                        title: "创建时间",
+                        key: "createTime"
+                    },
+                    {
+                        title: "更新时间",
+                        key: "updateTime"
+                    }
+                ],
+                data: [],
+                exportData: [],
+                total: 0,
                 selectDate: null
             }
         },
@@ -695,7 +753,7 @@
                     this.$Message.warning("您还未选择要删除的数据");
                     return;
                 }
-                /*this.$Modal.confirm({
+                this.$Modal.confirm({
                     title: "确认删除",
                     content: "您确认要删除所选的 " + this.selectCount + " 条数据?",
                     onOk: () => {
@@ -714,7 +772,7 @@
                             }
                         });
                     }
-                });*/
+                });
             },
             viewPic() {
                 this.viewImage = true;
@@ -802,11 +860,20 @@
                 });
             },
             exportAll() {
-
+                getAllUserData().then(res => {
+                    this.modalExportAll = false;
+                    if (res.success) {
+                        this.exportData = res.result;
+                        setTimeout(() => {
+                            this.$refs.exportTable.exportCsv({
+                                filename: "用户全部数据"
+                            });
+                        }, 1000);
+                    }
+                });
             },
             clearSelectAll() {
-                //todo 这个怎么使用
-            //    this.$refs.table.selectAll(false);
+                this.$refs.table.selectAll(false);
             },
             changeSort(e) {
                 this.searchForm.sort = e.key;
@@ -827,6 +894,100 @@
                         this.roleList = res.result;
                     }
                 });
+            },
+            edit(v){
+                this.modalType = 1;
+                this.modalTitle = "编辑用户";
+                this.$refs.userForm.resetFields();
+                // 转换null为""
+                for (let attr in v) {
+                    if (v[attr] === null) {
+                        v[attr] = "";
+                    }
+                }
+                let str = JSON.stringify(v);
+                let userInfo = JSON.parse(str);
+                this.userForm = userInfo;
+                let selectRolesId = [];
+                this.userForm.roles.forEach(function(e) {
+                    selectRolesId.push(e.id);
+                });
+                this.userForm.roles = selectRolesId;
+                this.userModalVisible = true;
+            },
+            enable(v){
+                this.$Modal.confirm({
+                    title: "确认启用",
+                    content: "您确认要启用用户 " + v.username + " ?",
+                    onOk: () => {
+                        this.operationLoading = true;
+                        enableUser(v.id).then(res => {
+                            this.operationLoading = false;
+                            if (res.success === true) {
+                                this.$Message.success("操作成功");
+                                this.getUserList();
+                            }
+                        });
+                    }
+                });
+            },
+            disable(v) {
+                this.$Modal.confirm({
+                    title: "确认禁用",
+                    content: "您确认要禁用用户 " + v.username + " ?",
+                    onOk: () => {
+                        this.operationLoading = true;
+                        disableUser(v.id).then(res => {
+                            this.operationLoading = false;
+                            if (res.success === true) {
+                                this.$Message.success("操作成功");
+                                this.getUserList();
+                            }
+                        });
+                    }
+                });
+            },
+            remove(v) {
+                this.$Modal.confirm({
+                    title: "确认删除",
+                    content: "您确认要删除用户 " + v.username + " ?",
+                    onOk: () => {
+                        this.operationLoading = true;
+                        deleteUser(v.id).then(res => {
+                            this.operationLoading = false;
+                            if (res.success === true) {
+                                this.$Message.success("删除成功");
+                                this.getUserList();
+                            }
+                        });
+                    }
+                });
+            },
+            handleDropdown(name) {
+                if (name === "refresh") {
+                    this.getUserList();
+                } else if (name === "exportData") {
+                    if (this.selectCount <= 0) {
+                        this.$Message.warning("您还未选择要导出的数据");
+                        return;
+                    }
+                    this.$Modal.confirm({
+                        title: "确认导出",
+                        content: "您确认要导出所选 " + this.selectCount + " 条数据?",
+                        onOk: () => {
+                            this.$refs.exportTable.exportCsv({
+                                filename: "用户数据"
+                            });
+                        }
+                    });
+                }else if (name === "exportAll") {
+                    this.modalExportAll = true;
+                } else if (name === "importData") {
+                    this.$Modal.info({
+                        title: "请获取完整版",
+                        content: "支付链接: http://xpay.exrick.cn/pay?xboot"
+                    });
+                }
             }
         },
         mounted() {

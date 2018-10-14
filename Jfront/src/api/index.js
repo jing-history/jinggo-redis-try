@@ -42,3 +42,22 @@ export const addUser = (params) => {
 export const editUser = (params) => {
     return postRequest('/user/admin/edit', params)
 }
+// 启用用户
+export const enableUser = (id, params) => {
+    return postRequest(`/user/admin/enable/${id}`, params)
+}
+
+// 禁用用户
+export const disableUser = (id, params) => {
+    return postRequest(`/user/admin/disable/${id}`, params)
+}
+
+// 删除用户
+export const deleteUser = (ids, params) => {
+    return deleteRequest(`/user/delByIds/${ids}`, params)
+}
+
+// 获取全部用户数据
+export const getAllUserData = (params) => {
+    return getRequest('/user/getAll', params)
+}
