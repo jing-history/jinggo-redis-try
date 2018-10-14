@@ -15,15 +15,6 @@ export const ipInfo = (params) => {
     return getRequest('/common/ip/info', params)
 }
 
-// 获取一级部门
-export const initDepartment = (params) => {
-    return getRequest('/department/getByParentId/0', params)
-}
-// 加载部门子级数据
-export const loadDepartment = (id, params) => {
-    return getRequest(`/department/getByParentId/${id}`, params)
-}
-
 // 获取用户数据 多条件
 export const getUserListData = (params) => {
     return getRequest('/user/getByCondition', params)
@@ -60,4 +51,17 @@ export const deleteUser = (ids, params) => {
 // 获取全部用户数据
 export const getAllUserData = (params) => {
     return getRequest('/user/getAll', params)
+}
+
+// 第二个标签也买呢的链接 获取一级部门
+export const initDepartment = (params) => {
+    return getRequest('/department/getByParentId/0', params)
+}
+// 加载部门子级数据
+export const loadDepartment = (id, params) => {
+    return getRequest(`/department/getByParentId/${id}`, params)
+}
+// 添加部门
+export const addDepartment = (params) => {
+    return postRequest('/department/add', params)
 }

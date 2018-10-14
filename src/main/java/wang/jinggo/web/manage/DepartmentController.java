@@ -5,12 +5,11 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import wang.jinggo.common.constant.CommonConstant;
 import wang.jinggo.common.vo.Result;
 import wang.jinggo.domain.Department;
@@ -35,6 +34,9 @@ public class DepartmentController {
     @Autowired
     private DepartmentService departmentService;
 
+    @Autowired
+    private StringRedisTemplate redisTemplate;
+
     @RequestMapping(value = "/getByParentId/{parentId}",method = RequestMethod.GET)
     @ApiOperation(value = "通过id获取")
     @Cacheable(key = "#parentId")
@@ -51,5 +53,24 @@ public class DepartmentController {
             }
         });
         return new ResultUtil<List<Department>>().setData(list);
+    }
+
+    @RequestMapping(value = "/add",method = RequestMethod.POST)
+    @ApiOperation(value = "添加")
+    @CacheEvict(key = "#department.parentId")
+    public Result<Department> add(@ModelAttribute Department department){
+
+        Department d = departmentService.save(department);
+        // 如果不是添加的一级 判断设置上级为父节点标识
+        if(!CommonConstant.PARENT_ID.equals(department.getParentId())){
+            Department parent = departmentService.get(department.getParentId());
+            if(parent.getIsParent()==null||!parent.getIsParent()){
+                parent.setIsParent(true);
+                departmentService.update(parent);
+                // 更新上级节点的缓存
+                redisTemplate.delete("department::" + parent.getParentId());
+            }
+        }
+        return new ResultUtil<Department>().setData(d);
     }
 }
