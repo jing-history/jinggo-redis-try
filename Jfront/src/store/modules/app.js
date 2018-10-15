@@ -60,6 +60,17 @@ const app = {
         setAvatarPath(state, path) {
             localStorage.avatorImgPath = path;
         },
+        pageOpenedList(state, get) {
+            let openedPage = state.pageOpenedList[get.index];
+            if (get.argu) {
+                openedPage.argu = get.argu;
+            }
+            if (get.query) {
+                openedPage.query = get.query;
+            }
+            state.pageOpenedList.splice(get.index, 1, openedPage);
+            localStorage.pageOpenedList = JSON.stringify(state.pageOpenedList);
+        },
         setOpenedList(state) {
             state.pageOpenedList = localStorage.pageOpenedList ? JSON.parse(localStorage.pageOpenedList) : [otherRouter.children[0]];
         },
@@ -78,6 +89,10 @@ const app = {
             if (!hasThisName && !isEmpty) {
                 state.openedSubmenuArr.push(name);
             }
+        },
+        switchLang(state, lang) {
+            state.lang = lang;
+            Vue.config.lang = lang;
         }
     }
 };

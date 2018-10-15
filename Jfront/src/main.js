@@ -7,7 +7,7 @@ import iviewArea from 'iview-area'
 import App from './App'
 import { router } from './router/index'
 import store from './store'
-// import '@/locale'
+import '@/locale'
 import 'iview/dist/styles/iview.css'
 import VueI18n from 'vue-i18n';
 import Icon from 'vue-awesome/components/Icon'

@@ -123,6 +123,9 @@
             },
             mesCount() {
                 return this.$store.state.app.messageCount;
+            },
+            pageTagsList() {
+                return this.$store.state.app.pageOpenedList; // 打开的页面的页面对象
             }
         },
         stompClient: {
@@ -133,7 +136,7 @@
         methods: {
             init() {
                 let pathArr = util.setCurrentPath(this, this.$route.name);
-                // this.$store.commit("updateMenulist");
+            //     this.$store.commit("updateMenulist");
                 if (pathArr.length >= 2) {
                     this.$store.commit("addOpenSubmenu", pathArr[1].name);
                 }
