@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import wang.jinggo.common.constant.CommonConstant;
 import wang.jinggo.common.vo.Result;
 import wang.jinggo.domain.Permission;
+import wang.jinggo.service.PermissionService;
 import wang.jinggo.service.mybatis.IPermissionService;
 import wang.jinggo.util.ResultUtil;
 
@@ -36,6 +37,29 @@ public class PermissionController {
 
     @Autowired
     private IPermissionService iPermissionService;
+
+    @Autowired
+    private PermissionService permissionService;
+
+    @RequestMapping(value = "/getAllList",method = RequestMethod.GET)
+    @ApiOperation(value = "获取权限菜单树")
+    @Cacheable(key = "'allList'")
+    public Result<List<Permission>> getAllList(){
+
+        //一级
+        List<Permission> list = permissionService.findByLevelOrderBySortOrder(CommonConstant.LEVEL_ONE);
+        //二级
+        for(Permission p1 : list){
+            List<Permission> children1 = permissionService.findByParentIdOrderBySortOrder(p1.getId());
+            p1.setChildren(children1);
+            //三级
+            for(Permission p2 : children1){
+                List<Permission> children2 = permissionService.findByParentIdOrderBySortOrder(p2.getId());
+                p2.setChildren(children2);
+            }
+        }
+        return new ResultUtil<List<Permission>>().setData(list);
+    }
 
     @RequestMapping(value = "/getMenuList/{userId}",method = RequestMethod.GET)
     @ApiOperation(value = "获取用户页面菜单数据")

@@ -139,4 +139,10 @@ public class UserServiceImpl implements UserService {
             }
         }, pageable);
     }
+
+    @Override
+    public List<User> findByDepartmentId(String departmentId) {
+
+        return userDao.findByDepartmentId(departmentId);
+    }
 }

@@ -31,6 +31,16 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
+    public List<Permission> findByLevelOrderBySortOrder(Integer level) {
+        return permissionDao.findByLevelOrderBySortOrder(level);
+    }
+
+    @Override
+    public List<Permission> findByParentIdOrderBySortOrder(String parentId) {
+        return permissionDao.findByParentIdOrderBySortOrder(parentId);
+    }
+
+    @Override
     public XbootBaseDao<Permission, String> getRepository() {
         return permissionDao;
     }

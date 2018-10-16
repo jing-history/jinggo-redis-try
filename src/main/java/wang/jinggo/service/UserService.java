@@ -8,6 +8,8 @@ import wang.jinggo.base.XbootBaseService;
 import wang.jinggo.domain.User;
 import wang.jinggo.pojo.SearchVo;
 
+import java.util.List;
+
 /**
  * 用户接口
  * @author wangyj
@@ -32,4 +34,12 @@ public interface UserService extends XbootBaseService<User,String> {
      * @return
      */
     Page<User> findByCondition(User user, SearchVo searchVo, Pageable pageable);
+
+    /**
+     * 通过部门id获取
+     * @param departmentId
+     * @return
+     */
+    List<User> findByDepartmentId(String departmentId);
+
 }

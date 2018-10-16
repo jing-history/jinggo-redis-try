@@ -65,3 +65,16 @@ export const loadDepartment = (id, params) => {
 export const addDepartment = (params) => {
     return postRequest('/department/add', params)
 }
+// 编辑部门
+export const editDepartment = (params) => {
+    return postRequest('/department/edit', params)
+}
+// 删除部门
+export const deleteDepartment = (ids, params) => {
+    return deleteRequest(`/department/delByIds/${ids}`, params)
+}
+
+// 获取全部权限数据
+export const getAllPermissionList = (params) => {
+    return getRequest('/permission/getAllList', params)
+}

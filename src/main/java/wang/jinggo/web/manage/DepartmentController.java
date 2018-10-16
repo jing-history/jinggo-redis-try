@@ -13,10 +13,13 @@ import org.springframework.web.bind.annotation.*;
 import wang.jinggo.common.constant.CommonConstant;
 import wang.jinggo.common.vo.Result;
 import wang.jinggo.domain.Department;
+import wang.jinggo.domain.User;
 import wang.jinggo.service.DepartmentService;
+import wang.jinggo.service.UserService;
 import wang.jinggo.util.ResultUtil;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author wangyj
@@ -36,6 +39,9 @@ public class DepartmentController {
 
     @Autowired
     private StringRedisTemplate redisTemplate;
+
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(value = "/getByParentId/{parentId}",method = RequestMethod.GET)
     @ApiOperation(value = "通过id获取")
@@ -72,5 +78,38 @@ public class DepartmentController {
             }
         }
         return new ResultUtil<Department>().setData(d);
+    }
+
+    @RequestMapping(value = "/edit",method = RequestMethod.POST)
+    @ApiOperation(value = "编辑")
+    public Result<Department> edit(@ModelAttribute Department department){
+
+        Department d = departmentService.update(department);
+        // 手动删除所有部门缓存
+        Set<String> keys = redisTemplate.keys("department:" + "*");
+        redisTemplate.delete(keys);
+        // 删除所有用户缓存
+        Set<String> keysUser = redisTemplate.keys("user:" + "*");
+        redisTemplate.delete(keysUser);
+        return new ResultUtil<Department>().setData(d);
+    }
+
+    @RequestMapping(value = "/delByIds/{ids}",method = RequestMethod.DELETE)
+    @ApiOperation(value = "批量通过id删除")
+    public Result<Object> delByIds(@PathVariable String[] ids){
+
+        for(String id:ids){
+            List<User> list = userService.findByDepartmentId(id);
+            if(list!=null&&list.size()>0){
+                return new ResultUtil<Object>().setErrorMsg("删除失败，包含正被用户使用关联的部门");
+            }
+        }
+        for(String id:ids){
+            departmentService.delete(id);
+        }
+        // 手动删除所有部门缓存
+        Set<String> keys = redisTemplate.keys("department:" + "*");
+        redisTemplate.delete(keys);
+        return new ResultUtil<Object>().setSuccessMsg("批量通过id删除数据成功");
     }
 }
