@@ -58,7 +58,7 @@ public class MySecurityMetadataSource implements FilterInvocationSecurityMetadat
     /**
      * 加载权限表中所有操作请求权限
      */
-    private void loadResourceDefine() {
+    public void loadResourceDefine() {
 
         map = new HashMap<>(16);
         Collection<ConfigAttribute> configAttributes;

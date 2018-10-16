@@ -41,6 +41,11 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
+    public List<Permission> findByTitle(String title) {
+        return permissionDao.findByTitle(title);
+    }
+
+    @Override
     public XbootBaseDao<Permission, String> getRepository() {
         return permissionDao;
     }
