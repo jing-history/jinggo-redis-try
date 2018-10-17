@@ -183,6 +183,7 @@
     import {
         getAllPermissionList,
         addPermission,
+        editPermission,
         deletePermission
     } from "@/api/index";
     export default {
@@ -249,6 +250,20 @@
         methods: {
             init() {
                 this.getAllList();
+            },
+            handleDropdown(name) {
+                if (name === "expandOne") {
+                    this.expandLevel = 1;
+                    this.getAllList();
+                } else if (name === "expandTwo") {
+                    this.expandLevel = 2;
+                    this.getAllList();
+                } else if (name === "expandAll") {
+                    this.expandLevel = 3;
+                    this.getAllList();
+                } else if (name === "refresh") {
+                    this.getAllList();
+                }
             },
             getAllList() {
                 this.loading = true;
@@ -362,9 +377,6 @@
                     }
                 });
             },
-            handleDropdown() {
-
-            },
             canelEdit() {
                 this.isMenu = false;
                 this.isButton = false;
@@ -403,7 +415,34 @@
                 }
             },
             submitEdit() {
-
+                this.$refs.menuForm.validate(valid => {
+                    if (valid) {
+                        if (!this.menuForm.id) {
+                            this.$Message.warning("请先点击选择要修改的菜单节点");
+                            return;
+                        }
+                        this.submitLoading = true;
+                        if (this.menuForm.sortOrder === null) {
+                            this.menuForm.sortOrder = "";
+                        }
+                        if (this.menuForm.buttonType === null) {
+                            this.menuForm.buttonType = "";
+                        }
+                        if (this.menuForm.type == 1) {
+                            this.menuForm.name = "";
+                            this.menuForm.icon = "";
+                            this.menuForm.component = "";
+                        }
+                        editPermission(this.menuForm).then(res => {
+                            this.submitLoading = false;
+                            if (res.success === true) {
+                                this.$Message.success("编辑成功");
+                                this.init();
+                                this.menuModalVisible = false;
+                            }
+                        });
+                    }
+                });
             },
             handleReset() {
                 this.$refs.menuForm.resetFields();
