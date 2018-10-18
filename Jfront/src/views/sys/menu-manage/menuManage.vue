@@ -414,7 +414,7 @@
                     this.editTitle = menu.title;
                 }
             },
-            submitEdit() {
+          submitEdit() {
                 this.$refs.menuForm.validate(valid => {
                     if (valid) {
                         if (!this.menuForm.id) {
