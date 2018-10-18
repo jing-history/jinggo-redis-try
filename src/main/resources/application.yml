@@ -127,6 +127,8 @@ xboot:
   elasticsearch:
     nodeClient: 192.168.5.111:9200
   # 日志记录方式 true使用Elasticsearch记录 false记录至数据库中
+  logRecord:
+    es: false
 
 # 忽略鉴权url
 ignored:

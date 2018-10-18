@@ -114,3 +114,20 @@ export const editRolePerm = (id, params) => {
 export const deleteRole = (ids, params) => {
     return deleteRequest(`/role/delAllByIds/${ids}`, params)
 }
+
+// 分页获取日志数据
+export const getLogListData = (params) => {
+    return getRequest('/log/getAllByPage', params)
+}
+// 搜索获取日志数据
+export const getSearchLogData = (params) => {
+    return getRequest('/log/search', params)
+}
+// 删除日志
+export const deleteLog = (ids, params) => {
+    return deleteRequest(`/log/delByIds/${ids}`, params)
+}
+// 清空日志
+export const deleteAllLog = (params) => {
+    return deleteRequest('/log/delAll', params)
+}
