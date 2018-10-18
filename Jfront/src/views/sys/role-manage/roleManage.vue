@@ -448,6 +448,34 @@
                     return true;
                 }
                 return false;
+            },
+            edit(v) {
+                this.modalType = 1;
+                this.modalTitle = "编辑角色";
+                // 转换null为""
+                for (let attr in v) {
+                    if (v[attr] === null) {
+                        v[attr] = "";
+                    }
+                }
+                let str = JSON.stringify(v);
+                let roleInfo = JSON.parse(str);
+                this.roleForm = roleInfo;
+                this.roleModalVisible = true;
+            },
+            remove(v) {
+                this.$Modal.confirm({
+                    title: "确认删除",
+                    content: "您确认要删除角色 " + v.name + " ?",
+                    onOk: () => {
+                        deleteRole(v.id).then(res => {
+                            if (res.success === true) {
+                                this.$Message.success("删除成功");
+                                this.getRoleList();
+                            }
+                        });
+                    }
+                });
             }
         },
         mounted() {

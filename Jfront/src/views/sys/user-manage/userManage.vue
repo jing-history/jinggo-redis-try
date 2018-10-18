@@ -80,6 +80,9 @@
                         <Table :loading="loading" border :columns="columns" :data="data" sortable="custom" @on-sort-change="changeSort" @on-selection-change="showSelect" ref="table"></Table>
                         <Table :columns="exportColumns" :data="exportData" ref="exportTable" style="display:none"></Table>
                     </Row>
+                    <Row type="flex" justify="end" class="page">
+                        <Page :current="searchForm.pageNumber" :total="total" :page-size="searchForm.pageSize" @on-change="changePage" @on-page-size-change="changePageSize" :page-size-opts="[10,20,50]" size="small" show-total show-elevator show-sizer></Page>
+                    </Row>
                 </Card>
             </Col>
         </Row>
@@ -988,6 +991,15 @@
                         content: "支付链接: http://xpay.exrick.cn/pay?xboot"
                     });
                 }
+            },
+            changePage(v) {
+                this.searchForm.pageNumber = v;
+                this.getUserList();
+                this.clearSelectAll();
+            },
+            changePageSize(v) {
+                this.searchForm.pageSize = v;
+                this.getUserList();
             }
         },
         mounted() {
