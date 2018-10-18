@@ -91,6 +91,35 @@ curl -XGET http://192.168.5.111:9200/product/book/_search?pretty -H Content-Type
 	}
 }'
 
+YELLOW (参考连接:http://www.jwsblog.com/archives/59.html)
+原因
+yellow表示所有主分片可用，但不是所有副本分片都可用，最常见的情景是单节点时，由于es默认是有1个副本，
+主分片和副本不能在同一个节点上，所以副本就是未分配unassigned
+
+处理
+过滤查看所有未分配索引的方式， 
+curl -s "http://192.168.5.111:9200/_cat/shards" | grep UNASSIGNED 结果如下，
+第一列表示索引名，第二列表示分片编号，第三列p是主分片，r是副本
+
+分配分片
+知道哪个索引的哪个分片就开始手动修复，通过reroute的allocate分配
+
+curl -XPOST '192.168.5.111:9200/_cluster/reroute' -d '{
+    "commands" : [ {
+          "allocate" : {
+              "index" : "product",
+              "shard" : 5,
+              "node" : "p1",
+              "allow_primary" : true
+          }
+        }
+    ]
+}'
+
+查看ES各个分片的状态
+$ curl -XGET http://192.168.5.111:9200/_cluster/health?pretty
+
 ---
 2. 日志输入格式化
 java -jar xxx.jar --logging.file=xxx.log
+
