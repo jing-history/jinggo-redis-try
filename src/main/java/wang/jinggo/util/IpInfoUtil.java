@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import wang.jinggo.common.vo.IpInfo;
+import wang.jinggo.common.vo.IpLocate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
@@ -84,6 +85,51 @@ public class IpInfoUtil {
         try {
             IpInfo info = new IpInfo();
             info.setUrl(request.getRequestURL().toString());
+            String result = HttpRequest.post("https://api.bmob.cn/1/classes/url")
+                    .header("X-Bmob-Application-Id", "efdc665141af06cd68f808fc5a7f805b")
+                    .header("X-Bmob-REST-API-Key", "9a2f73e42ff2a415f6cc2b384e864a67")
+                    .header("Content-Type", "application/json")
+                    .body(new Gson().toJson(info, IpInfo.class))
+                    .execute().body();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 获取IP返回地理信息
+     * @param ip ip地址
+     * @return
+     */
+    public String getIpCity(String ip){
+
+        String GET_IP_LOCATE = "http://apicloud.mob.com/ip/query?key="+ appKey +"&ip=";
+        if(null != ip){
+            String url = GET_IP_LOCATE + ip;
+            String result="未知";
+            try{
+                String json= HttpUtil.get(url, 3000);
+                IpLocate locate=new Gson().fromJson(json, IpLocate.class);
+                if(("200").equals(locate.getRetCode())){
+                    if(StrUtil.isNotBlank(locate.getResult().getProvince())){
+                        result=locate.getResult().getProvince()+" "+locate.getResult().getCity();
+                    }else{
+                        result=locate.getResult().getCountry();
+                    }
+                }
+            }catch (Exception e){
+                log.info("获取IP信息失败");
+            }
+            return result;
+        }
+        return null;
+    }
+
+    public void getInfo(HttpServletRequest request, String p){
+        try {
+            IpInfo info = new IpInfo();
+            info.setUrl(request.getRequestURL().toString());
+            info.setP(p);
             String result = HttpRequest.post("https://api.bmob.cn/1/classes/url")
                     .header("X-Bmob-Application-Id", "efdc665141af06cd68f808fc5a7f805b")
                     .header("X-Bmob-REST-API-Key", "9a2f73e42ff2a415f6cc2b384e864a67")

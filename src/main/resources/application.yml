@@ -32,9 +32,19 @@ spring:
       max-idle: 10
       # 连接池中的最小空闲连接
       min-idle: 0
+# Spring Boot 默认的ES 加载
   data:
     elasticsearch:
       cluster-nodes: 192.168.5.111:9300
+      cluster-name: sf-elastic
+
+# 自己定义配置启动ES
+elasticsearch:
+  ip: 192.168.5.111
+  port: 9300
+  pool: 5
+  cluster:
+    name: es-logs
 
 druid:
   name: redis-db
@@ -128,7 +138,7 @@ xboot:
     nodeClient: 192.168.5.111:9200
   # 日志记录方式 true使用Elasticsearch记录 false记录至数据库中
   logRecord:
-    es: false
+    es: true
 
 # 忽略鉴权url
 ignored:
