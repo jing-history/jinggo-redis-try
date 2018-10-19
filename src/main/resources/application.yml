@@ -35,8 +35,8 @@ spring:
 # Spring Boot 默认的ES 加载
   data:
     elasticsearch:
-      cluster-nodes: 192.168.5.111:9300
-      cluster-name: sf-elastic
+      cluster-nodes: 120.79.230.147:9300
+      cluster-name: elasticsearch
 
 # 自己定义配置启动ES
 elasticsearch:
@@ -135,7 +135,7 @@ xboot:
     appKey: 你的appKey
   # ES
   elasticsearch:
-    nodeClient: 192.168.5.111:9200
+    nodeClient: 120.79.230.147:9200
   # 日志记录方式 true使用Elasticsearch记录 false记录至数据库中
   logRecord:
     es: true
