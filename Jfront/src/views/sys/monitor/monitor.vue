@@ -1,5 +1,5 @@
 <style lang="less">
-@import "./monitor.less";
+  @import "./monitor.less";
 </style>
 
 <template>
@@ -10,7 +10,7 @@
         <Row>
           <Form ref="searchForm" inline :label-width="70" class="search-form" @keydown.enter.native="handleGo">
             <Form-item label="链接地址" prop="url">
-              <Input type="text" v-model="url" placeholder="http://localhost:7777/druid/login.html" clearable style="width: 350px" />
+              <Input type="text" v-model="url" placeholder="http://" clearable style="width: 350px" />
             </Form-item>
             <Form-item style="margin-left:-50px;">
               <Button @click="handleGo" type="primary" icon="ios-send" style="margin-right:5px">前往</Button>
@@ -29,43 +29,43 @@
 </template>
 
 <script>
-import axios from "axios";
-export default {
-  name: "monitor",
-  data() {
-    return {
-      go: "",
-      url: "",
-      html: ""
+    import axios from "axios";
+    export default {
+        name: "monitor",
+        data() {
+            return {
+                go: "",
+                url: "",
+                html: ""
+            };
+        },
+        computed: {},
+        methods: {
+            initUrl() {
+                let url = this.$route.meta.url;
+                if (url !== null && url !== undefined) {
+                    this.url = url;
+                    this.go = url;
+                    // window.open(this.go);
+                }
+            },
+            handleGo() {
+                let url = this.url;
+                this.go = this.url;
+            },
+            handleOpen() {
+                window.open(this.url);
+            }
+        },
+        watch: {
+            $route(to, from) {
+                this.initUrl();
+            }
+        },
+        created() {
+            this.initUrl();
+        }
     };
-  },
-  computed: {},
-  methods: {
-    initUrl() {
-      let url = this.$route.meta.url;
-      if (url !== null && url !== undefined) {
-        this.url = url;
-        this.go = url;
-        // window.open(this.go);
-      }
-    },
-    handleGo() {
-      let url = this.url;
-      this.go = this.url;
-    },
-    handleOpen() {
-      window.open(this.url);
-    }
-  },
-  watch: {
-    $route(to, from) {
-      this.initUrl();
-    }
-  },
-  created() {
-    this.initUrl();
-  }
-};
 </script>
 
 <style>

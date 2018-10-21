@@ -24,6 +24,7 @@ import wang.jinggo.domain.User;
 import wang.jinggo.domain.UserRole;
 import wang.jinggo.pojo.SearchVo;
 import wang.jinggo.service.DepartmentService;
+import wang.jinggo.service.RoleService;
 import wang.jinggo.service.UserRoleService;
 import wang.jinggo.service.UserService;
 import wang.jinggo.service.mybatis.IUserRoleService;
@@ -65,6 +66,58 @@ public class UserController {
 
     @Autowired
     private StringRedisTemplate redisTemplate;
+
+    @Autowired
+    private RoleService roleService;
+
+    @RequestMapping(value = "/regist",method = RequestMethod.POST)
+    @ApiOperation(value = "注册用户")
+    public Result<Object> regist(@ModelAttribute User u,
+                                 @RequestParam String verify,
+                                 @RequestParam String captchaId){
+
+        if(StrUtil.isBlank(verify)|| StrUtil.isBlank(u.getUsername())
+                || StrUtil.isBlank(u.getPassword())){
+            return new ResultUtil<Object>().setErrorMsg("缺少必需表单字段");
+        }
+
+        //验证码
+        String code=redisTemplate.opsForValue().get(captchaId);
+        if(StrUtil.isBlank(code)){
+            return new ResultUtil<Object>().setErrorMsg("验证码已过期，请重新获取");
+        }
+
+        if(!verify.toLowerCase().equals(code.toLowerCase())) {
+            log.error("注册失败，验证码错误：code:"+ verify +",redisCode:"+code.toLowerCase());
+            return new ResultUtil<Object>().setErrorMsg("验证码输入错误");
+        }
+
+        if(userService.findByUsername(u.getUsername())!=null){
+            return new ResultUtil<Object>().setErrorMsg("该用户名已被注册");
+        }
+        //删除缓存
+        redisTemplate.delete("user::"+u.getUsername());
+
+        String encryptPass = new BCryptPasswordEncoder().encode(u.getPassword());
+        u.setPassword(encryptPass);
+        u.setType(CommonConstant.USER_TYPE_NORMAL);
+        User user=userService.save(u);
+        if(user==null){
+            return new ResultUtil<Object>().setErrorMsg("注册失败");
+        }
+        // 默认角色
+        List<Role> roleList = roleService.findByDefaultRole(true);
+        if(roleList!=null&&roleList.size()>0){
+            for(Role role : roleList){
+                UserRole ur = new UserRole();
+                ur.setUserId(user.getId());
+                ur.setRoleId(role.getId());
+                iUserRoleService.insert(ur);
+            }
+        }
+
+        return new ResultUtil<Object>().setData(user);
+    }
 
     @RequestMapping(value = "/info",method = RequestMethod.GET)
     @ApiOperation(value = "获取当前登录用户接口")

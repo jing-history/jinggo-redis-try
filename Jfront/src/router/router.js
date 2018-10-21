@@ -21,8 +21,55 @@ export const otherRouter = {
     ]
 };
 
+export const registRouter = {
+    path: '/regist',
+    name: 'regist',
+    meta: {
+        title: '注册 - X-Boot前后端分离开发平台'
+    },
+    component: () => import('@/views/regist.vue')
+};
+
+export const registResult = {
+    path: '/regist-result',
+    name: 'regist-result',
+    meta: {
+        title: '注册结果 - X-Boot前后端分离开发平台'
+    },
+    component: () => import('@/views/regist-result.vue')
+};
+
+export const relateRouter = {
+    path: '/relate',
+    name: 'relate',
+    meta: {
+        title: '绑定账号 - X-Boot前后端分离开发平台 '
+    },
+    component: () => import('@/views/relate.vue')
+};
+
+export const page403 = {
+    path: '/403',
+    meta: {
+        title: '403-权限不足'
+    },
+    name: 'error-403',
+    component: () => import('@/views/error-page/403.vue')
+};
+
+export const page500 = {
+    path: '/500',
+    meta: {
+        title: '500-服务端错误'
+    },
+    name: 'error-500',
+    component: () => import('@/views/error-page/500.vue')
+};
+
 // 所有上面定义的路由都要写在下面的routers里
 export const routers = [
     loginRouter,
+    registRouter,
+    registResult,
     otherRouter
 ];

@@ -9,6 +9,22 @@ export const login = (params) => {
 export const userInfo = (params) => {
     return getRequest('/user/info', params)
 }
+// 注册
+export const regist = (params) => {
+    return postRequest('/user/regist', params)
+}
+// 初始化验证码
+export const initCaptcha = (params) => {
+    return getRequest('/common/captcha/init', params)
+}
+// 发送短信验证码
+export const sendSms = (mobile, params) => {
+    return getRequest(`/common/captcha/sendSms/${mobile}`, params)
+}
+// 短信验证码登录
+export const smsLogin = (params) => {
+    return postRequest('/user/smsLogin', params)
+}
 
 // IP天气信息
 export const ipInfo = (params) => {

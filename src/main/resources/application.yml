@@ -139,6 +139,12 @@ xboot:
   # 日志记录方式 true使用Elasticsearch记录 false记录至数据库中
   logRecord:
     es: true
+  # 七牛云配置
+  qiniu:
+    accessKey: pd8EMFJt9IERhDOUAobL_9bB0qJSYBLhyBiFQRTN
+    secretKey: m2nwvfRbOi5qxKd-qmbv0wEql8rMsMV4pM_uBLZ9
+    bucket: jinggo-blog
+    domain: pd2kdimru.bkt.clouddn.com/
 
 # 忽略鉴权url
 ignored:
