@@ -106,7 +106,7 @@
                     <p slot="title" class="card-title" style="overflow:visible">
                         <a href="http://xpay.exrick.cn/pay?xboot" target="_blank">
                             <Icon type="ios-star" size="20" style="margin-bottom:2px"></Icon>
-                            <Badge dot>立即获取 X-Boot 完整版</Badge>
+                            <Badge dot>X-Boot 项目简介</Badge>
                         </a>
                     </p>
                     <div>
@@ -275,11 +275,11 @@
             });
             gitment.render("comments");
             // 宣传视频
-            let xbootVideo = Boolean(Cookies.get('xbootVideo'));
+            /*let xbootVideo = Boolean(Cookies.get('xbootVideo'));
             if(!xbootVideo){
                 this.showVideo = true;
                 Cookies.set('xbootVideo', true);
-            }
+            }*/
         }
     };
 </script>

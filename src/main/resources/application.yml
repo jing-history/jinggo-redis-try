@@ -40,11 +40,11 @@ spring:
 
 # 自己定义配置启动ES
 elasticsearch:
-  ip: 192.168.5.111
+  ip: 120.79.230.147
   port: 9300
   pool: 5
   cluster:
-    name: es-logs
+    name: elasticsearch
 
 druid:
   name: redis-db

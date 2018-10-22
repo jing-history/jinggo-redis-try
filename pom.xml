@@ -118,22 +118,15 @@
 			<artifactId>jasypt-spring-boot-starter</artifactId>
 			<version>1.18</version>
 		</dependency>
+		<!-- Quartz定时任务 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-quartz</artifactId>
+		</dependency>
 		<!-- ES 使用 版本比较旧 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-elasticsearch</artifactId>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.elasticsearch.plugin/transport-netty3-client -->
-		<dependency>
-			<groupId>org.elasticsearch.client</groupId>
-			<artifactId>transport</artifactId>
-			<version>5.6.10</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.elasticsearch.plugin</groupId>
-			<artifactId>transport-netty4-client</artifactId>
-			<version>5.6.10</version>
 		</dependency>
 		<!--<dependency>
 			<groupId>org.elasticsearch</groupId>

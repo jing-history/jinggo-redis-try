@@ -2,8 +2,8 @@
     <Row type="flex" justify="center" align="middle" class="login" @keydown.enter.native="submitLogin">
         <Col :xs="{span:22}" style="width: 368px;">
         <Row class="header">
-            <img src="../assets/xboot.png" width="220px" />
-            <div class="description">X-Boot 是很不错的Web前后端分离架构开发平台</div>
+            <img src="../assets/Jing2.jpg" width="220px" />
+            <div class="description">基于 X-Boot 前后端分离个人管理平台</div>
         </Row>
 
         <Alert type="error" show-icon v-if="error">{{errorMsg}}</Alert>
@@ -71,12 +71,12 @@
 
         <Row class="foot">
             <Row type="flex" justify="space-around" class="code-row-bg help">
-                <a class="item" href="https://github.com/Exrick/x-boot" target="_blank">帮助</a>
-                <a class="item" href="https://github.com/Exrick/x-boot" target="_blank">隐私</a>
-                <a class="item" href="https://github.com/Exrick/x-boot" target="_blank">条款</a>
+                <a class="item" href="" target="_blank">帮助</a>
+                <a class="item" href="" target="_blank">隐私</a>
+                <a class="item" href="" target="_blank">条款</a>
             </Row>
             <Row type="flex" justify="center" class="code-row-bg copyright">
-                Copyright © 2018-Present <a href="http://exrick.cn" target="_blank" style="margin:0 5px;">Exrick</a> 版权所有
+                Copyright © 2018-Present <a href="http://jinggo.wang" target="_blank" style="margin:0 5px;">JingGo</a> 版权所有
             </Row>
         </Row>
         </Col>

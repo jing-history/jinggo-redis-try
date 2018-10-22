@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * @author wangyj
@@ -44,8 +45,8 @@ public class ElasticsearchConfig {
     @Value("${elasticsearch.pool}")
     private String poolSize;
 
-    /*@Bean
-    public TransportClient init() {
+    @Bean
+    public TransportClient transportClient() {
         LOGGER.info("============ES初始化开始================");
         TransportClient transportClient = null;
 
@@ -67,5 +68,5 @@ public class ElasticsearchConfig {
         }
         LOGGER.info("ES初始化完毕");
         return transportClient;
-    }*/
+    }
 }

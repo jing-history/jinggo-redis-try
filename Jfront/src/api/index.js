@@ -147,3 +147,8 @@ export const deleteLog = (ids, params) => {
 export const deleteAllLog = (params) => {
     return deleteRequest('/log/delAll', params)
 }
+
+// 分页获取定时任务数据
+export const getQuartzListData = (params) => {
+    return getRequest('/quartzJob/getAllByPage', params)
+}

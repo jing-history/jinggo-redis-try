@@ -19,7 +19,7 @@ import 'vue-awesome/icons/brands/github'
 import { getRequest, postRequest, putRequest, deleteRequest, uploadFileRequest } from '@/libs/axios'
 import { setStore, getStore, removeStore } from '@/libs/storage'
 import util from '@/libs/util';
-// import hasPermission from '@/libs/hasPermission';
+import hasPermission from '@/libs/hasPermission';
 import VueVirtualScroller from 'vue-virtual-scroller'
 
 Vue.config.productionTip = false;
@@ -56,8 +56,8 @@ new Vue({
          Vuex 的使用，来子store index.js，要想改变store 中的数据
             唯一的途径就是提交mutations
         */
-     //   this.$store.commit('setOpenedList');
-     //   this.$store.commit('initCachepage');
+        this.$store.commit('setOpenedList');
+        this.$store.commit('initCachepage');
     }
 });
 

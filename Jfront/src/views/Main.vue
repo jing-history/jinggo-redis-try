@@ -8,7 +8,7 @@
             <scroll-bar ref="scrollBar">
                 <shrinkable-menu :shrink="shrink" @on-change="handleSubmenuChange" :theme="menuTheme" :before-push="beforePush" :open-names="openedSubmenuArr" :menu-list="menuList">
                     <div slot="top" class="logo-con">
-                        <img v-show="!shrink" src="../assets/logo.png" key="max-logo" />
+                        <img v-show="!shrink" src="../assets/JingGo.png" key="max-logo" />
                         <img v-show="shrink" src="../assets/logo-min.png" key="min-logo" />
                     </div>
                 </shrinkable-menu>
