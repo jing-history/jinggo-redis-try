@@ -1,10 +1,18 @@
 package wang.jinggo;
 
+import com.google.gson.Gson;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
+import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest;
+import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse;
+import org.elasticsearch.action.index.IndexRequestBuilder;
+import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.client.IndicesAdminClient;
+import org.elasticsearch.client.Requests;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.xcontent.XContentBuilder;
+import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +25,11 @@ import wang.jinggo.util.ElasticsearchUtils;
 
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
@@ -47,6 +60,7 @@ public class ESTest {
     }
 
     //在mapping 中定义字段类型
+    @Test
     public void setESmapping() throws IOException {
         Settings settings = Settings.builder().
                 loadFromSource(
@@ -86,5 +100,76 @@ public class ESTest {
         CreateIndexResponse response = transportClient.admin()
                 .indices().prepareCreate("index_name")
                 .setSettings(settings).addMapping("mapping_name1",content).get();
+    }
+
+    //假设json 文件中存储了索引的映射、设置，用下面代码设定索引库结构
+    @Test
+    public void setESmappingByJson() throws IOException {
+        CreateIndexRequestBuilder createIndexRequestBuilder = transportClient.admin()
+                .indices().prepareCreate("test1");  //创建称为test1 的索引
+        Path json_path = Paths.get("C:/Xmp");
+        String mapping_json = new String(Files.readAllBytes(json_path));
+        createIndexRequestBuilder.addMapping("my_mapping",mapping_json);
+        CreateIndexResponse response = createIndexRequestBuilder.execute().actionGet();
+    }
+
+    public void putMapping() throws IOException {
+        String indexType = "String";
+        XContentBuilder mapping = XContentFactory.jsonBuilder().startObject()
+                .startObject(indexType)
+                .startObject("properties")
+                .startObject("repname").field("type","string")
+                .field("store","yes").field("analyzer","standard")  //词
+                .endObject()
+
+                .startObject("repnameS").field("type","string")
+                .field("store","yes").field("analyzer","standard")  //字
+                .endObject()
+
+                .startObject("path").field("type","string")
+                .field("store","yes").field("analyzer","standard")
+                .endObject()
+
+                .startObject("contents").field("type","string")
+                .field("store","yes").field("analyzer","cn")  //词
+                .endObject()
+
+                .startObject("contentsS").field("type","string")
+                .field("store","yes").field("analyzer","standard")  //字
+                .endObject()
+
+                .endObject() //end properties
+                .endObject() //end indexType
+                .endObject();
+
+        // 使用 IndicesAdminClient putMapping 方法设定索引库结构
+        PutMappingRequest mappingRequest = Requests.putMappingRequest("indexName").type("type").source(mapping);
+        PutMappingResponse putMappingResponse = transportClient.admin().indices().putMapping(mappingRequest).actionGet();
+
+        //使用 IndicesAdminClient 删除索引
+        IndicesAdminClient admin = transportClient.admin().indices();
+        admin.prepareDelete("indexName").execute().actionGet().isAcknowledged();
+
+        //使用 IndicesAdminClient.prepareCreate 方法设置好创建索引需要的参数
+        CreateIndexResponse indexResponse = transportClient.admin().indices()
+                .prepareCreate("testindex").setSettings(Settings.EMPTY).execute()
+                .actionGet();
+        logger.info(String.valueOf(indexResponse.isAcknowledged()));
+    }
+
+    @Test
+    public void addESdata() {
+        Map<String,String> data = new HashMap<>();
+        data.put("user","jinggo");
+        data.put("postDate","2018-10-22");
+        data.put("message","try out ES!!!");
+
+        Gson gson = new Gson();
+        String json = gson.toJson(data);
+
+        IndexRequestBuilder indexRequestBuilder = transportClient.prepareIndex("test1","mydata")
+                .setSource(json);
+        IndexResponse response = indexRequestBuilder.execute().actionGet();
+        logger.info("================>>> " + response.toString());
     }
 }
