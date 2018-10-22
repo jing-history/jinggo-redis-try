@@ -132,7 +132,7 @@ xboot:
   loginAfterTime: 10
   # mob api配置 mob官网注册申请即可
   mob:
-    appKey: 你的appKey
+    appKey: 285b065b754fd
   # ES
   elasticsearch:
     nodeClient: 120.79.230.147:9200

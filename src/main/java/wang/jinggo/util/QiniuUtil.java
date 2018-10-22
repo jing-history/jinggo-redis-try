@@ -43,7 +43,7 @@ public class QiniuUtil {
     /**
      * 构造一个带指定Zone对象的配置类 zone2华南
      */
-    private static Configuration cfg = new Configuration(Zone.zone2());
+    private static Configuration cfg = new Configuration(Zone.zone0());
 
     private static UploadManager uploadManager = new UploadManager(cfg);
 
@@ -110,8 +110,9 @@ public class QiniuUtil {
     public String qiniuBase64Upload(String data64) {
 
         String key = renamePic("");
-        //服务端http://up-z2.qiniup.com
-        String url = "http://up-z2.qiniup.com/putb64/-1/key/" + UrlSafeBase64.encodeToString(key);
+        //服务端http://up-z2.qiniup.com    up-z0.qiniup.com
+     //   String url = "http://up-z2.qiniup.com/putb64/-1/key/" + UrlSafeBase64.encodeToString(key);
+        String url = "http://up-z0.qiniup.com/putb64/-1/key/" + UrlSafeBase64.encodeToString(key);
         RequestBody rb = RequestBody.create(null, data64);
         Request request = new Request.Builder().
                 url(url).

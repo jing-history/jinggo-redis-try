@@ -5,7 +5,7 @@
 
 <template>
     <div class="home-main">
-        <!--<Row :gutter="10">
+        <Row :gutter="10">
             <Col :md="24" :lg="8">
             <Row class-name="home-page-row1" :gutter="10">
                 <Col :md="12" :lg="24" :style="{marginBottom: '10px'}">
@@ -157,7 +157,7 @@
                     每日来访量统计
                 </p>
                 <div class="data-source-row">
-                    &lt;!&ndash;<visite-volume></visite-volume>&ndash;&gt;
+                    <visite-volume></visite-volume>
                 </div>
             </Card>
             </Col>
@@ -189,20 +189,33 @@
             <iframe src="//player.bilibili.com/player.html?aid=30284667&cid=52827707&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="width:100%;height:550px;"> </iframe>
             <div slot="footer">
             </div>
-        </Modal>-->
+        </Modal>
     </div>
 </template>
 
 <script>
     import { ipInfo } from "@/api/index";
     import cityData from "./map-data/get-city-value.js";
-//    import homeMap from "./components/map.vue";
+    import homeMap from "./components/map.vue";
+    import visiteVolume from "./components/visiteVolume.vue";
+    import userFlow from "./components/userFlow.vue";
+    import countUp from "./components/countUp.vue";
+    import inforCard from "./components/inforCard.vue";
+    import mapDataTable from "./components/mapDataTable.vue";
     import Cookies from "js-cookie";
     import "gitment/style/default.css";
     import Gitment from "gitment";
 
     export default {
         name: "home",
+        components: {
+            homeMap,
+            visiteVolume,
+            userFlow,
+            countUp,
+            inforCard,
+            mapDataTable
+        },
         data() {
             return {
                 showVideo: false,
@@ -248,6 +261,25 @@
                     }
                 });
             }
+        },
+        mounted() {
+            this.init();
+            const gitment = new Gitment({
+                id: "xboot", // optional
+                owner: "Exrick",
+                repo: "xboot-comments",
+                oauth: {
+                    client_id: "a128de2dd7383614273a",
+                    client_secret: "a77691ecb662a8303a6c686ae651ae035868da6e"
+                }
+            });
+            gitment.render("comments");
+            // 宣传视频
+            let xbootVideo = Boolean(Cookies.get('xbootVideo'));
+            if(!xbootVideo){
+                this.showVideo = true;
+                Cookies.set('xbootVideo', true);
+            }
         }
-    }
+    };
 </script>

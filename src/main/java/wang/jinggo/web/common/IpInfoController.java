@@ -28,7 +28,8 @@ public class IpInfoController {
     @ApiOperation(value = "IP及天气相关信息")
     public Result<Object> upload(HttpServletRequest request) {
 
-        String result= ipInfoUtil.getIpWeatherInfo(ipInfoUtil.getIpAddr(request));
+    //    String result= ipInfoUtil.getIpWeatherInfo(ipInfoUtil.getIpAddr(request));
+        String result= ipInfoUtil.getIpWeatherInfo("183.232.231.173");
         return new ResultUtil<Object>().setData(result);
     }
 }
