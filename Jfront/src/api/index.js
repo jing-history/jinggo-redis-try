@@ -152,3 +152,38 @@ export const deleteAllLog = (params) => {
 export const getQuartzListData = (params) => {
     return getRequest('/quartzJob/getAllByPage', params)
 }
+// 添加定时任务
+export const addQuartz = (params) => {
+    return postRequest('/quartzJob/add', params)
+}
+// 编辑定时任务
+export const editQuartz = (params) => {
+    return postRequest('/quartzJob/edit', params)
+}
+// 暂停定时任务
+export const pauseQuartz = (params) => {
+    return postRequest('/quartzJob/pause', params)
+}
+// 恢复定时任务
+export const resumeQuartz = (params) => {
+    return postRequest('/quartzJob/resume', params)
+}
+// 删除定时任务
+export const deleteQuartz = (ids, params) => {
+    return deleteRequest(`/quartzJob/delByIds/${ids}`, params)
+}
+
+// 个人中心编辑
+export const userInfoEdit = (params) => {
+    return postRequest('/user/edit', params)
+}
+// 个人中心修改密码
+export const changePass = (params) => {
+    return postRequest('/user/modifyPass', params)
+}
+
+// 解锁
+export const unlock = (params) => {
+    return postRequest('/user/unlock', params)
+}
+

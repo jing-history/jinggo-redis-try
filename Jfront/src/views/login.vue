@@ -116,7 +116,7 @@
                 form: {
                     username: "test",
                     password: "123456",
-                    mobile: "捐赠获取完整版功能",
+                    mobile: "功能未实现",
                     code: ""
                 },
                 rules: {

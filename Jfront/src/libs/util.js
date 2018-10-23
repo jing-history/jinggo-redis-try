@@ -294,7 +294,7 @@ util.initRouterNode = function (routers, data) {
         let meta = {};
         // 给页面添加权限、标题、第三方网页链接
         meta.permTypes = menu.permTypes ? menu.permTypes : null;
-        meta.title = menu.title ? menu.title + " - JingGo个人管理平台" : null;
+        meta.title = menu.title ? menu.title + " - JingGo 前后端分离个人管理平台" : null;
         meta.url = menu.url ? menu.url : null;
         menu.meta = meta;
 

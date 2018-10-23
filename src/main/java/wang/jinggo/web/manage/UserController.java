@@ -293,4 +293,53 @@ public class UserController {
         }
         return new ResultUtil<Object>().setSuccessMsg("修改成功");
     }
+
+    @RequestMapping(value = "/unlock",method = RequestMethod.POST)
+    @ApiOperation(value = "解锁验证密码")
+    public Result<Object> unLock(@RequestParam String password){
+
+        UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User u = userService.findByUsername(user.getUsername());
+        if(!new BCryptPasswordEncoder().matches(password, u.getPassword())){
+            return new ResultUtil<Object>().setErrorMsg("密码不正确");
+        }
+        return new ResultUtil<Object>().setData(null);
+    }
+
+    /**
+     * 线上demo仅允许ADMIN权限改密码
+     * @param id
+     * @param password
+     * @param newPass
+     * @return
+     */
+    @RequestMapping(value = "/modifyPass",method = RequestMethod.POST)
+    @ApiOperation(value = "修改密码")
+    public Result<Object> modifyPass(@ApiParam("需用户id获取原用户数据") @RequestParam String id,
+                                     @ApiParam("password") @RequestParam String password,
+                                     @ApiParam("新密码") @RequestParam String newPass){
+
+        User old = userService.get(id);
+
+        if(!new BCryptPasswordEncoder().matches(password,old.getPassword())){
+            return new ResultUtil<Object>().setErrorMsg("旧密码不正确");
+        }
+
+        //在线DEMO所需
+        if("test".equals(old.getUsername())||"test2".equals(old.getUsername())){
+            return new ResultUtil<Object>().setErrorMsg("演示账号不支持修改密码");
+        }
+
+        String newEncryptPass= new BCryptPasswordEncoder().encode(newPass);
+        old.setPassword(newEncryptPass);
+        User user=userService.update(old);
+        if(user==null){
+            return new ResultUtil<Object>().setErrorMsg("修改失败");
+        }
+
+        //手动更新缓存
+        redisTemplate.delete("user::"+user.getUsername());
+
+        return new ResultUtil<Object>().setData(user);
+    }
 }
