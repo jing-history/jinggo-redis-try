@@ -47,12 +47,10 @@ public class TimeAxisController {
 
     @RequestMapping(value = "/getByCondition",method = RequestMethod.GET)
     @ApiOperation(value = "多条件分页获取内容列表")
-    public Result<Page<User>> getByCondition(HttpServletRequest request, @ModelAttribute PageVo pageVo){
+    public Result<Page<User>> getByCondition(SearchVo searchVo, @ModelAttribute PageVo pageVo){
 
-        String searchKey = request.getParameter("searchKey");
-        String startDate = request.getParameter("startDate");
-
-        Page<TimeAxis> page = timeAxisService.findByCondition(searchKey, startDate, PageUtil.initPage(pageVo));
+        LOG.info("====>>> " + searchVo.toString());
+     //   Page<TimeAxis> page = timeAxisService.findByCondition(searchKey, startDate, PageUtil.initPage(pageVo));
         return new ResultUtil<Page<User>>().setData(null);
     }
 }

@@ -188,7 +188,7 @@ export const unlock = (params) => {
 }
 
 //我的空间 时间轴
-export const getLoveListData = (params) => {
-    return getRequest('/log/getAllByPage', params)
+export const getTimeListData = (params) => {
+    return getRequest('/mine/getByCondition', params)
 }
 

@@ -17,8 +17,8 @@ import javax.persistence.Table;
 @Data
 @ToString
 @Entity
-@Table(name = "loves")
-@TableName("loves")
+@Table(name = "t_time_axis")
+@TableName("t_time_axis")
 public class TimeAxis extends XbootBaseEntity {
 
     @ApiModelProperty(value = "标题")

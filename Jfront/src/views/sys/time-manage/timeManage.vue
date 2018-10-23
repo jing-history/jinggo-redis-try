@@ -11,10 +11,10 @@
                         <Input type="text" v-model="searchKey" clearable placeholder="请输入搜索标题关键词" style="width: 200px"/>
                     </Form-item>
                     <Form-item label="创建时间">
-                        <DatePicker type="daterange" v-model="selectDate" format="yyyy-MM-dd" clearable @on-change="selectDateRange" placeholder="选择起始时间" style="width: 200px"></DatePicker>
+                        <DatePicker type="date" v-model="selectDate" format="yyyy-MM-dd" clearable @on-change="selectDateRange" placeholder="选择起始时间" style="width: 200px"></DatePicker>
                     </Form-item>
                     <Form-item style="margin-left:-35px;" class="br">
-                        <Button @click="getLoveList"  type="primary" icon="ios-search">搜索</Button>
+                        <Button @click="getTimeList"  type="primary" icon="ios-search">搜索</Button>
                         <Button @click="handleReset" >重置</Button>
                     </Form-item>
                 </Form>
@@ -37,7 +37,7 @@
 </template>
 <script>
     import {
-        getLoveListData
+        getTimeListData
     } from "@/api/index";
     export default {
         name: "time-manage",
@@ -47,6 +47,8 @@
               selectCount: 0,
               searchKey: "",
               selectDate: null,
+              sortColumn: "createTime",
+              sortType: "desc",
               columns: [
                   {
                       type: "selection",
@@ -148,18 +150,20 @@
             clearSelectAll() {
                 this.$refs.table.selectAll(false);
             },
-            getLoveList() {
+            init() {
+                this.getTimeList();
+            },
+            getTimeList() {
                 this.loading = true;
                 let params = {
-                    key: this.searchKey,
+                    title: this.searchKey,
                     pageNumber: this.pageNumber,
                     pageSize: this.pageSize,
                     sort: this.sortColumn,
                     order: this.sortType,
-                    startDate: this.startDate,
-                    endDate: this.endDate
+                    startDate: this.selectDate,
                 };
-                getLoveListData(params).then(res => {
+                getTimeListData(params).then(res => {
                     this.loading = false;
                     if (res.success === true) {
                         this.data = res.result.content;
@@ -174,8 +178,8 @@
 
             }
         },
-        /*mounted: {
-
-        }*/
-    }
+        mounted() {
+            this.init();
+        }
+    };
 </script>
