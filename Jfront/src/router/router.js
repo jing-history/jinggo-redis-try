@@ -5,7 +5,7 @@ export const loginRouter = {
     path: '/login',
     name: 'login',
     meta: {
-        title: '登录 - X-Boot前后端分离开发平台 '
+        title: '登录 - JingGo 前后端分离开发平台 '
     },
     component: () => import('@/views/login.vue')
 };
@@ -25,7 +25,7 @@ export const registRouter = {
     path: '/regist',
     name: 'regist',
     meta: {
-        title: '注册 - X-Boot前后端分离开发平台'
+        title: 'JingGo 前后端分离开发平台'
     },
     component: () => import('@/views/regist.vue')
 };
@@ -43,7 +43,7 @@ export const relateRouter = {
     path: '/relate',
     name: 'relate',
     meta: {
-        title: '绑定账号 - X-Boot前后端分离开发平台 '
+        title: '绑定账号 - JingGo 前后端分离开发平台 '
     },
     component: () => import('@/views/relate.vue')
 };

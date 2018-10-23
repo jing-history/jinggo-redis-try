@@ -3,7 +3,7 @@
         <Col :xs="{span:22}" style="width: 368px;">
         <Row class="header">
             <img src="../assets/Jing2.jpg" width="220px" />
-            <div class="description">基于 X-Boot 前后端分离个人管理平台</div>
+            <div class="description">JingGo 前后端分离个人管理平台</div>
         </Row>
 
         <Alert type="error" show-icon v-if="error">{{errorMsg}}</Alert>
