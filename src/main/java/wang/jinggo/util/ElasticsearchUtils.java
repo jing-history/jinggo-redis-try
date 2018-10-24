@@ -157,7 +157,6 @@ public class ElasticsearchUtils {
         UpdateRequest updateRequest = new UpdateRequest();
         updateRequest.index(index).type(type).id(id).doc(XContentType.JSON, new Gson().toJson(jsonObject));
         client.update(updateRequest);
-
     }
 
     /**

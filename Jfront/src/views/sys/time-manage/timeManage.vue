@@ -79,8 +79,8 @@
                 <Button type="primary" :loading="submitLoading" @click="submitTime">提交</Button>
             </div>
         </Modal>
-        <Modal title="图片预览" v-model="viewImage" :styles="{top: '30px'}">
-            <img :src="timeForm.avatar" alt="无效的图片链接" style="width: 100%;margin: 0 auto;display: block;">
+        <Modal title="查看大图" v-model="viewImage" :styles="{top: '30px'}">
+            <img :src="imgUrl" alt="图片预览" style="width: 100%;margin: 0 auto;display: block;">
         </Modal>
     </div>
 </template>
@@ -106,6 +106,7 @@
               modalTitle: "",
               modalVisible: false,  //弹出框是否可见
               accessToken: {},
+              imgUrl:"",    //大图的url
               timeForm: {
                   title: "",
                   content: "",
@@ -140,12 +141,38 @@
                   {
                       title: "内容",
                       key: "content",
-                      sortable: true
+                      width: 200,
+                      tooltip: true
                   },
                   {
                       title: "图片",
                       key: "figureImg",
-                      sortable: true
+                      width: 160,
+                      align: "center",
+                      render: (h, params) => {
+                          return h("img", {
+                              props: {
+                                  src: params.row.figureImg
+                              },
+                              style:{
+                                  'margin-top':'10px',
+                                  'margin-bottom':'10px',
+                                  'border-radius':'4px',
+                                  width:'80px',
+                                  height:'50px',
+                                  cursor: 'pointer',
+                              },
+                              attrs:{
+                                  'src': params.row.figureImg,
+                                  onerror:'this.src="https://goss.veer.com/creative/vcg/veer/800water/veer-133632476.jpg"'
+                              },
+                              on:{
+                                  click:(e)=>{
+                                      this.handleView(params.row.figureImg);
+                                  }
+                              }
+                          });
+                      }
                   },
                   {
                       title: "图片说明",
@@ -315,6 +342,10 @@
             },
             //图片上传
             viewPic() {
+                this.viewImage = true;
+            },
+            handleView(url) {
+                this.imgUrl = url;
                 this.viewImage = true;
             },
             handleSuccess(res, file) {

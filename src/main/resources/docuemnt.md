@@ -126,3 +126,20 @@ java -jar xxx.jar --logging.file=xxx.log
 ---
 **死磕Elasticsearch方法论**
 https://github.com/laoyang360/deep_elasticsearch/wiki/%E3%80%8A%E6%AD%BB%E7%A3%95Elasticsearch%E6%96%B9%E6%B3%95%E8%AE%BA%E3%80%8B%E2%80%94%E2%80%94%E9%93%AD%E6%AF%85%E5%A4%A9%E4%B8%8B%E5%87%BA%E5%93%81
+
+text类型和keyword类型的存储字符数区别
+text类型：支持分词、全文检索，不支持聚合、排序操作。 
+适合大字段存储，如：文章详情、content字段等；
+
+keyword类型：支持精确匹配，支持聚合、排序操作。 
+适合精准字段匹配，如：url、name、title等字段。 
+一般情况，text和keyword共存，设置mapping如下：
+"id": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        }

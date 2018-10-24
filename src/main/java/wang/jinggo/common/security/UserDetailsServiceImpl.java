@@ -30,6 +30,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private UserService userService;
 
+    /**
+     * 1.用户登录的时间校验是否登录成功
+     * @param username
+     * @return
+     * @throws UsernameNotFoundException
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         RedisCachePool pool = redisCacheManager.getRedisPoolMap().get(RedisDataBaseType.defaultType.toString());
@@ -42,7 +48,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new LoginFailLimitException("登录错误次数超过限制，请"+timeRest+"分钟后再试");
         }
         User user = userService.findByUsername(username);
-
         return new SecurityUserDetails(user);
     }
 }

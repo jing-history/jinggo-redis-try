@@ -748,7 +748,7 @@
                 this.modalType = 0;
                 this.modalTitle = "添加用户";
                 //todo 这个方法没有找到
-                this.$refs.userForm.resetFields();
+             //   this.$refs.userForm.resetFields();
                 this.userModalVisible = true;
             },
             delAll() {

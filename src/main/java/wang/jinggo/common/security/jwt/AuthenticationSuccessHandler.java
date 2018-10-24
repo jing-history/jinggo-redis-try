@@ -7,6 +7,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -43,6 +44,9 @@ public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticatio
 
     @Autowired
     private IpInfoUtil ipInfoUtil;
+
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     @Override
     @SystemLog(description="登录系统")

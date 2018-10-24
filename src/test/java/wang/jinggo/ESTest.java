@@ -13,6 +13,7 @@ import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexRequestBuilder;
 import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.client.IndicesAdminClient;
@@ -22,9 +23,9 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.TermQueryBuilder;
+import org.elasticsearch.index.query.*;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -239,5 +240,47 @@ public class ESTest {
         //QueryBuilder queryBuilder = QueryBuilders.termQuery("title",keyWords);
         String index = "test1"; //索引名
         SearchResponse searchResponse = transportClient.prepareSearch(index).setQuery(qb).execute().actionGet();
+    }
+
+    //基本查询
+    @Test
+    public void testSearch() throws Exception {
+        MatchAllQueryBuilder qb = QueryBuilders.matchAllQuery();
+        String index = "bookdb_index";
+
+        SearchResponse searchResponse =
+                transportClient.prepareSearch(index).setQuery(qb).execute().actionGet();
+
+        SearchHits hits = searchResponse.getHits();
+        for (SearchHit hit : hits) {
+            System.out.println("id "+hit.getId()); // 文档id
+            Map<String, Object> result = hit.getSource(); // 键是列名，值是文档中该列的值
+            for (final Map.Entry<String, Object> entry : result.entrySet()) {
+                System.out.println(entry.getKey() + " : " + entry.getValue());
+            }
+        }
+    }
+
+    @Test
+    public void testSearchFetchSource() throws Exception {
+
+        String keyWords = "Elasticsearch";
+        QueryStringQueryBuilder qb = new QueryStringQueryBuilder(keyWords);
+
+        String index = "bookdb_index";
+
+        SearchResponse searchResponse = transportClient.prepareSearch(index)
+                .setQuery(qb).execute().actionGet();
+
+        SearchHits hits = searchResponse.getHits();
+        for (SearchHit hit : hits) {
+            System.out.println("id "+hit.getId()); // 文档id
+            Map<String, Object> result = hit.getSource(); // 键是列名，值是文档中该列的值
+            for (final Map.Entry<String, Object> entry : result.entrySet()) {
+                System.out.println(entry.getKey() + " : " + entry.getValue());
+            }
+        }
+
+        transportClient.close();
     }
 }
