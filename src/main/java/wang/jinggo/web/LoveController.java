@@ -9,7 +9,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import wang.jinggo.dao.LoveRepository;
+import wang.jinggo.dao.TimeAxisDao;
 import wang.jinggo.domain.Love;
+import wang.jinggo.domain.TimeAxis;
 import wang.jinggo.domain.vo.LoveForm;
 import wang.jinggo.util.DTOUtil;
 
@@ -25,10 +27,14 @@ import java.util.List;
  * @create 2018-08-25 14:25
  **/
 @Controller
+@RequestMapping("/love")
 public class LoveController {
 
     @Autowired
     private LoveRepository loveRepository;
+
+    @Autowired
+    private TimeAxisDao timeAxisDao;
 
     private static final int PAGE_SIZE = 10000;
     private static SimpleDateFormat FORMATDATE = new SimpleDateFormat("yyyy,MM,dd");
@@ -41,6 +47,24 @@ public class LoveController {
         for (Love love : loves) {
             LoveForm loveForm = DTOUtil.map(love, LoveForm.class);
             Date nowDate = love.getCreatedAt();
+            String dateStr = FORMATDATE.format(nowDate);
+            loveForm.setFormatDate(dateStr);
+
+            loveForms.add(loveForm);
+        }
+
+        model.addAttribute("loves", loveForms);
+        return "love";
+    }
+
+    @RequestMapping(value = "/list")
+    public String timelist(Model model) throws IOException {
+
+        List<LoveForm> loveForms = new ArrayList<>();
+        List<TimeAxis> loves = timeAxisDao.findAll();
+        for (TimeAxis love : loves) {
+            LoveForm loveForm = DTOUtil.map(love, LoveForm.class);
+            Date nowDate = love.getCreateTime();
             String dateStr = FORMATDATE.format(nowDate);
             loveForm.setFormatDate(dateStr);
 

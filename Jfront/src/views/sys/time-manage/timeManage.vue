@@ -29,7 +29,7 @@
                     </Alert>
                 </Row>
                 <Row>
-                    <Table :loading="loading" border :columns="columns" :data="data" ref="table" sortable="custom" @on-sort-change="changeSort" @on-selection-change="changeSelect"></Table>
+                    <Table :loading="loading" border :columns="columns" :data="data" ref="table" sortable="custom" ></Table>
                 </Row>
                 <Row type="flex" justify="end" class="page">
                     <Page :current="pageNumber" :total="total" :page-size="pageSize" @on-change="changePage" @on-page-size-change="changePageSize" :page-size-opts="[10,20,50]" size="small" show-total show-elevator show-sizer></Page>
@@ -125,23 +125,23 @@
               columns: [
                   {
                       type: "selection",
-                      width: 60,
+                      width: 50,
                       align: "center"
                   },
                   {
                       type: "index",
-                      width: 60,
+                      width: 40,
                       align: "center"
                   },
                   {
                       title: "标题",
                       key: "title",
-                      sortable: true
+                      tooltip: true
                   },
                   {
                       title: "内容",
                       key: "content",
-                      width: 200,
+                      width: 120,
                       tooltip: true
                   },
                   {
@@ -158,8 +158,8 @@
                                   'margin-top':'10px',
                                   'margin-bottom':'10px',
                                   'border-radius':'4px',
-                                  width:'80px',
-                                  height:'50px',
+                                  width:'120px',
+                                  height:'80px',
                                   cursor: 'pointer',
                               },
                               attrs:{
@@ -177,18 +177,27 @@
                   {
                       title: "图片说明",
                       key: "figureMsg",
-                      sortable: true
                   },
                   {
                       title: "标签说明",
                       key: "figcaption",
-                      sortable: true
+                      tooltip: true
+                  },
+                  {
+                      title: "创建时间",
+                      key: "createTime",
+                      width: 100,
+                      render: (h,params)=>{
+                          return h('div',
+                              this.formatDate(new Date(params.row.createTime),'yyyy-MM-dd')
+                          )
+                      }
                   },
                   {
                       title: "操作",
                       key: "action",
                       align: "center",
-                      width: 280,
+                      width: 180,
                       render: (h, params) => {
                           return h("div", [
                               h(
@@ -208,6 +217,23 @@
                                       }
                                   },
                                   "编辑"
+                              ),
+                              h(
+                                  "Button",
+                                  {
+                                      props: {
+                                          size: "small"
+                                      },
+                                      style: {
+                                          marginRight: "5px"
+                                      },
+                                      on: {
+                                          click: () => {
+                                              this.disable(params.row);
+                                          }
+                                      }
+                                  },
+                                  "禁用"
                               ),
                               h(
                                   "Button",
@@ -269,7 +295,7 @@
                 this.selectDate = null;
                 this.startDate = "";
                 this.endDate = "";
-                this.getLoveList();
+                this.getTimeList();
             },  // end 上面常用的方法
 
             clearSelectAll() {
@@ -296,17 +322,34 @@
             add() {
                 this.modalType = 0;
                 this.modalTitle = "添加时间轴";
-            //    this.$refs.timeForm.resetFields();
+                this.$refs.timeForm.resetFields();
                 this.modalVisible = true;
             },
             edit(v) {
-
+                this.modalType = 1;
+                this.modalTitle = "修改时间轴";
+                // 转换null为""
+                for (let attr in v) {
+                    if (v[attr] === null) {
+                        v[attr] = "";
+                    }
+                }
+                let str = JSON.stringify(v);
+                let timeInfo = JSON.parse(str);
+                this.timeForm = timeInfo;
+                this.modalVisible = true;
+            },
+            disable(v) {
+                this.$Message.warning("暂时不用禁用啊😱");
+                return;
             },
             remove(v) {
-
+                this.$Message.warning("数据来之不易，请忽乱删😱");
+                return;
             },
             delAll() {
-
+                this.$Message.warning("不可以乱删除数据哦😄");
+                return;
             },
             cancelTime() {
                 this.modalVisible = false;
@@ -328,10 +371,10 @@
                         } else {
                             //修改
                             this.submitLoading = true;
-                            editTime(this.form).then(res => {
+                            editTime(this.timeForm).then(res => {
                                 this.submitLoading = false;
                                 if (res.success === true) {
-                                    this.$Message.success("操作成功");
+                                    this.$Message.success("修改成功");
                                     this.getTimeList();
                                     this.modalVisible = false;
                                 }
@@ -381,6 +424,25 @@
                     return false;
                 }*/
                 return true;
+            },
+            formatDate(date, fmt) {
+                let o = {
+                    'M+': date.getMonth() + 1, // 月份
+                    'd+': date.getDate(), // 日
+                    'h+': date.getHours(), // 小时
+                    'm+': date.getMinutes(), // 分
+                    's+': date.getSeconds(), // 秒
+                    'S': date.getMilliseconds() // 毫秒
+                }
+                if (/(y+)/.test(fmt)) {
+                    fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
+                }
+                for (var k in o) {
+                    if (new RegExp('(' + k + ')').test(fmt)) {
+                        fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)))
+                    }
+                }
+                return fmt;
             }
         },
         mounted() {

@@ -43,7 +43,7 @@ public class UploadController {
                                  HttpServletRequest request) {
 
         // IP限流 在线Demo所需 5分钟限1个请求
-        String token = redisRaterLimiter.acquireTokenFromBucket("upload:"+ipInfoUtil.getIpAddr(request), 1, 300000);
+        String token = redisRaterLimiter.acquireTokenFromBucket("upload:"+ipInfoUtil.getIpAddr(request), 1, 5000);
         if (StrUtil.isBlank(token)) {
             throw new XbootException("上传那么多干嘛，等等再传吧");
         }
