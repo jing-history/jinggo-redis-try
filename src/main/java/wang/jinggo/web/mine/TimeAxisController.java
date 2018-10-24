@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import wang.jinggo.common.constant.CommonConstant;
 import wang.jinggo.common.vo.PageVo;
 import wang.jinggo.common.vo.Result;
+import wang.jinggo.domain.QuartzJob;
 import wang.jinggo.domain.TimeAxis;
 import wang.jinggo.domain.User;
 import wang.jinggo.pojo.SearchVo;
@@ -47,10 +49,26 @@ public class TimeAxisController {
 
     @RequestMapping(value = "/getByCondition",method = RequestMethod.GET)
     @ApiOperation(value = "多条件分页获取内容列表")
-    public Result<Page<User>> getByCondition(SearchVo searchVo, @ModelAttribute PageVo pageVo){
+    public Result<Page<TimeAxis>> getByCondition(SearchVo searchVo, @ModelAttribute PageVo pageVo){
 
         LOG.info("====>>> " + searchVo.toString());
-     //   Page<TimeAxis> page = timeAxisService.findByCondition(searchKey, startDate, PageUtil.initPage(pageVo));
-        return new ResultUtil<Page<User>>().setData(null);
+        Page<TimeAxis> page = timeAxisService.findByCondition(searchVo, PageUtil.initPage(pageVo));
+        return new ResultUtil<Page<TimeAxis>>().setData(page);
+    }
+
+    @RequestMapping(value = "/add",method = RequestMethod.POST)
+    @ApiOperation(value = "添加时间轴事件")
+    public Result<Object> addTime(@ModelAttribute TimeAxis timeAxis){
+
+        timeAxisService.save(timeAxis);
+        return new ResultUtil<Object>().setSuccessMsg("添加时间轴事件成功");
+    }
+
+    @RequestMapping(value = "/edit",method = RequestMethod.POST)
+    @ApiOperation(value = "修改时间轴事件")
+    public Result<Object> editTime(@ModelAttribute TimeAxis timeAxis){
+
+        timeAxisService.update(timeAxis);
+        return new ResultUtil<Object>().setSuccessMsg("修改时间轴事件成功");
     }
 }

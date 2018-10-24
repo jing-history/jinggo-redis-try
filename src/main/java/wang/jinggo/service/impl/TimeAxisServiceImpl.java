@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import wang.jinggo.base.XbootBaseDao;
 import wang.jinggo.dao.TimeAxisDao;
 import wang.jinggo.domain.TimeAxis;
+import wang.jinggo.pojo.SearchVo;
 import wang.jinggo.service.TimeAxisService;
 
 import javax.persistence.criteria.*;
@@ -39,7 +40,7 @@ public class TimeAxisServiceImpl implements TimeAxisService {
     }
 
     @Override
-    public Page<TimeAxis> findByCondition(String title, String createDate, Pageable pageable) {
+    public Page<TimeAxis> findByCondition(SearchVo searchVo, Pageable pageable) {
         return timeAxisDao.findAll(new Specification<TimeAxis>() {
 
             @Nullable
@@ -52,10 +53,10 @@ public class TimeAxisServiceImpl implements TimeAxisService {
                 List<Predicate> list = new ArrayList<Predicate>();
 
                 //模糊搜素
-                list.add(cb.like(titleField,'%'+title+'%'));
+                list.add(cb.like(titleField,'%'+searchVo.getTitle()+'%'));
                 //创建时间
-                if(StrUtil.isNotBlank(createDate)){
-                    Date start = DateUtil.parse(createDate);
+                if(StrUtil.isNotBlank(searchVo.getStartDate())){
+                    Date start = DateUtil.parse(searchVo.getStartDate());
                     list.add(cb.equal(createTimeField, start));
                 }
                 Predicate[] arr = new Predicate[list.size()];

@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import wang.jinggo.base.XbootBaseService;
 import wang.jinggo.domain.TimeAxis;
 import wang.jinggo.domain.User;
+import wang.jinggo.pojo.SearchVo;
 
 /**
  * @author wangyj
@@ -20,5 +21,5 @@ public interface TimeAxisService  extends XbootBaseService<TimeAxis,String> {
      * @param pageable
      * @return
      */
-    Page<TimeAxis> findByCondition(String title, String createDate, Pageable pageable);
+    Page<TimeAxis> findByCondition(SearchVo searchVo, Pageable pageable);
 }

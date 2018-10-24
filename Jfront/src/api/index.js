@@ -191,4 +191,10 @@ export const unlock = (params) => {
 export const getTimeListData = (params) => {
     return getRequest('/mine/getByCondition', params)
 }
+export const addTime = (params) => {
+    return postRequest('/mine/add', params)
+}
+export const editTime = (params) => {
+    return postRequest('/mine/edit', params)
+}
 
