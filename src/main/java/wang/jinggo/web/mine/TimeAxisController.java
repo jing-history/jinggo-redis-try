@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +28,7 @@ import wang.jinggo.util.ResultUtil;
 import wang.jinggo.web.WorkInfoController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -59,7 +62,9 @@ public class TimeAxisController {
     @RequestMapping(value = "/add",method = RequestMethod.POST)
     @ApiOperation(value = "添加时间轴事件")
     public Result<Object> addTime(@ModelAttribute TimeAxis timeAxis){
-
+        UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        timeAxis.setCreateBy(user.getUsername());
+        timeAxis.setCreateTime(new Date());
         timeAxisService.save(timeAxis);
         return new ResultUtil<Object>().setSuccessMsg("添加时间轴事件成功");
     }
@@ -67,7 +72,9 @@ public class TimeAxisController {
     @RequestMapping(value = "/edit",method = RequestMethod.POST)
     @ApiOperation(value = "修改时间轴事件")
     public Result<Object> editTime(@ModelAttribute TimeAxis timeAxis){
-
+        UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        timeAxis.setUpdateBy(user.getUsername());
+        timeAxis.setUpdateTime(new Date());
         timeAxisService.update(timeAxis);
         return new ResultUtil<Object>().setSuccessMsg("修改时间轴事件成功");
     }
