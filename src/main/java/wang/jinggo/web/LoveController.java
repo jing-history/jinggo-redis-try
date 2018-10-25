@@ -61,7 +61,7 @@ public class LoveController {
         return "love";
     }*/
 
-    @RequestMapping(value = "")
+    /*@RequestMapping(value = "/data")
     public String timelist(Model model) throws IOException {
 
         List<LoveForm> loveForms = new ArrayList<>();
@@ -77,15 +77,15 @@ public class LoveController {
 
         model.addAttribute("loves", loveForms);
         return "love";
-    }
+    }*/
 
     /**
-     * 前端Aajax 请求
+     * 动静分离 前端Aajax 请求
      * @param model
      * @return
      * @throws IOException
      */
-    @RequestMapping(value = "/data", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     @ResponseBody
     public Result<List<LoveForm>> timeData(Model model) throws IOException {
         List<LoveForm> loveForms = new ArrayList<>();

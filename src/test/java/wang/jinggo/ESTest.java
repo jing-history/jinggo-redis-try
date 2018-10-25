@@ -26,6 +26,7 @@ import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -282,5 +283,22 @@ public class ESTest {
         }
 
         transportClient.close();
+    }
+
+    @Test
+    public void testHighlighter() {
+        String index = "bookdb_index";
+
+        SearchRequestBuilder searchRequestBuilder = transportClient.prepareSearch(index);
+
+        // 高亮
+        HighlightBuilder hiBuilder = new HighlightBuilder();
+        hiBuilder.preTags("<span style=\"color:red\">");
+        hiBuilder.postTags("</span>");
+
+        // 高亮字段
+        hiBuilder.field("title");
+
+        searchRequestBuilder.highlighter(hiBuilder);
     }
 }

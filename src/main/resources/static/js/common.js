@@ -68,6 +68,7 @@ var Index = {
     }
     return d + "-" + e + "-" + f;
   },
+
   initTimeline: function () {
     if (/Mobile/i.test(navigator.userAgent) || $("#timeline").length === 0) {
       return;
@@ -85,15 +86,11 @@ var Index = {
 
 (function () {
   Index.killBrowser();
-  Index.getNews();
-  Index.initTimeline();
+//  Index.getNews();
+//  Index.initTimeline();
 
-  var hm = document.createElement("script");
-  hm.src = "//hm.baidu.com/hm.js?174a1111f4c1724383232f848510cd2c";
-  var s = document.getElementsByTagName("script")[0];
-  s.parentNode.insertBefore(hm, s);
+  // var hm = document.createElement("script");
+  // hm.src = "//hm.baidu.com/hm.js?174a1111f4c1724383232f848510cd2c";
+  // var s = document.getElementsByTagName("script")[0];
+  // s.parentNode.insertBefore(hm, s);
 })();
-
-function initData() {
-    alert("initdat");
-}
