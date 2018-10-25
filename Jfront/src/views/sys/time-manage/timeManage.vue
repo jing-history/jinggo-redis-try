@@ -136,18 +136,18 @@
                   {
                       title: "标题",
                       key: "title",
+                      width: 150,
                       tooltip: true
                   },
                   {
                       title: "内容",
                       key: "content",
-                      width: 120,
                       tooltip: true
                   },
                   {
                       title: "图片",
                       key: "figureImg",
-                      width: 160,
+                      width: 200,
                       align: "center",
                       render: (h, params) => {
                           return h("img", {
@@ -158,8 +158,8 @@
                                   'margin-top':'10px',
                                   'margin-bottom':'10px',
                                   'border-radius':'4px',
-                                  width:'120px',
-                                  height:'80px',
+                                  width:'150px',
+                                  height:'100px',
                                   cursor: 'pointer',
                               },
                               attrs:{
@@ -177,6 +177,7 @@
                   {
                       title: "图片说明",
                       key: "figureMsg",
+                      width: 120,
                   },
                   {
                       title: "标签说明",

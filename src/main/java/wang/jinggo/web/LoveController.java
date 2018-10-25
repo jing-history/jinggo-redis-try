@@ -7,13 +7,17 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import wang.jinggo.common.vo.Result;
 import wang.jinggo.dao.LoveRepository;
 import wang.jinggo.dao.TimeAxisDao;
 import wang.jinggo.domain.Love;
 import wang.jinggo.domain.TimeAxis;
 import wang.jinggo.domain.vo.LoveForm;
 import wang.jinggo.util.DTOUtil;
+import wang.jinggo.util.ResultUtil;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -39,7 +43,7 @@ public class LoveController {
     private static final int PAGE_SIZE = 10000;
     private static SimpleDateFormat FORMATDATE = new SimpleDateFormat("yyyy,MM,dd");
 
-    @RequestMapping(value = "")
+    /*@RequestMapping(value = "")
     public String love(Model model) throws IOException {
 
         List<LoveForm> loveForms = new ArrayList<>();
@@ -55,9 +59,9 @@ public class LoveController {
 
         model.addAttribute("loves", loveForms);
         return "love";
-    }
+    }*/
 
-    @RequestMapping(value = "/list")
+    @RequestMapping(value = "")
     public String timelist(Model model) throws IOException {
 
         List<LoveForm> loveForms = new ArrayList<>();
@@ -73,5 +77,28 @@ public class LoveController {
 
         model.addAttribute("loves", loveForms);
         return "love";
+    }
+
+    /**
+     * 前端Aajax 请求
+     * @param model
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(value = "/data", method = RequestMethod.GET)
+    @ResponseBody
+    public Result<List<LoveForm>> timeData(Model model) throws IOException {
+        List<LoveForm> loveForms = new ArrayList<>();
+        List<TimeAxis> loves = timeAxisDao.findAll();
+        for (TimeAxis love : loves) {
+            LoveForm loveForm = DTOUtil.map(love, LoveForm.class);
+            Date nowDate = love.getCreateTime();
+            String dateStr = FORMATDATE.format(nowDate);
+            loveForm.setFormatDate(dateStr);
+
+            loveForms.add(loveForm);
+        }
+
+        return new ResultUtil<List<LoveForm>>().setData(loveForms);
     }
 }
