@@ -143,3 +143,25 @@ keyword类型：支持精确匹配，支持聚合、排序操作。
             }
           }
         }
+        
+        
+--- 
+** Nginx 的使用 **
+   upstream api {
+        server 172.18.214.134:7777;
+    }
+
+    underscores_in_headers on;
+
+    server {
+        listen       80;
+        server_name  api.jinggo.wang;
+        client_max_body_size 1024M;
+
+        location / {
+            proxy_pass http://api;
+            proxy_set_header Host $host:$server_port;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+    }

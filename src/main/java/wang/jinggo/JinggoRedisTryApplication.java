@@ -14,6 +14,8 @@ public class JinggoRedisTryApplication {
 		 * java.lang.IllegalStateException: availableProcessors is already set to [4], rejecting [4]
 		 */
 		System.setProperty("es.set.netty.runtime.available.processors", "false");
+		//更新到Linux 服务器 不必要使用 devtools 模式
+		System.setProperty("spring.devtools.restart.enabled", "false");
 		SpringApplication.run(JinggoRedisTryApplication.class, args);
 	}
 }
