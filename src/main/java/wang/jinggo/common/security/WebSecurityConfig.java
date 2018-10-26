@@ -17,6 +17,8 @@ import wang.jinggo.common.security.jwt.JWTAuthenticationFilter;
 import wang.jinggo.common.security.jwt.RestAccessDeniedHandler;
 import wang.jinggo.common.security.permission.MyFilterSecurityInterceptor;
 import wang.jinggo.config.IgnoredUrlsProperties;
+import wang.jinggo.config.interceptor.CorsConfig;
+import wang.jinggo.config.interceptor.CorsFilter;
 
 /**
  * Security 核心配置类
@@ -46,6 +48,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private MyFilterSecurityInterceptor myFilterSecurityInterceptor;
+
+    @Autowired
+    private CorsFilter corsFilter;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -98,5 +103,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(myFilterSecurityInterceptor, FilterSecurityInterceptor.class)
                 //添加JWT过滤器 除/xboot/login其它请求都需经过此过滤器
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()));
+
+        http.addFilterBefore(corsFilter,JWTAuthenticationFilter.class);    //首先要先跨域问题
     }
 }

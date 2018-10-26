@@ -253,7 +253,7 @@ util.initRouter = function (vm) {
     let userId = JSON.parse(Cookies.get("userInfo")).id;
     let accessToken = window.localStorage.getItem('accessToken')
     // 加载菜单
-    axios.get("/xboot/permission/getMenuList/" + userId, {headers: {'accessToken': accessToken}}).then(res => {
+    axios.get("http://api.jinggo.wang/xboot/permission/getMenuList/" + userId, {headers: {'accessToken': accessToken}}).then(res => {
         let menuData = res.result;
         if (menuData === null || menuData === "" || menuData === undefined) {
             return;

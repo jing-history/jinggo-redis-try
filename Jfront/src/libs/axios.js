@@ -10,7 +10,7 @@ import { Message } from 'iview';
 import Cookies from 'js-cookie';
 
 // 统一请求路径前缀
-let base = '/xboot';
+let base = 'http://api.jinggo.wang/xboot';
 // 超时设定
 axios.defaults.timeout = 15000;
 

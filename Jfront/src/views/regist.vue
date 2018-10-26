@@ -2,7 +2,7 @@
   <Row type="flex" justify="center" align="middle" class="regist" @keydown.enter.native="submitRegist">
     <Col :xs="{span:22}" style="width: 368px;">
     <Row class="header">
-      <img src="../assets/xboot.png" width="220px" />
+      <img src="../assets/Jing2.jpg" width="220px" />
       <div class="description">X-Boot 是很不错的Web前后端分离架构开发平台</div>
     </Row>
   
@@ -66,12 +66,12 @@
   
     <Row class="foot">
       <Row type="flex" justify="space-around" class="code-row-bg help">
-        <a class="item" href="https://github.com/Exrick/x-boot" target="_blank">帮助</a>
-        <a class="item" href="https://github.com/Exrick/x-boot" target="_blank">隐私</a>
-        <a class="item" href="https://github.com/Exrick/x-boot" target="_blank">条款</a>
+        <a class="item" href="" target="_blank">帮助</a>
+        <a class="item" href="" target="_blank">隐私</a>
+        <a class="item" href="" target="_blank">条款</a>
       </Row>
       <Row type="flex" justify="center" class="code-row-bg copyright">
-        Copyright © 2018-Present <a href="http://exrick.cn" target="_blank" style="margin:0 5px;">Exrick</a> 版权所有
+        Copyright © 2018-Present <a href="http://jinggo.wang" target="_blank" style="margin:0 5px;">JingGo</a> 版权所有
       </Row>
     </Row>
     </Col>
@@ -258,7 +258,7 @@ export default {
       initCaptcha().then(res => {
         if (res.success === true) {
           this.captchaId = res.result.captchaId;
-          this.verifyCodeImg = "/xboot/common/captcha/draw/" + this.captchaId;
+          this.verifyCodeImg = "http://api.jinggo.wang/xboot/common/captcha/draw/" + this.captchaId;
           this.loadingCode = false;
         }
       });

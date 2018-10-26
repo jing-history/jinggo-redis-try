@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,10 +22,13 @@ public class ResponseUtil {
      * @param response
      * @param resultMap
      */
-    public static void out(ServletResponse response, Map<String, Object> resultMap){
+    public static void out(HttpServletResponse response, Map<String, Object> resultMap){
 
         PrintWriter out = null;
         try {
+            response.setHeader("Access-Control-Allow-Origin", "*");
+            response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+            response.setHeader("Access-Control-Max-Age", "3600");
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");
             out = response.getWriter();

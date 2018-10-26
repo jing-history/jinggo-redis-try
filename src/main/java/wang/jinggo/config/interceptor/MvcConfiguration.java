@@ -32,24 +32,29 @@ public class MvcConfiguration implements WebMvcConfigurer {
     }
 
     //跨域访问配置
+     /*
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("*")
-                .allowCredentials(true)
-                .allowedMethods("GET", "POST", "DELETE", "PUT")
+        registry.addMapping("/**")  //添加映射路径
+                .allowedOrigins("*")    //放行哪些原始域
+                .allowCredentials(true)  //是否发送Cookie信息
+                .allowedMethods("GET", "POST", "DELETE", "PUT") //放行哪些原始域(请求方式)
+                .allowedHeaders("*")    //放行哪些原始域(头部信息)
                 .maxAge(3600);
     }
 
-    //参考 https://blog.csdn.net/c5113620/article/details/79132968
+
+    下面这种也是全局配置的方法
+    // 请求常用的三种配置，*代表允许所有，当时你也可以自定义属性（比如header只能带什么，只能是post方式等等）
+
+    参考 https://blog.csdn.net/c5113620/article/details/79132968
+
     private CorsConfiguration addcorsConfig() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         List<String> list = new ArrayList<>();
         list.add("*");
         corsConfiguration.setAllowedOrigins(list);
-    /*
-    // 请求常用的三种配置，*代表允许所有，当时你也可以自定义属性（比如header只能带什么，只能是post方式等等）
-    */
+
         corsConfiguration.addAllowedOrigin("*");
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.addAllowedMethod("*");
@@ -61,7 +66,7 @@ public class MvcConfiguration implements WebMvcConfigurer {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", addcorsConfig());
         return new CorsFilter(source);
-    }
+    }*/
 
     //格式化
     @Override
