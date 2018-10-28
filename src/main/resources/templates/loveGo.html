@@ -378,6 +378,8 @@
                     $("#timeline").height($(window).height() - 110);
                     var timeline = new VMM.Timeline();
                     timeline.init();
+
+                    setTimeout("showTime()", 5000);
                 }
             },
             error: function(res){
