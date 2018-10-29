@@ -301,4 +301,37 @@ public class ESTest {
 
         searchRequestBuilder.highlighter(hiBuilder);
     }
+
+    @Test
+    public void testPaging() {
+        int rows=10; //一页显示多少条搜索结果
+        int offset=0;  //开始行
+
+        // 获取客户端
+        String index = "bookdb_index";
+        // 创建查询索引,参数productindex表示要查询的索引库为productindex
+        SearchRequestBuilder searchRequestBuilder = transportClient.prepareSearch(index);
+        // 分页应用
+        searchRequestBuilder.setFrom(offset).setSize(rows);
+        String keyWords = "软件";//"工作"; //"大全"; // 查询词
+        // 设置查询关键词
+        QueryStringQueryBuilder qb = new QueryStringQueryBuilder(keyWords);
+        searchRequestBuilder.setQuery(qb);
+
+        // 执行搜索,返回搜索响应信息
+        SearchResponse response = searchRequestBuilder.execute().actionGet();
+
+        // 获取搜索的文档结果
+        SearchHits searchHits = response.getHits();
+        long totalHits = searchHits.getTotalHits();  //得到结果总数
+        System.out.println("totalHits:"+totalHits);
+        int count =0;
+        for (SearchHit hit : searchHits) {
+            //System.out.println("hit " + hit);
+            // 将文档中的每一个对象转换json串值
+            String json = hit.getSourceAsString(); //搜索结果用Gson解析。  解析都要自己写的
+            System.out.println((++count)+" : " + json);
+        }
+    }
+
 }

@@ -1,5 +1,6 @@
 package wang.jinggo.web;
 
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,6 +32,7 @@ import java.util.List;
  * @create 2018-08-25 14:25
  **/
 @Controller
+@Api(description = "静态页面时间轴内容接口")
 @RequestMapping("/love")
 public class LoveController {
 
