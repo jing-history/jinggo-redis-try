@@ -26,7 +26,7 @@ import java.util.Arrays;
 @Aspect
 public class AopConfig {
 
-    private final static Logger LOG =  LoggerFactory.getLogger(DruidConfiguration.class);
+    private final static Logger LOG =  LoggerFactory.getLogger(AopConfig.class);
 
     //Spring controller 的方法都被监控
     @Around("@within(org.springframework.stereotype.Controller)")

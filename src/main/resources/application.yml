@@ -37,6 +37,20 @@ spring:
     elasticsearch:
       cluster-nodes: 120.79.230.147:9300
       cluster-name: elasticsearch
+  datasource:
+    druid:
+      stat-view-servlet:
+        # 默认true 内置监控页面首页/druid/index.html
+        enabled: true
+        url-pattern: /druid/*
+        # 允许清空统计数据
+        reset-enable: false
+        login-username: root
+        login-password: a123456
+        # IP白名单 多个逗号分隔
+        allow:
+        # IP黑名单
+        deny:
 
 # 自己定义配置启动ES
 elasticsearch:

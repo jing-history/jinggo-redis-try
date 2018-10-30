@@ -9,7 +9,6 @@ import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import wang.jinggo.config.DruidConfiguration;
 import wang.jinggo.pojo.WorkInfoForm;
 
 import java.util.List;

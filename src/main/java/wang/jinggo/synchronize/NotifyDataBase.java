@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
-import wang.jinggo.config.DruidConfiguration;
 import wang.jinggo.dao.RedisDao;
 import wang.jinggo.util.RedisCacheManager;
 import wang.jinggo.util.RedisCachePool;

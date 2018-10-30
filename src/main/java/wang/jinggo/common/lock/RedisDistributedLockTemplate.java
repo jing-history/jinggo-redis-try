@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.JedisPool;
-import wang.jinggo.config.DruidConfiguration;
 import wang.jinggo.util.RedisCacheManager;
 import wang.jinggo.util.RedisCachePool;
 import wang.jinggo.util.RedisDataBaseType;

@@ -38,7 +38,7 @@ import java.util.Properties;
 @EnableJpaRepositories(basePackageClasses = JinggoRedisTryApplication.class)
 public class HibernateConfig {
 
-    private final static Logger LOG =  LoggerFactory.getLogger(DruidConfiguration.class);
+    private final static Logger LOG =  LoggerFactory.getLogger(HibernateConfig.class);
 
     @Autowired
     private DruidProperties druidProperties;
