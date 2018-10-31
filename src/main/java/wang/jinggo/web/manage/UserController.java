@@ -158,6 +158,16 @@ public class UserController {
     public Result<List<User>> getAll(){
 
         List<User> list = userService.getAll();
+        for(User u: list){
+            // 关联部门
+            if(StrUtil.isNotBlank(u.getDepartmentId())){
+                Department department = departmentService.get(u.getDepartmentId());
+                u.setDepartmentTitle(department.getTitle());
+            }
+            // 清除持久上下文环境 避免后面语句导致持久化
+            entityManager.clear();
+            u.setPassword(null);
+        }
         return new ResultUtil<List<User>>().setData(list);
     }
 
@@ -257,6 +267,9 @@ public class UserController {
     public Result<Object> delAllByIds(@PathVariable String[] ids){
 
         for(String id:ids){
+            User u = userService.get(id);
+            //删除缓存
+            redisTemplate.delete("user::"+u.getUsername());
             userService.delete(id);
             //删除关联角色
             userRoleService.deleteByUserId(id);
