@@ -134,8 +134,8 @@
 <!-- start main -->
 <div class="wrapper">
     <!-- start time line -->
-    <div id="timeline" style="margin:0px auto;">
-        <section>
+	<div id="timeline" style="margin:0px auto;">
+		<section>
             <time>2018,05,12</time>
             <h2>时间轴 上线</h2>
             <article>
@@ -149,9 +149,9 @@
                 <cite>我不会轰轰烈烈，也不会甜言蜜语，但我愿尽我所能，带给你快了和幸福！！！</cite>
             </figure>
         </section>
-        <ul id="times">
-        </ul>
-    </div>
+		<ul id="times">
+		</ul>
+	</div>
 </div>
 <script>
 </script>
@@ -348,44 +348,44 @@
         }
 
         $.ajax({
-            url: "http://127.0.0.1:7777/love",
-            type: "get",
-            dataType:"json",
-            data: {status:1},
-            success: function(res) {
-                if (res.success === true) {
+         url: "http://api.jinggo.wang/love",
+         type: "get",
+		 dataType:"json",
+         data: {status:1},
+         success: function(res) {
+			if (res.success === true) {
                     var templates = "";
                     res.result.forEach(function(e) {
                         var template = "<li>"
-                            +"<time>"+e.formatDate+"</time>"
-                            +"<h3>"+e.title+"</h3>"
-                            +"<article><p>"+e.content+"</p></article>"
-                            +"<figure><img src='"+e.figureImg+"' title='"+e.figureMsg+"' />"
-                            +"<figcaption>"+e.figcaption+"</figcaption></figure>"
-                            +"</li><br/>";
+                                +"<time>"+e.formatDate+"</time>"
+                                +"<h3>"+e.title+"</h3>"
+                                +"<article><p>"+e.content+"</p></article>"
+                                +"<figure><img src='"+e.figureImg+"' title='"+e.figureMsg+"' />"
+                                +"<figcaption>"+e.figcaption+"</figcaption></figure>"
+								+"</li><br/>";
 
                         templates += template;
                     });
-                    //	var hh = '<div id="timeline" style="margin:0px auto;"><section><time>2018,05,12</time><h2>时间轴 上线</h2><article><p><a href="jinggo.ml" target="_blank">骚年，坚持梦想，Go Go Go！</a></p></article><figure><img src="images/jing2.png" title="海螺沟"/><cite>我不会轰轰烈烈，也不会甜言蜜语，但我愿尽我所能，带给你快了和幸福！！！</cite></figure></section>';
-                    //	var content = hh + templates + "</div>";
-                    console.info(templates);
-                    $("#times").html(templates);
-
-                    //初始化时间轴
-                    if (/Mobile/i.test(navigator.userAgent) || $("#timeline").length === 0) {
-                        return;
-                    }
-                    $("#timeline").height($(window).height() - 110);
-                    var timeline = new VMM.Timeline();
-                    timeline.init();
-
-                    setTimeout("showTime()", 5000);
+				//	var hh = '<div id="timeline" style="margin:0px auto;"><section><time>2018,05,12</time><h2>时间轴 上线</h2><article><p><a href="jinggo.ml" target="_blank">骚年，坚持梦想，Go Go Go！</a></p></article><figure><img src="images/jing2.png" title="海螺沟"/><cite>我不会轰轰烈烈，也不会甜言蜜语，但我愿尽我所能，带给你快了和幸福！！！</cite></figure></section>';
+				//	var content = hh + templates + "</div>";
+					console.info(templates);
+                  // $("#times").html(templates);
+				  
+                  setTimeout(function () {
+		       $("#times").html(templates);
+                       if (/Mobile/i.test(navigator.userAgent) || $("#timeline").length === 0) {
+                          return;
+                        }
+                        $("#timeline").height($(window).height() - 110);
+                        var timeline = new VMM.Timeline();
+                        timeline.init(); 
+                    }, 5000);	  
                 }
-            },
-            error: function(res){
-                alert("服务器异常，请稍后在尝试！！！");
-            }
-        });
+         },
+		 error: function(res){
+			alert("服务器异常，请稍后在尝试！！！");
+		 }
+         });
     })();
 </script>
 <script type="text/javascript" src="js/lib/timeline/timeline-min.js" charset="utf-8"></script>

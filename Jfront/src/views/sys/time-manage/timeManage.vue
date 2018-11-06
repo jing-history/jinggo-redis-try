@@ -278,13 +278,14 @@
             },
             changePage(v) {
                 this.pageNumber = v;
-                this.getQuartzList();
+                this.getTimeList();
                 this.clearSelectAll();
             },
             changePageSize(v) {
                 this.pageSize = v;
-                this.getQuartzList();
+                this.getTimeList();
             },
+
             selectDateRange(v) {
                 if (v) {
                     this.startDate = v[0];
