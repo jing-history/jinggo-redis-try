@@ -1,11 +1,12 @@
-<style lang="less">
+<style lang="less" scoped>
+    @import "./leanManage.less";
 </style>
 <template>
     <div id="app">
         <h1>{{title}}</h1>
-        <ul>
-            <li v-for="(todo,index) in todos" :id="index">
-                <label>{{ index + 1 }}.{{ todo.value }}</label>
+        <ul class="todos">
+            <li v-for="(todo,index) in todos" :class="{'checked':todo.done}">
+                <label>{{index + 1}}.{{todo.value}}</label>
             </li>
         </ul>
     </div>
@@ -24,7 +25,7 @@
             title: "vue-todos",
             todos: [
                 {value: "my vue one", done: false},
-                {value: "my vue two", done: false},
+                {value: "my vue two", done: true},
                 {value: "my vue three", done: false}
             ],
           };
