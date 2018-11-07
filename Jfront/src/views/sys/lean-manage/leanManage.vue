@@ -7,6 +7,7 @@
         <ul class="todos">
             <li v-for="(todo,index) in todos" :class="{'checked':todo.done}">
                 <label>{{index + 1}}.{{todo.value}}</label>
+                <time>{{todo.created}}</time>
             </li>
         </ul>
     </div>
@@ -24,9 +25,9 @@
           return {
             title: "vue-todos",
             todos: [
-                {value: "my vue one", done: false},
-                {value: "my vue two", done: true},
-                {value: "my vue three", done: false}
+                {value: "my vue one", done: false, created: Date.now()},
+                {value: "my vue two", done: true, created: Date.now() + 30000},
+                {value: "my vue three", done: false,  created: Date.now() - 30000}
             ],
           };
         },
