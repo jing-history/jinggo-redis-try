@@ -114,7 +114,7 @@
                             <a @click="viewPic()" style="margin-top:5px;text-align:right;display:block">查看原图</a>
                         </div>
                     </Poptip>
-                    <Upload action="/xboot/upload/file"
+                    <Upload action="http://api.jinggo.wang/xboot/upload/file"
                             :headers="accessToken"
                             :on-success="handleSuccess"
                             :on-error="handleError"
