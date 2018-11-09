@@ -35,7 +35,7 @@ spring:
 # Spring Boot 默认的ES 加载
   data:
     elasticsearch:
-      cluster-nodes: 120.79.230.147:9300
+      cluster-nodes: 47.107.34.185:9300
       cluster-name: elasticsearch
   datasource:
     druid:
@@ -54,7 +54,7 @@ spring:
 
 # 自己定义配置启动ES
 elasticsearch:
-  ip: 120.79.230.147
+  ip: 47.107.34.185
   port: 9300
   pool: 5
   cluster:
@@ -149,7 +149,7 @@ xboot:
     appKey: 285b065b754fd
   # ES
   elasticsearch:
-    nodeClient: 120.79.230.147:9200
+    nodeClient: 47.107.34.185:9200
   # 日志记录方式 true使用Elasticsearch记录 false记录至数据库中
   logRecord:
     es: true

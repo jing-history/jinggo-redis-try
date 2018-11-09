@@ -106,11 +106,31 @@
                     <p slot="title" class="card-title" style="overflow:visible">
                         <a href="http://xpay.exrick.cn/pay?xboot" target="_blank">
                             <Icon type="ios-star" size="20" style="margin-bottom:2px"></Icon>
-                            <Badge dot>X-Boot 项目简介</Badge>
+                            <Badge dot>JingGo 项目简介</Badge>
                         </a>
                     </p>
                     <div>
-                        <div class="qr">
+                        <Checkbox v-model="disabledSingle" disabled><span class="origin">代码拥有详细注释 无复杂逻辑 核心使用 SpringBoot 2.0.4.RELEASE</span></Checkbox>
+                        <Checkbox v-model="disabledSingle" disabled><span class="origin">JPA + Mybatis-Plus任意切换</span></Checkbox>
+                        <Checkbox v-model="disabledSingle" disabled><span class="origin">操作日志记录方式任意切换Mysql或Elasticseach记录</span></Checkbox>
+                        <Checkbox v-model="disabledSingle" disabled><span class="origin">极简代码生成 只需输入类名和字段 自动创建数据库表</span></Checkbox>
+                        <Checkbox v-model="disabledSingle" disabled><span class="origin">动态权限管理 菜单按钮权限+数据权限配置</span></Checkbox>
+                        <Checkbox v-model="disabledSingle" disabled><span class="origin">支持社交账号、短信等多方式登录 不干涉原用户数据 实现第三方账号管理</span></Checkbox>
+                        <Checkbox v-model="disabledSingle" disabled><span class="origin">基于Websocket消息推送管理、基于Quartz定时任务管理</span></Checkbox>
+                        <Checkbox v-model="disabledSingle" disabled><span class="origin">极简代码生成 只需输入类名和字段 自动创建数据库表</span></Checkbox>
+                        <Checkbox v-model="disabledSingle" disabled><span class="origin">后台提供分布式限流、同步锁、验证码等工具类 前端提供空白Vue模版</span></Checkbox>
+                        <Checkbox v-model="disabledSingle" disabled><span class="origin">可动态配置SSO、短信、邮件、Vaptcha验证码等</span></Checkbox>
+                        <Checkbox v-model="disabledSingle" disabled><span class="origin">七牛云文件存储服务</span></Checkbox>
+                        <Checkbox v-model="disabledSingle" disabled><span class="origin">Mob全国天气预报接口：需注册账号创建应用后申请填入AppKey后免费使用</span></Checkbox>
+                        <Checkbox v-model="disabledSingle" disabled><span class="origin">第三方社交账号登录配置(为实现)</span></Checkbox>
+                        <Checkbox v-model="disabledSingle" disabled><span class="origin">Jasypt：配置文件加密(thymeleaf作者开发)</span></Checkbox>
+                        <Checkbox v-model="disabledSingle" disabled><span class="origin">Thymeleaf：发送模版邮件使用</span></Checkbox>
+                        <Checkbox v-model="disabledSingle" disabled><span class="origin">Quartz：定时任务</span></Checkbox>
+                        <Checkbox v-model="disabledSingle" disabled><span class="origin">Druid：阿里高性能数据库连接池 Druid配置官方中文文档</span></Checkbox>
+                        <Checkbox v-model="disabledSingle" disabled><span class="origin">Swagger2：Api文档生成</span></Checkbox>
+                        <Checkbox v-model="disabledSingle" disabled><span class="origin">Json Web Token(JWT)</span></Checkbox>
+                        <Checkbox v-model="disabledSingle" disabled><span class="origin">Vaptcha人机验证码</span></Checkbox>
+                       <!-- <div class="qr">
                             <img src="@/assets/qr.png" width="150">
                             <div>支持手机扫码支付，限时优惠！<br>赠送
                                 <a href="https://v.qq.com/x/page/f0627kf4x1e.html" target="_blank">XMall小程序(不含后台)</a> +
@@ -133,7 +153,7 @@
                             支付后源码和更新维护群将自动发至您在支付页面所填写的邮箱，
                             开源版本请遵循GPLv3.0开源协议，不得闭源，商用需求请联系作者签署授权协议。
                             价格可能随功能逐渐完善或物价变化。
-                        </Alert>
+                        </Alert>-->
                     </div>
                 </Card>
                 </Col>
@@ -229,7 +249,8 @@
                 newToDoItemValue: "",
                 city: "",
                 weather: "",
-                username: ""
+                username: "",
+                disabledSingle: true
             };
         },
         computed: {

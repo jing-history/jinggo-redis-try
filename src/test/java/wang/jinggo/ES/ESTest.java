@@ -1,4 +1,4 @@
-package wang.jinggo;
+package wang.jinggo.ES;
 
 import com.google.gson.Gson;
 import org.elasticsearch.action.ActionFuture;
@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import wang.jinggo.JinggoRedisTryApplicationTests;
 import wang.jinggo.util.ElasticsearchUtils;
 
 
@@ -333,5 +334,9 @@ public class ESTest {
             System.out.println((++count)+" : " + json);
         }
     }
+
+
+    /****************************************ES 搜索引擎开发实战*****************************************/
+
 
 }
