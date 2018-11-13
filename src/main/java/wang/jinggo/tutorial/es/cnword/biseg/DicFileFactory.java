@@ -10,7 +10,7 @@ import java.util.StringTokenizer;
  **/
 public class DicFileFactory implements DicFactory {
 
-    public static final String dicDir = "./dic/";
+    public static final String dicDir = "E:\\Hua\\ES\\dic\\";
     public static final String binDic = "coreDict.txt";
 
     @Override
