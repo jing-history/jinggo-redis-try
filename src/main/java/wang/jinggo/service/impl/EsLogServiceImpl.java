@@ -82,6 +82,14 @@ public class EsLogServiceImpl implements EsLogService {
             qb = QueryBuilders.boolQuery().must(qb1).must(qb2);
         }
 
+        //不使用的，举例放在这里
+        QueryBuilder qb3 = QueryBuilders.boolQuery()//
+                .must(QueryBuilders.termQuery("schoolId", "0"))// 单个
+                .must(QueryBuilders.termQuery("sex", "0"))//
+                .must(QueryBuilders.termsQuery("specialtyId", "71", "72"))// 多选
+                .must(QueryBuilders.termsQuery("educationId", "2", "3", "4"))//
+                .must(QueryBuilders.matchQuery("addr", "海"));
+
         //多字段搜索
         return logDao.search(qb, pageable);
     }

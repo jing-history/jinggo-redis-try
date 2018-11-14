@@ -10,22 +10,37 @@ import com.google.gson.Gson;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.action.search.SearchRequestBuilder;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHitField;
+import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import wang.jinggo.common.constant.ESConstrant;
 import wang.jinggo.common.vo.EsCount;
 import wang.jinggo.common.vo.EsInfo;
+import wang.jinggo.common.vo.PageVo;
 import wang.jinggo.common.vo.Result;
 import wang.jinggo.dao.es.BookDao;
 import wang.jinggo.domain.es.Book;
 import wang.jinggo.exception.XbootException;
+import wang.jinggo.pojo.ESQueryVO;
+import wang.jinggo.pojo.ListDesc;
+import wang.jinggo.pojo.SearchVo;
+import wang.jinggo.util.ESUtil;
+import wang.jinggo.util.PageUtil;
 import wang.jinggo.util.ResultUtil;
 
 import java.io.IOException;
@@ -53,20 +68,63 @@ public class EsController {
     private RestTemplate restTemplate;
 
     @Autowired
+    private TransportClient client;
+
+    @Autowired
+    private ElasticsearchTemplate template;
+
+    @Autowired
     private BookDao bookDao;
 
-    static int pageSize=10;
-
-    static String title="repname"; //高亮显示列
-    static String title2="repnameS"; //查询列
-
-    static String body="contents"; //查询列
-    static String body2="contentsS"; //查询列
-    static String body3="contentsShort"; //高亮显示列
-
-    @RequestMapping(value = "/searchWeb/{key}",method = RequestMethod.GET)
+    @RequestMapping(value = "/searchWeb",method = RequestMethod.GET)
     @ApiOperation(value = "ES智能匹配查询")
-    public Result<Object> searchWeb(@PathVariable String key){
+    public Result<Object> searchWeb(@RequestParam(required = true) ESQueryVO esQueryVO, @ModelAttribute PageVo pageVo){
+
+        String index = ESConstrant.INDEXNAME;// 索引名
+        Pageable pageable = PageUtil.initPage(pageVo);
+
+        SearchRequestBuilder searchRequestBuilder = client.prepareSearch(index);
+        QueryBuilder qb = ESUtil.getQueryBuilder(esQueryVO.getQuery());
+        searchRequestBuilder = searchRequestBuilder.setQuery(qb);
+        // addFields 方法没有
+        //searchRequestBuilder.addFields("repname", "docType","folder", "repsubunit","contentsShort");
+        // 分页应用
+        searchRequestBuilder.setFrom(pageable.getPageNumber()).setSize(pageable.getPageSize());
+        // 设置高亮显示列
+        //高亮标签
+        HighlightBuilder highlightBuilder = new HighlightBuilder();
+        //指定高亮字段
+        highlightBuilder.field(ESConstrant.TITLE);
+        int fragmentSize = 120;
+        highlightBuilder.field(ESConstrant.BODY3,fragmentSize);
+        highlightBuilder.preTags("<span style=\"color:red\">");
+        highlightBuilder.postTags("</span>");
+        searchRequestBuilder.highlighter(highlightBuilder);
+
+        SearchResponse response = null;
+        ListDesc desc = new ListDesc();
+        // 执行搜索,返回搜索响应信息
+        response = searchRequestBuilder.execute().actionGet();
+        // 获取搜索的文档结果
+        SearchHits searchHits = response.getHits();
+        long totalHits = searchHits.getTotalHits();  //得到结果总数
+
+        for (SearchHit hit : searchHits) {
+            HashMap<String,String> row = new HashMap<String,String>();
+
+            // 获取对应的高亮域
+            Map<String, HighlightField> _highlighting = hit.highlightFields();
+
+            Map<String, SearchHitField> map = hit.getFields(); // 键是列名，值是文档中该列的值
+            // 从设定的高亮域中取得指定域
+            _highlighting.get(ESConstrant.TITLE);
+            map.get("folder");
+            map.get("repname");
+            map.get("docType");
+            map.get("repsubunit");
+            ESUtil.getBody(_highlighting.get(ESConstrant.BODY3));
+        }
+
 
         return new ResultUtil<Object>().setData(null);
     }

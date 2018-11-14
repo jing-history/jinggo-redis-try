@@ -62,9 +62,6 @@ public class ESTest {
     private static final Logger logger = LoggerFactory.getLogger(JinggoRedisTryApplicationTests.class);
 
     @Autowired
-    ElasticsearchUtils elasticsearchUtils;
-
-    @Autowired
     TransportClient transportClient;
 
     @Test

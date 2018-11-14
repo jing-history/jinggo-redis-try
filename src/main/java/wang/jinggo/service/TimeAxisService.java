@@ -16,8 +16,8 @@ public interface TimeAxisService  extends XbootBaseService<TimeAxis,String> {
 
     /**
      *  条件查询
-     * @param title
-     * @param createDate
+     * title
+     * createDate
      * @param pageable
      * @return
      */

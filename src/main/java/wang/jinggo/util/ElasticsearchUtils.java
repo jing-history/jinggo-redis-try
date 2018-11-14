@@ -39,7 +39,6 @@ import java.util.Map;
  * @description
  * @create 2018-10-18 16:15
  **/
-@Component
 public class ElasticsearchUtils {
 
     private final Logger LOGGER = LoggerFactory.getLogger(ElasticsearchUtils.class);
