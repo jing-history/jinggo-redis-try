@@ -1,10 +1,10 @@
 package wang.jinggo.ES.cnword.template;
 
+import wang.jinggo.tutorial.es.cnword.template.AdjList;
+import wang.jinggo.tutorial.es.cnword.template.QueryTemplate;
+
 import java.util.ArrayList;
 
-import com.lietu.template.AdjList;
-import com.lietu.template.QueryTemplate;
-import com.lietu.template.GraphMatcher.MatchValue;
 
 public class TestAdjList {
 

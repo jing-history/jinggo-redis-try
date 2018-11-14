@@ -1,15 +1,10 @@
 package wang.jinggo.ES.cnword.template;
 
+import wang.jinggo.tutorial.es.cnword.template.*;
+
 import java.util.ArrayList;
 import java.util.Map.Entry;
 
-import com.lietu.template.AdjList;
-import com.lietu.template.CnToken;
-import com.lietu.template.CnTokenLinkedList;
-import com.lietu.template.IndexMinPQ;
-import com.lietu.template.QueryTemplate;
-import com.lietu.template.StackValue;
-import com.lietu.template.Trie;
 
 /**
  * @author luogang

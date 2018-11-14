@@ -1,10 +1,11 @@
 package wang.jinggo.ES.cnword.template;
 
+import wang.jinggo.tutorial.es.cnword.template.IndexMinPQ;
+
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import com.lietu.template.IndexMinPQ;
 
 public class IndexMinPQTest {
 	public static final Map<String, Integer> map = new TreeMap<String, Integer>();

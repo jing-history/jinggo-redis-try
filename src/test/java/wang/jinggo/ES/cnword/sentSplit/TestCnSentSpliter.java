@@ -1,6 +1,7 @@
 package wang.jinggo.ES.cnword.sentSplit;
 
-import com.lietu.split.CnSentSplit;
+
+import wang.jinggo.tutorial.es.cnword.split.CnSentSplit;
 
 public class TestCnSentSpliter {
 

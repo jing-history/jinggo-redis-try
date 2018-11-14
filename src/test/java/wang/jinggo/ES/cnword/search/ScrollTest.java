@@ -5,8 +5,8 @@ import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.search.SearchHit;
+import wang.jinggo.ES.cnword.client.ElasticSearchClient;
 
-import client.ElasticSearchClient;
 
 public class ScrollTest {
 

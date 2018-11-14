@@ -18,8 +18,8 @@ import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilde
 import org.elasticsearch.search.aggregations.pipeline.PipelineAggregatorBuilders;
 import org.elasticsearch.search.aggregations.pipeline.bucketscript.BucketScriptPipelineAggregationBuilder;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
+import wang.jinggo.ES.cnword.client.ClientBuilder;
 
-import client.ClientBuilder;
 
 public class TestAggregationBuilders {
 

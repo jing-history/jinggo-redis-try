@@ -55,6 +55,21 @@ public class EsController {
     @Autowired
     private BookDao bookDao;
 
+    static int pageSize=10;
+
+    static String title="repname"; //高亮显示列
+    static String title2="repnameS"; //查询列
+
+    static String body="contents"; //查询列
+    static String body2="contentsS"; //查询列
+    static String body3="contentsShort"; //高亮显示列
+
+    @RequestMapping(value = "/searchWeb/{key}",method = RequestMethod.GET)
+    @ApiOperation(value = "ES智能匹配查询")
+    public Result<Object> searchWeb(@PathVariable String key){
+
+        return new ResultUtil<Object>().setData(null);
+    }
 
     @RequestMapping(value = "/info",method = RequestMethod.GET)
     @ApiOperation(value = "获取es状态")

@@ -15,8 +15,7 @@ import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
-
-import client.ElasticSearchClient;
+import wang.jinggo.ES.cnword.client.ElasticSearchClient;
 
 public class TestSroll {
 

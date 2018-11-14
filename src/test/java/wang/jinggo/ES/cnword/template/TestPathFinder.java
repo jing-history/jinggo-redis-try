@@ -1,10 +1,10 @@
 package wang.jinggo.ES.cnword.template;
 
-import java.util.Deque;
+import wang.jinggo.tutorial.es.cnword.template.CnToken;
+import wang.jinggo.tutorial.es.cnword.template.PathFinder;
+import wang.jinggo.tutorial.es.cnword.template.QueryTemplate;
 
-import com.lietu.template.CnToken;
-import com.lietu.template.PathFinder;
-import com.lietu.template.QueryTemplate;
+import java.util.Deque;
 
 public class TestPathFinder {
 

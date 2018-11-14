@@ -1,6 +1,6 @@
 package wang.jinggo.ES.cnword.template;
 
-import com.lietu.queryMatch.QueryMatcher;
+import wang.jinggo.tutorial.es.cnword.QueryMatcher.QueryMatcher;
 
 public class TestQueryMatcher {
 
