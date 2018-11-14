@@ -265,7 +265,59 @@ function timeEvent() {
         
         // 加载歌词
         function loadLrc(name){
+            $.ajax({
+                type:"get",
+                url:"http://api.jinggo.wang/love",
+                dataType:"json",
+                data:{"name":name},
+                success:function(data){
+                    if (data.success === true) {
+                        var lrc = data.result;
+                        // 把时间个歌词分离出来
+                        var lrcArr = lrc.split("[");
+                        var htmlLrc = "";
+                        for(var i = 0; i < lrcArr.length; i++){
+                            // 第二次分割“]”
+                            var arr = lrcArr[i].split("]");
+                            // console.log(arr);
+                            // 取到歌词
+                            var message = arr[1];
 
+                            // 取到时间
+                            var timer = arr[0].split(".");
+                            // 取到分钟和秒
+                            var stime = timer[0].split(":");
+                            // 转换成秒数
+                            var ms = stime[0]*60 + stime[1]*1 - 1;
+
+                            if(message){
+                                htmlLrc += "<div class='lrcline' id='"+ms+"'>"+message+"</div>";
+                            }
+                        }
+                        // 把解析好的歌词放入div中
+                        $(".l_con_lrc").html(htmlLrc);
+
+                        // 联动音乐播放歌词
+                        audioDom.addEventListener("timeupdate",function(){
+                            // 获取当前播放时间
+                            var timer = this.currentTime;
+                            console.log(timer);
+                            // 解析音乐对应的时间
+                            var m = parseInt(timer / 60);
+                            var s = parseInt(timer);
+                            for(var i = 0; i < s; i++){
+                                $("#"+i).addClass("lrcSel").siblings().removeClass("lrcSel");
+                            }
+                            var st = m * 60 + s;
+                            $(".l_con_lrc").scrollTop(st*2);
+
+                        });
+                    }
+                },
+                error: function(data){
+                    alert("服务器异常，请稍后在尝试！！！");
+                }
+            });
         }
         
         $(function () {
