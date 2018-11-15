@@ -42,6 +42,7 @@ public class LoveController {
     @Autowired
     private TimeAxisDao timeAxisDao;
 
+
     private static final int PAGE_SIZE = 10000;
     private static SimpleDateFormat FORMATDATE = new SimpleDateFormat("yyyy,MM,dd");
 
@@ -102,5 +103,18 @@ public class LoveController {
         }
 
         return new ResultUtil<List<LoveForm>>().setData(loveForms);
+    }
+
+    /**
+     * 动静分离 前端Aajax 请求
+     * @param name
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    @ResponseBody
+    public Result<String> getMusicLrc(@RequestParam String name) throws IOException {
+
+        return new ResultUtil<String>().setData("lrc");
     }
 }
