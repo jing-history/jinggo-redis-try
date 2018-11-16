@@ -314,7 +314,7 @@ function timeEvent() {
                         });
                     }
                 },
-                error: function(data){
+                error: function(res){
                     alert("服务器异常，请稍后在尝试！！！");
                 }
             });
