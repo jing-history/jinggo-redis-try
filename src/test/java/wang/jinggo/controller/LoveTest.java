@@ -9,6 +9,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
 import wang.jinggo.dao.LoveRepository;
+import wang.jinggo.dao.MusicLrcDao;
+import wang.jinggo.domain.MusicLrc;
 
 import javax.servlet.http.Cookie;
 import java.util.Collections;
@@ -25,15 +27,17 @@ public class LoveTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
-    LoveRepository loveRepository;
+/*    @MockBean
+    LoveRepository loveRepository;*/
+    @Autowired
+    MusicLrcDao musicLrcDao;
 
     @Test
     public void getLovesTest() throws Exception {
         int userId = 10;
         int expectedCredit = 100;
         // anyInt()
-        given(this.loveRepository.findAll().size()).willReturn(expectedCredit);
+    //    given(this.loveRepository.findAll().size()).willReturn(expectedCredit);
         // todo mvc 调用 content 是返回结果 但是我这里是要返回集合
         mockMvc.perform(get("/love")).andExpect(content().string(expectedCredit+""));
 
@@ -59,7 +63,11 @@ public class LoveTest {
         String path = "$.success";
         //代码期望返回的json的success属性是true，$代表了Json 的根节点
         mockMvc.perform(get("/love/{id}",userId)).andExpect(jsonPath(path).value(true));
+    }
 
-
+    @Test
+    public void getMusicLrc() throws Exception {
+        MusicLrc musicLrc = musicLrcDao.findByName("咱们结婚吧");
+        System.out.println(musicLrc.toString());
     }
 }

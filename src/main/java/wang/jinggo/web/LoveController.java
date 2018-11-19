@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import wang.jinggo.common.vo.Result;
 import wang.jinggo.dao.LoveRepository;
+import wang.jinggo.dao.MusicLrcDao;
 import wang.jinggo.dao.TimeAxisDao;
 import wang.jinggo.domain.Love;
+import wang.jinggo.domain.MusicLrc;
 import wang.jinggo.domain.TimeAxis;
 import wang.jinggo.domain.vo.LoveForm;
 import wang.jinggo.util.DTOUtil;
@@ -41,6 +43,8 @@ public class LoveController {
 
     @Autowired
     private TimeAxisDao timeAxisDao;
+    @Autowired
+    private MusicLrcDao musicLrcDao;
 
 
     private static final int PAGE_SIZE = 10000;
@@ -111,10 +115,14 @@ public class LoveController {
      * @return
      * @throws IOException
      */
-    @RequestMapping(value = "", method = RequestMethod.GET)
+    @RequestMapping(value = "musiclrc", method = RequestMethod.GET)
     @ResponseBody
     public Result<String> getMusicLrc(@RequestParam String name) throws IOException {
-
-        return new ResultUtil<String>().setData("lrc");
+        MusicLrc musicLrc = musicLrcDao.findByName(name);
+        if(musicLrc != null){
+            String lrc = musicLrc.getContent();
+            return new ResultUtil<String>().setData(lrc);
+        }
+        return new ResultUtil<String>().setData("No Data");
     }
 }

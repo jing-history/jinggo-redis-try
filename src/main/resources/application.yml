@@ -168,7 +168,7 @@ ignored:
     - /xboot/common/**
     - /xboot/es/**
     - /druid/**
-    - /love
+    - /love/**
     - /swagger-ui.html
     - /swagger-resources/**
     - /swagger/**
