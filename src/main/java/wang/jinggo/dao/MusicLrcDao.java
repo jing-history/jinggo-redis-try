@@ -13,4 +13,6 @@ import java.util.List;
 public interface MusicLrcDao extends XbootBaseDao<MusicLrc,String>  {
 
     MusicLrc findByName(String name);
+
+    List<MusicLrc> findByDelFlag(Integer flag);
 }

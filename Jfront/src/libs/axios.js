@@ -9,8 +9,8 @@ import { router } from '../router/index';
 import { Message } from 'iview';
 import Cookies from 'js-cookie';
 
-// 统一请求路径前缀 http://api.jinggo.wang 外网API
-let base = 'http://api.jinggo.wang/xboot';
+// 统一请求路径前缀 http://api.jinggo.wang/xboot 外网API ; 测试 /xboot
+let base = '/xboot';
 // 超时设定
 axios.defaults.timeout = 15000;
 

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import wang.jinggo.common.constant.CommonConstant;
 import wang.jinggo.common.vo.Result;
 import wang.jinggo.dao.LoveRepository;
 import wang.jinggo.dao.MusicLrcDao;
@@ -109,8 +110,16 @@ public class LoveController {
         return new ResultUtil<List<LoveForm>>().setData(loveForms);
     }
 
+    @RequestMapping(value = "music", method = RequestMethod.GET)
+    @ResponseBody
+    public Result<List<MusicLrc>> getMusic() throws IOException {
+        //查询状态为0 的歌曲
+        List<MusicLrc> musicLrcs = musicLrcDao.findByDelFlag(CommonConstant.DF_DEL_FLAG);
+        return new ResultUtil<List<MusicLrc>>().setData(musicLrcs);
+    }
+
     /**
-     * 动静分离 前端Aajax 请求
+     * 动静分离 前端Aajax 请求 获取歌词
      * @param name
      * @return
      * @throws IOException

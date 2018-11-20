@@ -64,6 +64,11 @@ public interface CommonConstant {
     Integer DEL_FLAG = 1;
 
     /**
+     * 默认删除标志
+     */
+    Integer DF_DEL_FLAG = 0;
+
+    /**
      * 限流标识
      */
     String LIMIT_ALL = "XBOOT_LIMIT_ALL";

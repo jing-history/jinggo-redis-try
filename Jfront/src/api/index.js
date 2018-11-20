@@ -198,3 +198,16 @@ export const editTime = (params) => {
     return postRequest('/mine/edit', params)
 }
 
+//我的空间 歌曲列表管理
+export const getMusicListData = (params) => {
+    return getRequest('/music/getByCondition', params)
+}
+export const addMusic = (params) => {
+    return postRequest('/music/add', params)
+}
+export const editMusic = (params) => {
+    return postRequest('/music/edit', params)
+}
+
+
+
