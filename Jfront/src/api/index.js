@@ -209,5 +209,45 @@ export const editMusic = (params) => {
     return postRequest('/music/edit', params)
 }
 
+// 获取全部字典
+export const getAllDictList = (params) => {
+    return getRequest('/dict/getAll', params)
+}
+// 添加字典
+export const addDict = (params) => {
+    return postRequest('/dict/add', params)
+}
+// 编辑字典
+export const editDict = (params) => {
+    return postRequest('/dict/edit', params)
+}
+// 删除字典
+export const deleteDict = (ids, params) => {
+    return deleteRequest(`/dict/delByIds/${ids}`, params)
+}
+// 搜索字典
+export const searchDict = (params) => {
+    return getRequest('/dict/search', params)
+}
+// 获取全部字典数据
+export const getAllDictDataList = (params) => {
+    return getRequest('/dictData/getByCondition', params)
+}
+// 添加字典数据
+export const addDictData = (params) => {
+    return postRequest('/dictData/add', params)
+}
+// 编辑字典数据
+export const editDictData = (params) => {
+    return postRequest('/dictData/edit', params)
+}
+// 删除字典数据
+export const deleteData = (ids, params) => {
+    return deleteRequest(`/dictData/delByIds/${ids}`, params)
+}
+// 通过类型获取字典数据
+export const getDictDataByType = (type, params) => {
+    return getRequest(`/dictData/getByType/${type}`, params)
+}
 
 
