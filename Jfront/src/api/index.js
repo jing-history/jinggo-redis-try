@@ -208,6 +208,9 @@ export const addMusic = (params) => {
 export const editMusic = (params) => {
     return postRequest('/music/edit', params)
 }
+export const disableMusic = (id, params) => {
+    return postRequest(`/music/disable/${id}`, params)
+}
 
 // 获取全部字典
 export const getAllDictList = (params) => {

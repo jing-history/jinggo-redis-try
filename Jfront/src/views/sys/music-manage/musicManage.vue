@@ -38,23 +38,20 @@
             </Col>
         </Row>
         <Modal :title="modalTitle" v-model="modalVisible" :mask-closable='false' :width="500" :styles="{top: '30px'}">
-            <Form ref="timeForm" :model="timeForm" :label-width="70" :rules="formValidate">
-                <FormItem label="标题" prop="title">
-                    <Input v-model="timeForm.title" autocomplete="off"/>
+            <Form ref="musicForm" :model="musicForm" :label-width="70" :rules="formValidate">
+                <FormItem label="歌名" prop="name">
+                    <Input v-model="musicForm.name" autocomplete="off"/>
                 </FormItem>
-                <FormItem label="内容" prop="content">
-                    <Input v-model="timeForm.content"/>
+                <FormItem label="代码" prop="code">
+                    <Input v-model="musicForm.code"/>
                 </FormItem>
-                <FormItem label="图片说明" prop="figureMsg">
-                    <Input v-model="timeForm.figureMsg"/>
-                </FormItem>
-                <FormItem label="标签说明" prop="figcaption">
-                    <Input v-model="timeForm.figcaption"/>
+                <FormItem label="歌词" prop="content">
+                    <Input type="textarea" v-model="musicForm.content"/>
                 </FormItem>
             </Form>
             <div slot="footer">
-                <Button type="text" @click="cancelTime">取消</Button>
-                <Button type="primary" :loading="submitLoading" @click="submitTime">提交</Button>
+                <Button type="text" @click="cancelMusic">取消</Button>
+                <Button type="primary" :loading="submitLoading" @click="submitMusic">提交</Button>
             </div>
         </Modal>
     </div>
@@ -63,7 +60,8 @@
     import {
         getMusicListData,
         addMusic,
-        editMusic
+        editMusic,
+        disableMusic
     } from "@/api/index";
     export default {
         name: "music-manage",
@@ -81,18 +79,18 @@
                 modalVisible: false,  //弹出框是否可见
                 accessToken: {},
                 imgUrl:"",    //大图的url
-                timeForm: {
-                    title: "",
+                musicForm: {
+                    name: "",
+                    code: "",
                     content: "",
-                    figureMsg: "",
-                    figcaption: ""
+                    status: ""
                 },
                 formValidate: {
-                    title: [
+                    name: [
                         { required: true, message: "歌曲不能为空", trigger: "blur" }
                     ],
-                    figureImg: [
-                        { required: true, message: "图片不能为空", trigger: "blur" }
+                    content: [
+                        { required: true, message: "歌词不能为空", trigger: "blur" }
                     ]
                 },
                 columns: [
@@ -113,7 +111,7 @@
                         tooltip: true
                     },
                     {
-                        title: "代号",
+                        title: "代码",
                         key: "code",
                         tooltip: true
                     },
@@ -121,6 +119,60 @@
                         title: "歌词",
                         key: "content",
                         tooltip: true
+                    },
+                    {
+                        title: "状态",
+                        key: "status",
+                        align: "center",
+                        width: 140,
+                        render: (h, params) => {
+                            let re = "";
+                            if (params.row.status === 0) {
+                                return h("div", [
+                                    h(
+                                        "Tag",
+                                        {
+                                            props: {
+                                                type: "dot",
+                                                color: "success"
+                                            }
+                                        },
+                                        "正常启用"
+                                    )
+                                ]);
+                            } else if (params.row.status === 1) {
+                                return h("div", [
+                                    h(
+                                        "Tag",
+                                        {
+                                            props: {
+                                                type: "dot",
+                                                color: "error"
+                                            }
+                                        },
+                                        "禁用"
+                                    )
+                                ]);
+                            }
+                        },
+                        filters: [
+                            {
+                                label: "正常启用",
+                                value: 0
+                            },
+                            {
+                                label: "禁用",
+                                value: 1
+                            }
+                        ],
+                        filterMultiple: false,
+                        filterMethod(value, row) {
+                            if (value === 0) {
+                                return row.status === 0;
+                            } else if (value === -1) {
+                                return row.status === -1;
+                            }
+                        }
                     },
                     {
                         title: "创建时间",
@@ -261,13 +313,13 @@
             },
             add() {
                 this.modalType = 0;
-                this.modalTitle = "添加时间轴";
-                this.$refs.timeForm.resetFields();
+                this.modalTitle = "添加歌曲";
+                this.$refs.musicForm.resetFields();
                 this.modalVisible = true;
             },
             edit(v) {
                 this.modalType = 1;
-                this.modalTitle = "修改时间轴";
+                this.modalTitle = "修改歌曲";
                 // 转换null为""
                 for (let attr in v) {
                     if (v[attr] === null) {
@@ -276,12 +328,24 @@
                 }
                 let str = JSON.stringify(v);
                 let timeInfo = JSON.parse(str);
-                this.timeForm = timeInfo;
+                this.musicForm = timeInfo;
                 this.modalVisible = true;
             },
             disable(v) {
-                this.$Message.warning("暂时不用禁用啊😱");
-                return;
+                this.$Modal.confirm({
+                    title: "确认禁用",
+                    content: "您确认要禁用歌曲 " + v.name + " ?",
+                    onOk: () => {
+                        this.operationLoading = true;
+                        disableMusic(v.id).then(res => {
+                            this.operationLoading = false;
+                            if (res.success === true) {
+                                this.$Message.success("操作成功");
+                                this.getMusicList();
+                            }
+                        });
+                    }
+                });
             },
             remove(v) {
                 this.$Message.warning("数据来之不易，请忽乱删😱");
@@ -291,16 +355,16 @@
                 this.$Message.warning("不可以乱删除数据哦😄");
                 return;
             },
-            cancelTime() {
+            cancelMusic() {
                 this.modalVisible = false;
             },
-            submitTime() {
-                this.$refs.timeForm.validate(valid => {
+            submitMusic() {
+                this.$refs.musicForm.validate(valid => {
                     if (valid) {
                         if (this.modalType === 0) {
                             // 添加
                             this.submitLoading = true;
-                            addTime(this.timeForm).then(res => {
+                            addMusic(this.musicForm).then(res => {
                                 this.submitLoading = false;
                                 if (res.success === true) {
                                     this.$Message.success("操作成功");
@@ -311,7 +375,7 @@
                         } else {
                             //修改
                             this.submitLoading = true;
-                            editTime(this.timeForm).then(res => {
+                            editMusic(this.musicForm).then(res => {
                                 this.submitLoading = false;
                                 if (res.success === true) {
                                     this.$Message.success("修改成功");

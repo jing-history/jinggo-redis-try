@@ -60,7 +60,14 @@ function timeEvent() {
     }
     // 播放音乐
     function playMusic(obj){
+        var name = obj.data("src");
+        var s = name.split("/");
+        var n = s[1];
+        var a = n.split(".");
+        // 从服务器动态加载歌词
+        loadLrc(a[0]);
         audioDom.play();
+        repeatName(obj);
     }
 
     // 动态替换歌名
@@ -237,7 +244,6 @@ function timeEvent() {
                 $(document).unbind("mousemove");
                 $(document).unbind("mouseup");
             });
-
         });
 
         // 点击进度条
@@ -262,14 +268,41 @@ function timeEvent() {
             audioDom.currentTime = audioDom.duration * (w/maxWidth);
 
         });
+
+        //加载歌曲列表
+        $.ajax({
+            url: "http://localhost:7777/love/music",
+            type: "get",
+            dataType:"json",
+            data: {status:0},
+            success: function(res) {
+                if (res.success === true) {
+                    var templates = "";
+                    res.result.forEach(function(e) {
+                        var template = "<li data-src='audio/"+e.code+".mp3' class='b_items'>"
+                            +"<i></i>"
+                            +"<a href='#'>"+e.name+"</a>"
+                            +"<span>分享</span>"
+                            +"</li><br/>";
+
+                        templates += template;
+                    });
+                    $("#l_box").html(templates);
+                }
+            },
+            error: function(res){
+                alert("服务器异常，请稍后在尝试！！！");
+            }
+        });
+    });
         
         // 加载歌词
         function loadLrc(name){
             $.ajax({
                 type:"get",
-                url:"http://api.jinggo.wang/love",
+                url:"http://localhost:7777/love/musiclrc",
                 dataType:"json",
-                data:{"name":name},
+                data:{"name":"咱们结婚吧"},
                 success:function(data){
                     if (data.success === true) {
                         var lrc = data.result;
@@ -319,49 +352,3 @@ function timeEvent() {
                 }
             });
         }
-        
-        $(function () {
-            var text = $("#lrc").val();
-            // 把时间个歌词分离出来
-            var lrcArr = text.split("[");
-            var htmlLrc = "";
-            for(var i = 0; i < lrcArr.length; i++){
-                // 第二次分割“]”
-                var arr = lrcArr[i].split("]");
-                // console.log(arr);
-                // 取到歌词
-                var message = arr[1];
-
-                // 取到时间
-                var timer = arr[0].split(".");
-                // 取到分钟和秒
-                var stime = timer[0].split(":");
-                // 转换成秒数
-                var ms = stime[0]*60 + stime[1]*1 - 1;
-
-                if(message){
-                    htmlLrc += "<div class='lrcline' id='"+ms+"'>"+message+"</div>";
-                }
-            }
-            // 把解析好的歌词放入div中
-            $(".l_con").html(htmlLrc);
-
-            // 联动音乐播放歌词
-            // 联动音乐播放歌词
-            audioDom.addEventListener("timeupdate",function(){
-                // 获取当前播放时间
-                var timer = this.currentTime;
-                console.log(timer);
-                // 解析音乐对应的时间
-                var m = parseInt(timer / 60);
-                var s = parseInt(timer);
-                for(var i = 0; i < s; i++){
-                    $("#"+i).addClass("lrcSel").siblings().removeClass("lrcSel");
-                }
-                var st = m * 60 + s;
-                $(".l_con").scrollTop(st*2);
-
-            });
-        });
-
-    });

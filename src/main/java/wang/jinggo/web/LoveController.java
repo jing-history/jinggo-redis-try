@@ -112,9 +112,9 @@ public class LoveController {
 
     @RequestMapping(value = "music", method = RequestMethod.GET)
     @ResponseBody
-    public Result<List<MusicLrc>> getMusic() throws IOException {
+    public Result<List<MusicLrc>> getMusic(@RequestParam String status) throws IOException {
         //查询状态为0 的歌曲
-        List<MusicLrc> musicLrcs = musicLrcDao.findByDelFlag(CommonConstant.DF_DEL_FLAG);
+        List<MusicLrc> musicLrcs = musicLrcDao.findByStatus(CommonConstant.STATUS_NORMAL);
         return new ResultUtil<List<MusicLrc>>().setData(musicLrcs);
     }
 

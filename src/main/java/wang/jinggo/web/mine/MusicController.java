@@ -2,6 +2,7 @@ package wang.jinggo.web.mine;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,10 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import wang.jinggo.common.constant.CommonConstant;
 import wang.jinggo.common.vo.PageVo;
 import wang.jinggo.common.vo.Result;
 import wang.jinggo.domain.MusicLrc;
@@ -53,23 +52,38 @@ public class MusicController {
         return new ResultUtil<Page<MusicLrc>>().setData(page);
     }
 
-    /*@RequestMapping(value = "/add",method = RequestMethod.POST)
-    @ApiOperation(value = "添加时间轴事件")
-    public Result<Object> addTime(@ModelAttribute TimeAxis timeAxis){
+    @RequestMapping(value = "/add",method = RequestMethod.POST)
+    @ApiOperation(value = "添加歌曲")
+    public Result<Object> addMusic(@ModelAttribute MusicLrc musicLrc){
         UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        timeAxis.setCreateBy(user.getUsername());
-        timeAxis.setCreateTime(new Date());
-        timeAxisService.save(timeAxis);
-        return new ResultUtil<Object>().setSuccessMsg("添加时间轴事件成功");
+        musicLrc.setCreateBy(user.getUsername());
+        musicLrc.setCreateTime(new Date());
+        musicLrc.setUpdateBy("");
+        musicLrc.setStatus(CommonConstant.STATUS_NORMAL);
+        musicService.save(musicLrc);
+        return new ResultUtil<Object>().setSuccessMsg("添加歌曲成功");
     }
 
     @RequestMapping(value = "/edit",method = RequestMethod.POST)
-    @ApiOperation(value = "修改时间轴事件")
-    public Result<Object> editTime(@ModelAttribute TimeAxis timeAxis){
+    @ApiOperation(value = "修改歌曲")
+    public Result<Object> editTime(@ModelAttribute MusicLrc musicLrc){
         UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        timeAxis.setUpdateBy(user.getUsername());
-        timeAxis.setUpdateTime(new Date());
-        timeAxisService.update(timeAxis);
-        return new ResultUtil<Object>().setSuccessMsg("修改时间轴事件成功");
-    }*/
+        musicLrc.setUpdateBy(user.getUsername());
+        musicLrc.setUpdateTime(new Date());
+        musicService.update(musicLrc);
+        return new ResultUtil<Object>().setSuccessMsg("修改歌曲成功");
+    }
+
+    @RequestMapping(value = "/disable/{id}",method = RequestMethod.POST)
+    @ApiOperation(value = "后台禁用歌曲")
+    public Result<Object> disable(@ApiParam("歌曲唯一id标识") @PathVariable String id){
+
+        MusicLrc musicLrc = musicService.get(id);
+        if(musicLrc==null){
+            return new ResultUtil<Object>().setErrorMsg("通过id获取歌曲失败");
+        }
+        musicLrc.setStatus(CommonConstant.USER_STATUS_LOCK);
+        musicService.update(musicLrc);
+        return new ResultUtil<Object>().setData("禁用歌曲成功");
+    }
 }

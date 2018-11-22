@@ -21,7 +21,7 @@ public interface CommonConstant {
     /**
      * 用户禁用状态
      */
-    Integer USER_STATUS_LOCK = -1;
+    Integer USER_STATUS_LOCK = 1;
 
     /**
      * 普通用户
@@ -56,7 +56,7 @@ public interface CommonConstant {
     /**
      * 禁用状态
      */
-    Integer STATUS_DISABLE = -1;
+    Integer STATUS_DISABLE = 1;
 
     /**
      * 删除标志
