@@ -127,7 +127,8 @@ public class LoveController {
     @RequestMapping(value = "musiclrc", method = RequestMethod.GET)
     @ResponseBody
     public Result<String> getMusicLrc(@RequestParam String name) throws IOException {
-        MusicLrc musicLrc = musicLrcDao.findByName(name);
+     //   MusicLrc musicLrc = musicLrcDao.findByName(name);
+        MusicLrc musicLrc = musicLrcDao.findByCode(name);
         if(musicLrc != null){
             String lrc = musicLrc.getContent();
             return new ResultUtil<String>().setData(lrc);

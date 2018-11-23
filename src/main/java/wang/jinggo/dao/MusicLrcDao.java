@@ -17,4 +17,6 @@ public interface MusicLrcDao extends XbootBaseDao<MusicLrc,String>  {
     List<MusicLrc> findByDelFlag(Integer flag);
 
     List<MusicLrc> findByStatus(Integer status);
+
+    MusicLrc findByCode(String code);
 }
