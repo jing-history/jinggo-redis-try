@@ -152,26 +152,6 @@ function timeEvent() {
             $("#stop").hide().prev().show();
         });
 
-
-        // 点击音乐列表播放
-        $("#l_box").find(".b_items").click(function(){
-            // 获取播放音乐文件的地址
-            var src = $(this).data("src");
-            // 添加到音乐播放器
-            addMusic(src);
-            // 播放音乐
-            playMusic($(this));
-
-            $(this).addClass("b_sel").siblings().removeClass("b_sel");
-
-            // 点击音乐列表文件，记录索引
-            playIndex = $(this).index();
-
-            // 自动触发播放按钮
-            $("#play").trigger("click");
-
-        });
-
         // 点击下一首
         $(".next").click(function(){
             nextMusic();
@@ -271,7 +251,7 @@ function timeEvent() {
 
         //加载歌曲列表
         $.ajax({
-            url: "http://localhost:7777/love/music",
+            url: "http://api.jinggo.wang/love/music",
             type: "get",
             dataType:"json",
             data: {status:0},
@@ -281,13 +261,34 @@ function timeEvent() {
                     res.result.forEach(function(e) {
                         var template = "<li data-src='audio/"+e.code+".mp3' class='b_items'>"
                             +"<i></i>"
-                            +"<a href='#'>"+e.name+"</a>"
+                            +'<a href="javascript:;">'
+                            +e.name
+                            +"</a>"
                             +"<span>分享</span>"
-                            +"</li><br/>";
+                            +"</li>";
 
                         templates += template;
                     });
                     $("#l_box").html(templates);
+
+                    // 点击音乐列表播放
+                    $("#l_box").find(".b_items").click(function(){
+                        // 获取播放音乐文件的地址
+                        var src = $(this).data("src");
+                        // 添加到音乐播放器
+                        addMusic(src);
+                        // 播放音乐
+                        playMusic($(this));
+
+                        $(this).addClass("b_sel").siblings().removeClass("b_sel");
+
+                        // 点击音乐列表文件，记录索引
+                        playIndex = $(this).index();
+
+                        // 自动触发播放按钮
+                        $("#play").trigger("click");
+
+                    });
                 }
             },
             error: function(res){
@@ -300,7 +301,7 @@ function timeEvent() {
         function loadLrc(name){
             $.ajax({
                 type:"get",
-                url:"http://localhost:7777/love/musiclrc",
+                url:"http://api.jinggo.wang/love/musiclrc",
                 dataType:"json",
                 data:{"name":"咱们结婚吧"},
                 success:function(data){
