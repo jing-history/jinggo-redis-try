@@ -449,14 +449,16 @@
                   // $("#times").html(templates);
 				  
                   setTimeout(function () {
-		       $("#times").html(templates);
+		            $("#times").html(templates);
                        if (/Mobile/i.test(navigator.userAgent) || $("#timeline").length === 0) {
                           return;
                         }
                         $("#timeline").height($(window).height() - 110);
                         var timeline = new VMM.Timeline();
-                        timeline.init(); 
-                    }, 5000);	  
+                        timeline.init();
+                    }, 5000);
+
+                    setTimeout(randomMusic(), 10000);
                 }
          },
 		 error: function(res){

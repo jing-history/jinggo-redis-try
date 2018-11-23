@@ -303,7 +303,7 @@ function timeEvent() {
                 type:"get",
                 url:"http://api.jinggo.wang/love/musiclrc",
                 dataType:"json",
-                data:{"name":"咱们结婚吧"},
+                data:{"name": name},
                 success:function(data){
                     if (data.success === true) {
                         var lrc = data.result;
@@ -335,7 +335,7 @@ function timeEvent() {
                         audioDom.addEventListener("timeupdate",function(){
                             // 获取当前播放时间
                             var timer = this.currentTime;
-                            console.log(timer);
+                            //console.log(timer);
                             // 解析音乐对应的时间
                             var m = parseInt(timer / 60);
                             var s = parseInt(timer);
