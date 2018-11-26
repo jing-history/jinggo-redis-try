@@ -289,12 +289,15 @@ function timeEvent() {
                         $("#play").trigger("click");
 
                     });
+
+                    setTimeout(randomMusic(), 10000);
                 }
             },
             error: function(res){
                 alert("服务器异常，请稍后在尝试！！！");
             }
         });
+
     });
         
         // 加载歌词
