@@ -196,4 +196,11 @@ public class PermissionController {
         redisTemplate.delete("permission::allList");
         return new ResultUtil<Object>().setSuccessMsg("批量通过id删除数据成功");
     }
+
+    @RequestMapping(value = "/search",method = RequestMethod.GET)
+    @ApiOperation(value = "搜索菜单")
+    public Result<List<Permission>> searchPermissionList(@RequestParam String title){
+        List<Permission> list = permissionService.findByTitleLikeOrderBySortOrder("%"+title+"%");
+        return new ResultUtil<List<Permission>>().setData(list);
+    }
 }

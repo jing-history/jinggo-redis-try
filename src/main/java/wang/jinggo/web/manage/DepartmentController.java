@@ -112,4 +112,20 @@ public class DepartmentController {
         redisTemplate.delete(keys);
         return new ResultUtil<Object>().setSuccessMsg("批量通过id删除数据成功");
     }
+
+    @RequestMapping(value = "/search",method = RequestMethod.GET)
+    @ApiOperation(value = "部门名模糊搜索")
+    public Result<List<Department>> searchByTitle(@RequestParam String title){
+        List<Department> list = departmentService.findByTitleLikeOrderBySortOrder("%"+title+"%");
+        // lambda表达式
+        list.forEach(item -> {
+            if(!CommonConstant.PARENT_ID.equals(item.getParentId())){
+                Department parent = departmentService.get(item.getParentId());
+                item.setParentTitle(parent.getTitle());
+            }else{
+                item.setParentTitle("一级部门");
+            }
+        });
+        return new ResultUtil<List<Department>>().setData(list);
+    }
 }

@@ -35,4 +35,9 @@ public class DepartmentServiceImpl implements DepartmentService {
         return departmentDao.findByParentIdOrderBySortOrder(parentId);
     }
 
+    @Override
+    public List<Department> findByTitleLikeOrderBySortOrder(String s) {
+        return departmentDao.findByParentIdOrderBySortOrder(s);
+    }
+
 }

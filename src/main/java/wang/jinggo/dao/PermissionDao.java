@@ -42,4 +42,11 @@ public interface PermissionDao extends XbootBaseDao<Permission,String> {
      * @return
      */
     List<Permission> findByTitle(String title);
+
+    /**
+     * 模糊搜索
+     * @param title
+     * @return
+     */
+    List<Permission> findByTitleLikeOrderBySortOrder(String title);
 }

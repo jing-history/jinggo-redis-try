@@ -42,4 +42,17 @@ public interface UserService extends XbootBaseService<User,String> {
      */
     List<User> findByDepartmentId(String departmentId);
 
+    /**
+     * 通过手机获取用户
+     * @param mobile
+     * @return
+     */
+    User findByMobile(String mobile);
+    /**
+     * 通过邮件和状态获取用户
+     * @param email
+     * @return
+     */
+    User findByEmail(String email);
+
 }

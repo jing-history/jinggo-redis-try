@@ -145,4 +145,24 @@ public class UserServiceImpl implements UserService {
 
         return userDao.findByDepartmentId(departmentId);
     }
+
+    @Override
+    public User findByMobile(String mobile) {
+        List<User> list = userDao.findByMobile(mobile);
+        if(list!=null&&list.size()>0) {
+            User user = list.get(0);
+            return user;
+        }
+        return null;
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        List<User> list = userDao.findByEmail(email);
+        if(list!=null&&list.size()>0) {
+            User user = list.get(0);
+            return user;
+        }
+        return null;
+    }
 }

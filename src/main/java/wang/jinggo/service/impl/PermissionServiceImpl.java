@@ -46,6 +46,11 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
+    public List<Permission> findByTitleLikeOrderBySortOrder(String s) {
+        return null;
+    }
+
+    @Override
     public XbootBaseDao<Permission, String> getRepository() {
         return permissionDao;
     }

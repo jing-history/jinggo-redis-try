@@ -19,4 +19,11 @@ public interface DepartmentService extends XbootBaseService<Department,String> {
      * @return
      */
     List<Department> findByParentIdOrderBySortOrder(String parentId);
+
+    /**
+     * 部门名模糊搜索 升序
+     * @param title
+     * @return
+     */
+    List<Department> findByTitleLikeOrderBySortOrder(String title);
 }

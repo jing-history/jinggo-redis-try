@@ -42,4 +42,6 @@ public interface PermissionService extends XbootBaseService<Permission, String> 
      * @return
      */
     List<Permission> findByTitle(String title);
+
+    List<Permission> findByTitleLikeOrderBySortOrder(String s);
 }

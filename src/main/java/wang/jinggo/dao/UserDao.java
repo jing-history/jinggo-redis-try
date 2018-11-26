@@ -26,4 +26,13 @@ public interface UserDao extends XbootBaseDao<User,String> {
      * @return
      */
     List<User> findByDepartmentId(String departmentId);
+
+    // 通过用户名获取用户
+    List<User> findByUsername(String username);
+
+    // 通过手机获取用户
+    List<User> findByMobile(String mobile);
+
+    // 通过邮件获取用户
+    List<User> findByEmail(String email);
 }
