@@ -53,7 +53,8 @@
                             <a @click="viewPic()" style="margin-top:5px;text-align:right;display:block">查看原图</a>
                         </div>
                     </Poptip>
-                    <Upload action="http://api.jinggo.wang/xboot/upload/file"
+                    <!-- 测试 线上 api.jinggo.wang-->
+                    <Upload action="http://localhost:7777/xboot/upload/file"
                             :headers="accessToken"
                             :on-success="handleSuccess"
                             :on-error="handleError"

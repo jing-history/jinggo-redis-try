@@ -158,7 +158,7 @@ xboot:
     accessKey: pd8EMFJt9IERhDOUAobL_9bB0qJSYBLhyBiFQRTN
     secretKey: m2nwvfRbOi5qxKd-qmbv0wEql8rMsMV4pM_uBLZ9
     bucket: jinggo-blog
-    domain: pd2kdimru.bkt.clouddn.com/
+    domain: img.jinggo.wang/
 
 # 忽略鉴权url
 ignored:

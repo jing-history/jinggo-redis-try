@@ -12,7 +12,7 @@ import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wang.jinggo.dao.EsLogDao;
-import wang.jinggo.domain.EsLog;
+import wang.jinggo.domain.es.EsLog;
 import wang.jinggo.pojo.SearchVo;
 import wang.jinggo.service.EsLogService;
 

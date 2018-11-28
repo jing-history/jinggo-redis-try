@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import wang.jinggo.base.XbootBaseEntity;
+import wang.jinggo.common.constant.CommonConstant;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -38,4 +39,8 @@ public class Role extends XbootBaseEntity {
     @TableField(exist=false)
     @ApiModelProperty(value = "拥有权限")
     private List<Permission> permissions;
+
+    @ApiModelProperty(value = "数据权限类型 0全部默认 1自定义")
+    @Column(name = "data_type")
+    private Integer dataType = CommonConstant.DATA_TYPE_ALL;
 }

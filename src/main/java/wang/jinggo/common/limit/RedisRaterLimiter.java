@@ -23,9 +23,9 @@ import java.util.UUID;
 @Slf4j
 public class RedisRaterLimiter {
 
-    private static final String BUCKET = "BUCKET_";
-    private static final String BUCKET_COUNT = "BUCKET_COUNT";
-    private static final String BUCKET_MONITOR = "BUCKET_MONITOR_";
+    private static final String BUCKET = "BUCKET:";
+    private static final String BUCKET_COUNT = "BUCKET_COUNT:";
+    private static final String BUCKET_MONITOR = "BUCKET_MONITOR:";
 
     @Autowired
     RedisCacheManager redisCacheManager;

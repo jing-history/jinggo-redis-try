@@ -1,7 +1,7 @@
 package wang.jinggo.dao;
 
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
-import wang.jinggo.domain.EsLog;
+import wang.jinggo.domain.es.EsLog;
 
 /**
  * @author wangyj

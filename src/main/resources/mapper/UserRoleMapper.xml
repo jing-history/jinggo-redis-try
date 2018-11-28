@@ -9,4 +9,11 @@
         ON ur.role_id = r.id
         WHERE user_Id = #{userId}
     </select>
+
+    <select id="findDepIdsByUserId" resultType="java.lang.String">
+        SELECT DISTINCT rd.department_id
+        FROM t_role_department rd
+        WHERE role_id IN
+        ( SELECT ur.role_id FROM t_user_role ur WHERE ur.user_id = #{userId} )
+    </select>
 </mapper>

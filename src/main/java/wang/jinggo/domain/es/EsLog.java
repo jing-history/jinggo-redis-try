@@ -1,29 +1,31 @@
-package wang.jinggo.domain;
+package wang.jinggo.domain.es;
 
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.google.gson.Gson;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.springframework.data.elasticsearch.annotations.DateFormat;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.data.elasticsearch.annotations.*;
 import wang.jinggo.common.constant.CommonConstant;
 import wang.jinggo.util.ObjectUtil;
 import wang.jinggo.util.SnowFlakeUtil;
 
 import javax.persistence.Id;
+import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
+
 
 /**
  * Elasticsearch文档实体类
- * @author wangyj
- * @description
- * @create 2018-10-04 18:16
- **/
+ */
 @Data
 @Document(indexName = "log", type = "log", shards = 1, replicas = 0, refreshInterval = "-1")
-public class EsLog {
+public class EsLog implements Serializable{
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @ApiModelProperty(value = "唯一标识")

@@ -14,7 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import wang.jinggo.annation.SystemLog;
-import wang.jinggo.domain.EsLog;
+import wang.jinggo.domain.es.EsLog;
 import wang.jinggo.domain.Log;
 import wang.jinggo.service.EsLogService;
 import wang.jinggo.service.impl.LogService;

@@ -2,7 +2,7 @@ package wang.jinggo.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import wang.jinggo.domain.EsLog;
+import wang.jinggo.domain.es.EsLog;
 import wang.jinggo.pojo.SearchVo;
 
 /**

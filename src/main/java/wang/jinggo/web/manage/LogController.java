@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import wang.jinggo.common.vo.PageVo;
 import wang.jinggo.common.vo.Result;
-import wang.jinggo.domain.EsLog;
+import wang.jinggo.domain.es.EsLog;
 import wang.jinggo.domain.Log;
 import wang.jinggo.pojo.SearchVo;
 import wang.jinggo.service.EsLogService;
