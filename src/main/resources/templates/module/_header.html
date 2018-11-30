@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head">
+    <link rel="shortcut icon" th:href="@{/icon/snow.ico}" type="image/x-icon" />
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="author" content="JingGo">
+    <meta name="description" content="jinggo simple life...">
+    <title>jinggo simple life...</title>
+    <!-- inject:style -->
+    <link th:href="@{/tale/css/front/style.min.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/my-style.css}" rel="stylesheet" type="text/css">
+    <!-- endinject -->
+    <style>
+    </style>
+
+</head>
+<body>
+<div class="cube-body" th:fragment="menu">
+    <nav id="cube-top-memu" class="cube-menu">
+        <ul class="cube-menu-collapse">
+
+            <li>
+                <i class="cube-icon cube-icon-home" aria-hidden="true"></i>
+                <a href="/">首页</a>
+            </li>
+
+            <li>
+                <i class="cube-icon cube-icon-archive" aria-hidden="true"></i>
+                <a href="/archive">归档</a>
+            </li>
+
+            <li>
+                <i class="cube-icon cube-icon-categories" aria-hidden="true"></i>
+                <a href="/category">分类</a>
+            </li>
+
+
+            <li>
+                <i class="cube-icon cube-icon-about" aria-hidden="true"></i>
+                <a href="/about">关于我</a>
+            </li>
+
+        </ul>
+    </nav>
+    <nav class="cube-side-menu" id="cube-side-menu">
+        <ul class="cube-menu-list">
+
+            <li>
+                <a class="lrc-control">开启歌词</a>
+            </li>
+
+            <li>
+                <a class="scroll-to-top">回到顶部</a>
+            </li>
+        </ul>
+    </nav>
+    <header class="cube-header" id="cube-header">
+        <img th:src="@{/images/background.jpg}" alt="头部背景图片">
+
+        <div class="cube-type">
+            <span class="cube-typed-title">jinggo simple life...</span>
+            <span class="cube-typed-cursor">|</span>
+        </div>
+
+    </header>
+
+    <style>
+        nav.cube-menu:before {
+            content: '';
+            visibility: hidden;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 44px;
+
+            filter: blur(5px);
+             -webkit-filter: blur(5px);
+
+            z-index: -1;
+            background-image: url('/images/background.jpg');
+            background-repeat: no-repeat;
+            background-position: center -256px;
+            background-size: cover;
+            background-color: transparent;
+        }
+
+        header.cube-background.cube-header-background {
+            visibility: hidden;
+            background-image: url('/images/background.jpg');
+            background-position: center -300px;
+        }
+    </style>
+    <header class="cube-background cube-header-background">
+
+        <div class="cube-type">
+            <span class="cube-typed-title">jinggo simple life...</span>
+            <span class="cube-typed-cursor">|</span>
+        </div>
+
+    </header>
+    <div class="load-header-background"></div>
+    <script>
+        (function (window) {
+
+            window.headerModule = {}
+            window.headerModule.image = {
+                width: '1920',
+                height: '1080'
+            }
+
+        })(window)
+    </script>
+
+</div>
+
+</body>
+</html>

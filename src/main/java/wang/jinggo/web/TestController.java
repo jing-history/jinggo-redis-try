@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -12,9 +13,16 @@ import wang.jinggo.annation.RateLimiter;
 import wang.jinggo.common.lock.Callback;
 import wang.jinggo.common.lock.RedisDistributedLockTemplate;
 import wang.jinggo.common.vo.Result;
+import wang.jinggo.domain.TimeAxis;
+import wang.jinggo.domain.vo.LoveForm;
+import wang.jinggo.util.DTOUtil;
 import wang.jinggo.util.ResultUtil;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author wangyj
@@ -51,5 +59,12 @@ public class TestController {
             }
         });
         return new ResultUtil<Object>().setData(null);
+    }
+
+    @RequestMapping(value = "/index")
+    public String index(Model model) throws IOException {
+
+        model.addAttribute("author", "JingGo");
+        return "index";
     }
 }

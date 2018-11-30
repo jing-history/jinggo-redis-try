@@ -2,9 +2,9 @@
 spring:
   application:
      name: JingGo-pro
-#  thymeleaf:
-#    cache: false
-#    mode: LEGACYHTML5
+  thymeleaf:
+    cache: false
+    mode: LEGACYHTML5
 # 配置自动建表：updata:没有表新建，有表更新操作,控制台显示建表语句
 #  jpa:
 #    hibernate:
@@ -175,8 +175,12 @@ ignored:
     - /**/v2/api-docs
     - /**/*.js
     - /**/*.css
+    - /**/*.jpg
     - /**/*.png
     - /**/*.ico
+    - /**/*.ttf
+    - /**/*.woff
+    - /**/*.woff2
     - /test/**
 
 # Swagger界面内容配置

@@ -53,10 +53,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-aop</artifactId>
 		</dependency>
-<!--		<dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
-		</dependency>-->
+		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
 		<dependency>
@@ -182,11 +182,11 @@
 			<artifactId>httpclient</artifactId>
 			<version>4.5.2</version>
 		</dependency>
-		<!-- LEGACYHTML5需要搭配一个额外的库NekoHTML才可用
+		<!-- LEGACYHTML5需要搭配一个额外的库NekoHTML才可用 -->
 		<dependency>
 			<groupId>net.sourceforge.nekohtml</groupId>
 			<artifactId>nekohtml</artifactId>
-		</dependency>-->
+		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
