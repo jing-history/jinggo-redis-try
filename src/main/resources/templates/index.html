@@ -35,10 +35,10 @@
         </div>
     </div>
 
-<!--    <div class ="cube-right"  >
-        <div th:replace="~{themes/hexo/sidebar/_author:: copy}"></div>
-        <div th:replace="~{themes/hexo/sidebar/_music:: copy}"></div>
-        &lt;!&ndash;播放音乐JS&ndash;&gt;
+    <div class ="cube-right">
+        <div th:replace="~{sidebar/_author:: copy}"></div>
+        <div th:replace="~{sidebar/_music:: copy}"></div>
+        <!--播放音乐JS-->
         <script>
             (function (window) {
                 window.musicModule = {}
@@ -49,10 +49,10 @@
                 }
             })(window)
         </script>
-        <div th:replace="~{themes/hexo/sidebar/_post:: copy}"></div>
-        <div th:replace="~{themes/hexo/sidebar/_tag:: copy}"></div>
-        <div th:replace="~{themes/hexo/sidebar/_links:: copy}"></div>
-    </div>-->
+<!--        <div th:replace="~{sidebar/_post:: copy}"></div>
+        <div th:replace="~{sidebar/_tag:: copy}"></div>
+        <div th:replace="~{sidebar/_links:: copy}"></div>-->
+    </div>
 </div>
 
 <div th:replace="~{module/_footer:: html}"></div>
