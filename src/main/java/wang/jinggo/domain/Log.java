@@ -46,6 +46,9 @@ public class Log extends XbootBaseEntity {
     @Column(name = "cost_time")
     private Integer costTime;
 
+    @ApiModelProperty(value = "日志类型 0登陆日志 1操作日志")
+    private Integer logType;
+
     /**
      * 转换请求参数为Json
      * @param paramMap

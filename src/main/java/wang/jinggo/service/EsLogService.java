@@ -37,10 +37,10 @@ public interface EsLogService {
 
     /**
      * 分页搜索获取日志
-     * @param key
+     * @param type
      * @param searchVo
      * @param pageable
      * @return
      */
-    Page<EsLog> searchLog(String key, SearchVo searchVo, Pageable pageable);
+    Page<EsLog> findByConfition(Integer type, String key, SearchVo searchVo, Pageable pageable);
 }

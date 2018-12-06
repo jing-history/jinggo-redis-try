@@ -2,7 +2,9 @@ package wang.jinggo.common.security;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -50,7 +52,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private MyFilterSecurityInterceptor myFilterSecurityInterceptor;
 
     @Autowired
+    private StringRedisTemplate redisTemplate;
+
+    @Autowired
     private CorsFilter corsFilter;
+
+    @Value("${xboot.token.redis}")
+    private Boolean tokenRedis;
+    @Value("${xboot.tokenExpireTime}")
+    private Integer tokenExpireTime;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -102,7 +112,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //添加自定义权限过滤器
                 .addFilterBefore(myFilterSecurityInterceptor, FilterSecurityInterceptor.class)
                 //添加JWT过滤器 除/xboot/login其它请求都需经过此过滤器
-                .addFilter(new JWTAuthenticationFilter(authenticationManager()));
+                .addFilter(new JWTAuthenticationFilter(authenticationManager(), tokenRedis, tokenExpireTime, redisTemplate));
 
         http.addFilterBefore(corsFilter,JWTAuthenticationFilter.class);    //首先要先跨域问题
     }

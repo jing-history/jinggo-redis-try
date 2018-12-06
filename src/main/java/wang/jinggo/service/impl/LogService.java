@@ -12,13 +12,13 @@ import wang.jinggo.pojo.SearchVo;
 public interface LogService extends XbootBaseService<Log,String> {
 
     /**
-     * 日志搜索
-     * @param key
+     * 分页搜索获取日志
+     * @param type
      * @param searchVo
      * @param pageable
      * @return
      */
-    Page<Log> searchLog(String key, SearchVo searchVo, Pageable pageable);
+    Page<Log> findByConfition(Integer type, String key, SearchVo searchVo, Pageable pageable);
 
     /**
      * 删除所有
