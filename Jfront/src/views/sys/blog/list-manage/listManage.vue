@@ -11,15 +11,14 @@
                         <Input type="text" v-model="searchKey" clearable placeholder="请输入搜索歌曲关键词" style="width: 200px"/>
                     </Form-item>
                     <Form-item label="创建时间">
-                        <DatePicker type="date" v-model="selectDate" format="yyyy-MM-dd" clearable @on-change="selectDateRange" placeholder="选择起始时间" style="width: 200px"></DatePicker>
+                        <DatePicker type="date" v-model="selectDate" format="yyyy-MM-dd" clearable @on-change="selectDateRange" placeholder="选择创建" style="width: 200px"></DatePicker>
                     </Form-item>
                     <Form-item style="margin-left:-35px;" class="br">
-                        <Button @click="getMusicList"  type="primary" icon="ios-search">搜索</Button>
+                        <Button @click="getBlogList"  type="primary" icon="ios-search">搜索</Button>
                         <Button @click="handleReset" >重置</Button>
                     </Form-item>
                 </Form>
                 <Row class="operation">
-                    <Button @click="add" type="primary" icon="md-add">添加</Button>
                     <Button @click="delAll" icon="md-trash">批量删除</Button>
                 </Row>
                 <Row>
@@ -37,34 +36,15 @@
             </Card>
             </Col>
         </Row>
-        <Modal :title="modalTitle" v-model="modalVisible" :mask-closable='false' :width="500" :styles="{top: '30px'}">
-            <Form ref="musicForm" :model="musicForm" :label-width="70" :rules="formValidate">
-                <FormItem label="歌名" prop="name">
-                    <Input v-model="musicForm.name" autocomplete="off"/>
-                </FormItem>
-                <FormItem label="代码" prop="code">
-                    <Input v-model="musicForm.code"/>
-                </FormItem>
-                <FormItem label="歌词" prop="content">
-                    <Input type="textarea" v-model="musicForm.content"/>
-                </FormItem>
-            </Form>
-            <div slot="footer">
-                <Button type="text" @click="cancelMusic">取消</Button>
-                <Button type="primary" :loading="submitLoading" @click="submitMusic">提交</Button>
-            </div>
-        </Modal>
     </div>
 </template>
 <script>
     import {
-        getMusicListData,
-        addMusic,
-        editMusic,
-        disableMusic
+        getBlogListData,
+        disableBlog
     } from "@/api/index";
     export default {
-        name: "music-manage",
+        name: "blog-list-manage",
         data() {
             return {
                 loading: true,
@@ -74,25 +54,10 @@
                 selectDate: null,
                 sortColumn: "createTime",
                 sortType: "desc",
-                modalType: 0, //新增还是修改 0 新增 1 修改
                 modalTitle: "",
                 modalVisible: false,  //弹出框是否可见
                 accessToken: {},
                 imgUrl:"",    //大图的url
-                musicForm: {
-                    name: "",
-                    code: "",
-                    content: "",
-                    status: ""
-                },
-                formValidate: {
-                    name: [
-                        { required: true, message: "歌曲不能为空", trigger: "blur" }
-                    ],
-                    content: [
-                        { required: true, message: "歌词不能为空", trigger: "blur" }
-                    ]
-                },
                 columns: [
                     {
                         type: "selection",
@@ -105,19 +70,23 @@
                         align: "center"
                     },
                     {
-                        title: "歌名",
-                        key: "name",
-                        width: 150,
+                        title: "标题",
+                        key: "articleTitle",
                         tooltip: true
                     },
                     {
-                        title: "代码",
-                        key: "code",
+                        title: "作者",
+                        key: "articleAuthorEmail",
                         tooltip: true
                     },
                     {
-                        title: "歌词",
-                        key: "content",
+                        title: "评论",
+                        key: "articleCommentCount",
+                        tooltip: true
+                    },
+                    {
+                        title: "浏览",
+                        key: "articleViewCount",
                         tooltip: true
                     },
                     {
@@ -176,7 +145,7 @@
                     },
                     {
                         title: "创建时间",
-                        key: "createTime",
+                        key: "articleCreateDate",
                         width: 100,
                         render: (h,params)=>{
                             return h('div',
@@ -259,7 +228,7 @@
                 this.accessToken = {
                     accessToken: this.getStore("accessToken")
                 };
-                this.getMusicList();
+                this.getBlogList();
             },
             changeSort(e) {
 
@@ -268,12 +237,12 @@
             },
             changePage(v) {
                 this.pageNumber = v;
-                this.getMusicList();
+                this.getBlogList();
                 this.clearSelectAll();
             },
             changePageSize(v) {
                 this.pageSize = v;
-                this.getMusicList();
+                this.getBlogList();
             },
 
             selectDateRange(v) {
@@ -287,13 +256,13 @@
                 this.selectDate = null;
                 this.startDate = "";
                 this.endDate = "";
-                this.getMusicList();
+                this.getBlogList();
             },  // end 上面常用的方法
 
             clearSelectAll() {
                 this.$refs.table.selectAll(false);
             },
-            getMusicList() {
+            getBlogList() {
                 this.loading = true;
                 let params = {
                     title: this.searchKey,
@@ -303,7 +272,7 @@
                     order: this.sortType,
                     startDate: this.selectDate,
                 };
-                getMusicListData(params).then(res => {
+                getBlogListData(params).then(res => {
                     this.loading = false;
                     if (res.success === true) {
                         this.data = res.result.content;
@@ -311,37 +280,17 @@
                     }
                 });
             },
-            add() {
-                this.modalType = 0;
-                this.modalTitle = "添加歌曲";
-                this.$refs.musicForm.resetFields();
-                this.modalVisible = true;
-            },
-            edit(v) {
-                this.modalType = 1;
-                this.modalTitle = "修改歌曲";
-                // 转换null为""
-                for (let attr in v) {
-                    if (v[attr] === null) {
-                        v[attr] = "";
-                    }
-                }
-                let str = JSON.stringify(v);
-                let timeInfo = JSON.parse(str);
-                this.musicForm = timeInfo;
-                this.modalVisible = true;
-            },
             disable(v) {
                 this.$Modal.confirm({
                     title: "确认禁用",
                     content: "您确认要禁用歌曲 " + v.name + " ?",
                     onOk: () => {
                         this.operationLoading = true;
-                        disableMusic(v.id).then(res => {
+                        disableBlog(v.id).then(res => {
                             this.operationLoading = false;
                             if (res.success === true) {
                                 this.$Message.success("操作成功");
-                                this.getMusicList();
+                                this.getBlogList();
                             }
                         });
                     }
@@ -359,27 +308,27 @@
                 this.modalVisible = false;
             },
             submitMusic() {
-                this.$refs.musicForm.validate(valid => {
+                this.$refs.listForm.validate(valid => {
                     if (valid) {
                         if (this.modalType === 0) {
                             // 添加
                             this.submitLoading = true;
-                            addMusic(this.musicForm).then(res => {
+                            addMusic(this.listForm).then(res => {
                                 this.submitLoading = false;
                                 if (res.success === true) {
                                     this.$Message.success("操作成功");
-                                    this.getMusicList();
+                                    this.getBlogList();
                                     this.modalVisible = false;
                                 }
                             });
                         } else {
                             //修改
                             this.submitLoading = true;
-                            editMusic(this.musicForm).then(res => {
+                            editMusic(this.listForm).then(res => {
                                 this.submitLoading = false;
                                 if (res.success === true) {
                                     this.$Message.success("修改成功");
-                                    this.getMusicList();
+                                    this.getBlogList();
                                     this.modalVisible = false;
                                 }
                             });

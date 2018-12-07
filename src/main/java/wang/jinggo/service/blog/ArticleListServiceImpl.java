@@ -46,8 +46,8 @@ public class ArticleListServiceImpl implements ArticleListService {
             @Override
             public Predicate toPredicate(Root<B3SoloArticle> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
 
-                Path<String> titleField = root.get("title");
-                Path<Date> createTimeField=root.get("createTime");
+                Path<String> titleField = root.get("articleTitle");
+                Path<Date> createTimeField=root.get("articleCreateDate");
 
                 List<Predicate> list = new ArrayList<Predicate>();
 

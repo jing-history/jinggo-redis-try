@@ -253,4 +253,18 @@ export const getDictDataByType = (type, params) => {
     return getRequest(`/dictData/getByType/${type}`, params)
 }
 
+//博客管理
+export const getBlogListData = (params) => {
+    return getRequest('/blog/getByCondition', params)
+}
+export const addBlog = (params) => {
+    return postRequest('/blog/add', params)
+}
+export const editBlog = (params) => {
+    return postRequest('/blog/edit', params)
+}
+export const disableBlog = (id, params) => {
+    return postRequest(`/blog/disable/${id}`, params)
+}
+
 
