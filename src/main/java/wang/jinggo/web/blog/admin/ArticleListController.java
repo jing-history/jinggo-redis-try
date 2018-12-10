@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import wang.jinggo.common.vo.PageVo;
 import wang.jinggo.common.vo.Result;
-import wang.jinggo.domain.blog.B3SoloArticle;
+import wang.jinggo.domain.blog.BlogArticle;
 import wang.jinggo.pojo.SearchVo;
 import wang.jinggo.service.blog.ArticleListService;
 import wang.jinggo.util.PageUtil;
 import wang.jinggo.util.ResultUtil;
+
+import java.util.List;
 
 /**
  * 博客内容列表
@@ -41,10 +43,11 @@ public class ArticleListController {
 
     @RequestMapping(value = "/getByCondition",method = RequestMethod.GET)
     @ApiOperation(value = "多条件分页获取内容列表")
-    public Result<Page<B3SoloArticle>> getByCondition(SearchVo searchVo, @ModelAttribute PageVo pageVo){
+    public Result<Page<BlogArticle>> getByCondition(SearchVo searchVo, @ModelAttribute PageVo pageVo){
 
         LOG.info("====>>> " + searchVo.toString());
-        Page<B3SoloArticle> page = articleListService.findByCondition(searchVo, PageUtil.initPage(pageVo));
-        return new ResultUtil<Page<B3SoloArticle>>().setData(page);
+        Page<BlogArticle> page = articleListService.findByCondition(searchVo, PageUtil.initPage(pageVo));
+        List<BlogArticle> list = articleListService.getAll();
+        return new ResultUtil<Page<BlogArticle>>().setData(page);
     }
 }

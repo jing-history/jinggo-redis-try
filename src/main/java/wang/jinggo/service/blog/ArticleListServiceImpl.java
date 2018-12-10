@@ -9,9 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
-import wang.jinggo.base.XbootBaseDao;
 import wang.jinggo.dao.blog.ArticleListDao;
-import wang.jinggo.domain.blog.B3SoloArticle;
+import wang.jinggo.domain.blog.BlogArticle;
 import wang.jinggo.pojo.SearchVo;
 
 import javax.persistence.criteria.*;
@@ -34,17 +33,17 @@ public class ArticleListServiceImpl implements ArticleListService {
     private ArticleListDao articleListDao;
 
     @Override
-    public XbootBaseDao getRepository() {
+    public ArticleListDao getRepository() {
         return articleListDao;
     }
 
     @Override
-    public Page<B3SoloArticle> findByCondition(SearchVo searchVo, Pageable pageable) {
-        return articleListDao.findAll(new Specification<B3SoloArticle>() {
+    public Page<BlogArticle> findByCondition(SearchVo searchVo, Pageable pageable) {
+        return articleListDao.findAll(new Specification<BlogArticle>() {
 
             @Nullable
             @Override
-            public Predicate toPredicate(Root<B3SoloArticle> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
+            public Predicate toPredicate(Root<BlogArticle> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
 
                 Path<String> titleField = root.get("articleTitle");
                 Path<Date> createTimeField=root.get("articleCreateDate");
@@ -52,7 +51,9 @@ public class ArticleListServiceImpl implements ArticleListService {
                 List<Predicate> list = new ArrayList<Predicate>();
 
                 //模糊搜素
-                list.add(cb.like(titleField,'%'+searchVo.getTitle()+'%'));
+                if(StrUtil.isNotBlank(searchVo.getTitle())){
+                    list.add(cb.like(titleField,'%'+searchVo.getTitle()+'%'));
+                }
                 //创建时间
                 if(StrUtil.isNotBlank(searchVo.getStartDate())){
                     Date start = DateUtil.parse(searchVo.getStartDate());

@@ -7,7 +7,7 @@
             <Col>
             <Card>
                 <Form inline :label-width="70" class="search-form">
-                    <Form-item label="搜索歌曲">
+                    <Form-item label="搜索文章">
                         <Input type="text" v-model="searchKey" clearable placeholder="请输入搜索歌曲关键词" style="width: 200px"/>
                     </Form-item>
                     <Form-item label="创建时间">
@@ -28,7 +28,7 @@
                     </Alert>
                 </Row>
                 <Row>
-                    <Table :loading="loading" border :columns="columns" :data="data" ref="table" sortable="custom" ></Table>
+                    <Table :loading="loading" border :columns="columns" :data="data" ref="table" sortable="articleCreateDate" ></Table>
                 </Row>
                 <Row type="flex" justify="end" class="page">
                     <Page :current="pageNumber" :total="total" :page-size="pageSize" @on-change="changePage" @on-page-size-change="changePageSize" :page-size-opts="[10,20,50]" size="small" show-total show-elevator show-sizer></Page>
@@ -77,26 +77,29 @@
                     {
                         title: "作者",
                         key: "articleAuthorEmail",
+                        width: 180,
                         tooltip: true
                     },
                     {
                         title: "评论",
                         key: "articleCommentCount",
+                        width: 80,
                         tooltip: true
                     },
                     {
                         title: "浏览",
                         key: "articleViewCount",
+                        width: 80,
                         tooltip: true
                     },
                     {
                         title: "状态",
-                        key: "status",
+                        key: "articleIsPublished",
                         align: "center",
                         width: 140,
                         render: (h, params) => {
                             let re = "";
-                            if (params.row.status === 0) {
+                            if (params.row.articleIsPublished === 0) {
                                 return h("div", [
                                     h(
                                         "Tag",
@@ -109,7 +112,7 @@
                                         "正常启用"
                                     )
                                 ]);
-                            } else if (params.row.status === 1) {
+                            } else if (params.row.articleIsPublished === 1) {
                                 return h("div", [
                                     h(
                                         "Tag",
@@ -126,27 +129,27 @@
                         },
                         filters: [
                             {
-                                label: "正常启用",
+                                label: "隐藏",
                                 value: 0
                             },
                             {
-                                label: "禁用",
+                                label: "启用",
                                 value: 1
                             }
                         ],
                         filterMultiple: false,
                         filterMethod(value, row) {
                             if (value === 0) {
-                                return row.status === 0;
+                                return row.articleIsPublished === 0;
                             } else if (value === -1) {
-                                return row.status === -1;
+                                return row.articleIsPublished === -1;
                             }
                         }
                     },
                     {
                         title: "创建时间",
                         key: "articleCreateDate",
-                        width: 100,
+                        width: 150,
                         render: (h,params)=>{
                             return h('div',
                                 this.formatDate(new Date(params.row.createTime),'yyyy-MM-dd')
@@ -282,8 +285,8 @@
             },
             disable(v) {
                 this.$Modal.confirm({
-                    title: "确认禁用",
-                    content: "您确认要禁用歌曲 " + v.name + " ?",
+                    title: "确认隐藏",
+                    content: "您确认要隐藏博文 " + v.name + " ?",
                     onOk: () => {
                         this.operationLoading = true;
                         disableBlog(v.id).then(res => {

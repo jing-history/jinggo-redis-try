@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import wang.jinggo.dao.blog.ArticleListDao;
-import wang.jinggo.domain.blog.B3SoloArticle;
+import wang.jinggo.domain.blog.BlogArticle;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class ArticleListTest {
 
     @Test
     public void getArticlesAll(){
-        List<B3SoloArticle> articles =  articleListDao.findAll();
+        List<BlogArticle> articles =  articleListDao.findAll();
         System.out.println(articles.toString());
     }
 }
