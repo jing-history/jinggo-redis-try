@@ -96,10 +96,10 @@
                         title: "状态",
                         key: "articleIsPublished",
                         align: "center",
-                        width: 140,
+                        width: 150,
                         render: (h, params) => {
                             let re = "";
-                            if (params.row.articleIsPublished === 0) {
+                            if (params.row.articleIsPublished === '1') {
                                 return h("div", [
                                     h(
                                         "Tag",
@@ -112,7 +112,7 @@
                                         "正常启用"
                                     )
                                 ]);
-                            } else if (params.row.articleIsPublished === 1) {
+                            } else if (params.row.articleIsPublished === '0') {
                                 return h("div", [
                                     h(
                                         "Tag",
@@ -122,7 +122,7 @@
                                                 color: "error"
                                             }
                                         },
-                                        "禁用"
+                                        "隐藏"
                                     )
                                 ]);
                             }
@@ -152,7 +152,7 @@
                         width: 150,
                         render: (h,params)=>{
                             return h('div',
-                                this.formatDate(new Date(params.row.createTime),'yyyy-MM-dd')
+                                this.formatDate(new Date(params.row.articleCreateDate),'yyyy-MM-dd hh:mm:ss')
                             )
                         }
                     },
